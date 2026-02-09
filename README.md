@@ -11,7 +11,7 @@
 ```bash
 # Open Command Prompt or Git Bash and run:
 git clone <your-repo-url-here>
-cd CS102GANGGANG
+cd cs102ganggang
 ```
 
 ## What is Git?
