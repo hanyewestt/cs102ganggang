@@ -2,6 +2,19 @@
 
 # Git Cheat Sheet for Absolute Beginners
 
+## Quick Start
+
+### First Time Setup (Do this once)
+
+#### 1. Clone this Repository
+
+```bash
+# Open Command Prompt or Git Bash and run:
+git clone <your-repo-url-here>
+cd LetsC
+```
+
+
 ## What is Git?
 
 Git helps multiple people work on the same code without breaking each other's work. Think of it like Google Docs for code!
