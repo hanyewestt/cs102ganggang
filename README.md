@@ -11,9 +11,8 @@
 ```bash
 # Open Command Prompt or Git Bash and run:
 git clone <your-repo-url-here>
-cd LetsC
+cd cs102ganggang
 ```
-
 
 ## What is Git?
 
@@ -143,30 +142,6 @@ git reset --soft HEAD~1
 git reset --hard HEAD~1
 ```
 
-## Reading Git Status
-
-When you run `git status`, you might see:
-
-### Green text = "Staged" (ready to commit)
-
-```bash
-Changes to be committed:
-  modified: index.html
-```
-
-### Red text = "Unstaged" (changed but not ready)
-
-```bash
-Changes not staged for commit:
-  modified: style.css
-```
-
-### Untracked = New files Git doesn't know about
-
-```bash
-Untracked files:
-  new-file.js
-```
 
 ## Understanding Git Messages
 
