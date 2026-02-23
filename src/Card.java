@@ -15,7 +15,9 @@ public class Card {
         tokens.put(Gem.Sapphire, Sapphire);
         tokens.put(Gem.Emerald, Emerald);
         tokens.put(Gem.Onyx, Onyx);
+        tokens.put(Gem.Gold, 0);
     }
+
 
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
