@@ -6,4 +6,10 @@ public enum Gem {
     Emerald,
     Onyx,
     Gold
+
 }
+
+class Test {
+    
+}
+
