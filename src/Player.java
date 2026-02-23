@@ -1,28 +1,33 @@
 
-import java.awt.geom.GeneralPath;
 import java.util.*;
 // Gem, Card, NobleTile
 
 public class Player {
 
+    private String name;
+
     private HashMap<Gem, Integer> tokens = new HashMap<>();
 
-    private List<Card> reserveCards;
     private static final int RESERVE_HAND_SIZE = 3;
+    private Card[] reserveCards = new Card[RESERVE_HAND_SIZE];
 
     private HashMap<Gem, Integer> production = new HashMap<>();
-    private List<NobleTile> ownedNobles;
+    private NobleTile[] ownedNobles = new NobleTile[5];
 
-    private int points;
+    private int points = 0;
 
     public Player() {
-        points = 0;
 
         for (Gem g : Gem.values()) {
             tokens.put(g, 0);
             production.put(g, 0);
         }
 
+    }
+
+    public Player(String name) {
+        this();
+        this.name = name;
     }
 
     public int getPoints() {
@@ -33,7 +38,7 @@ public class Player {
         return reserveCards.size();
     }
 
-    public List<Card> getReserveHand() {
+    public Card[] getReserveHand() {
         return reserveCards;
     }
 
@@ -48,7 +53,7 @@ public class Player {
     }
 
     // display production
-    public List<NobleTile> getOwnedNobleTile() {
+    public NobleTile[] getOwnedNobleTile() {
         return ownedNobles;
     }
 
@@ -61,7 +66,7 @@ public class Player {
         production.put(g, production.get(g) + 1);
     }
 
-    public void addPoints(int p) {
+    private void addPoints(int p) {
         points += p;
     }
 
@@ -74,7 +79,6 @@ public class Player {
     }
 
     // for gold
-    // opt 1. user inputs n gold coins only.
     // opt 2. user has to input all the gems.
     // public boolean canBuy(Card c) {
     //     // todo 
