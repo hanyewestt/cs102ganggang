@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class Card {
 
-    HashMap<Gem, Integer> tokens = new HashMap<>();
+    HashMap<Gem, Integer> tokens = new HashMap<>(6);
     private final Gem GEMTYPE;
     private final int POINTS;
 
@@ -15,7 +15,9 @@ public class Card {
         tokens.put(Gem.Sapphire, Sapphire);
         tokens.put(Gem.Emerald, Emerald);
         tokens.put(Gem.Onyx, Onyx);
+        tokens.put(Gem.Gold, 0);
     }
+
 
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
