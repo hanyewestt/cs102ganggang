@@ -32,17 +32,13 @@ public class Game {
 
     public void setPlayerArray(ArrayList<Player> players, int playerNumber) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter youngest player's name: ");
-        sc.nextLine();
-        String name = sc.nextLine();
-        Player player = new Player(name);
-        players.add(player);
-        for (int i = 1; i < playerNumber; i++) {
-            System.out.println("Enter next player name: ");
+        System.out.println("The first player is the youngest.");
+        for (int i = 0; i < playerNumber; i++) {
+            System.out.println("Enter player name: ");
             sc.nextLine();
-            name = sc.nextLine();
+            String name = sc.nextLine();
 
-            player = new Player(name);
+            Player player = new Player(name);
             players.add(player);
         }
 
