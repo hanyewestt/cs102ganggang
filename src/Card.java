@@ -1,25 +1,27 @@
+
 import java.util.HashMap;
 
 public class Card {
-    HashMap<String, Integer> tokens = new HashMap<>();
-    private final char GEMTYPE; 
-    private final int POINTS; 
 
-    public Card(char GEMTYPE, int POINTS, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
+    HashMap<Gem, Integer> tokens = new HashMap<>();
+    private final Gem GEMTYPE;
+    private final int POINTS;
+
+    public Card(Gem GEMTYPE, int POINTS, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
         this.GEMTYPE = GEMTYPE;
         this.POINTS = POINTS;
-        tokens.put("Diamond", Diamond);
-        tokens.put("Ruby", Ruby);
-        tokens.put("Sapphire", Sapphire);
-        tokens.put("Emerald", Emerald);
-        tokens.put("Onyx", Onyx);
+        tokens.put(Gem.Diamond, Diamond);
+        tokens.put(Gem.Ruby, Ruby);
+        tokens.put(Gem.Sapphire, Sapphire);
+        tokens.put(Gem.Emerald, Emerald);
+        tokens.put(Gem.Onyx, Onyx);
     }
 
-    public HashMap<String, Integer> getTokens() {
+    public HashMap<Gem, Integer> getTokens() {
         return tokens;
     }
 
-    public char getGEMTYPE() {
+    public Gem getGEMTYPE() {
         return GEMTYPE;
     }
 
