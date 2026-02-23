@@ -11,7 +11,6 @@ public class Game {
     private Card[][] market;
     private NobleTile[] nobles;
 
-    // idk
     public Game(int playerNumber) {
         this.playerNumber = playerNumber;
         this.decks = new Deck[3];
@@ -23,10 +22,6 @@ public class Game {
         }
 
         setPlayerArray(playerNumber);
-
-    }
-
-    public void cardSetup() {
 
     }
 
