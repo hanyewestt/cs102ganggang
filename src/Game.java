@@ -1,0 +1,68 @@
+package Project.cs102ganggang.src;
+import java.util.*;
+
+import javax.smartcardio.Card;
+
+public class Game {
+    private int playerNumber;
+    private ArrayList<Player> players;
+    private HashMap<Gem, Integer> bank;
+    private Deck[] decks;
+    private Card[][] market;
+    private NobleTile[] nobles;
+
+    // idk
+    public Game(int playerNumber) {
+        this.playerNumber = playerNumber;
+        this.decks = new Deck[3];
+        this.market = new Card[3][4];
+        this.nobles = new NobleTile[playerNumber + 1];
+
+        for (Gem g : Gem.values()) {
+            bank.put(g, 7 - (4 - playerNumber));
+        }
+
+        setPlayerArray(players, playerNumber);
+
+    }
+
+    public void cardSetup() {
+
+    }
+
+    public void setPlayerArray(ArrayList<Player> players, int playerNumber) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter youngest player's name: ");
+        sc.nextLine();
+        String name = sc.nextLine();
+        Player player = new Player(name);
+        players.add(player);
+        for (int i = 1; i < playerNumber; i++) {
+            System.out.println("Enter next player name: ");
+            sc.nextLine();
+            name = sc.nextLine();
+
+            player = new Player(name);
+            players.add(player);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Enter number of players: ");
+            int playerNumber = sc.nextInt();
+
+            if (playerNumber > 4 && playerNumber < 2) {
+                System.out.println("Invalid number of players, enter number between 2 and 4");
+            } else {
+                break;
+            }
+        }
+
+        Game game = new Game(playerNumber);
+
+    }
+}
