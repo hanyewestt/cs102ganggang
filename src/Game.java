@@ -22,7 +22,7 @@ public class Game {
             bank.put(g, 7 - (4 - playerNumber));
         }
 
-        setPlayerArray(players, playerNumber);
+        setPlayerArray(playerNumber);
 
     }
 
@@ -30,7 +30,7 @@ public class Game {
 
     }
 
-    public void setPlayerArray(ArrayList<Player> players, int playerNumber) {
+    public void setPlayerArray(int playerNumber) {
         Scanner sc = new Scanner(System.in);
         System.out.println("The first player is the youngest.");
         for (int i = 0; i < playerNumber; i++) {
@@ -46,12 +46,14 @@ public class Game {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        int playerNumber;
 
         while (true) {
             System.out.println("Enter number of players: ");
-            int playerNumber = sc.nextInt();
 
             if (playerNumber > 4 && playerNumber < 2) {
+                sc.nextLine();
+                playerNumber = sc.nextInt();
                 System.out.println("Invalid number of players, enter number between 2 and 4");
             } else {
                 break;
