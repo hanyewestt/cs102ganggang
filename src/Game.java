@@ -50,10 +50,10 @@ public class Game {
 
         while (true) {
             System.out.println("Enter number of players: ");
+            sc.nextLine();
+            playerNumber = sc.nextInt();
 
             if (playerNumber > 4 && playerNumber < 2) {
-                sc.nextLine();
-                playerNumber = sc.nextInt();
                 System.out.println("Invalid number of players, enter number between 2 and 4");
             } else {
                 break;
