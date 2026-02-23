@@ -1,19 +1,20 @@
 package item;
 
 import java.util.*;
+import java.lang.*;
 // Gem, Card, NobleTile
 
-public class Player {
+public class Player implements Comparable<Player>{
 
     private String name;
 
-    private HashMap<Gem, Integer> tokens = new HashMap<>();
+    private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
 
     private static final int RESERVE_HAND_SIZE = 3;
-    private Card[] reserveCards = new Card[RESERVE_HAND_SIZE];
+    private List<Card> reserveCards = new ArrayList<Card>(RESERVE_HAND_SIZE);
 
-    private HashMap<Gem, Integer> production = new HashMap<>();
-    private NobleTile[] ownedNobles = new NobleTile[5];
+    private HashMap<Gem, Integer> production = new HashMap<>(Gem.values().length);
+    private List<NobleTile> ownedNobles = new ArrayList<NobleTile>(5);
 
     private int points = 0;
 
@@ -36,10 +37,10 @@ public class Player {
     }
 
     public int getReserveHandSize() {
-        return reserveCards.length;
+        return reserveCards.size();
     }
 
-    public Card[] getReserveHand() {
+    public List<Card> getReserveHand() {
         return reserveCards;
     }
 
@@ -54,13 +55,17 @@ public class Player {
     }
 
     // display production
-    public NobleTile[] getOwnedNobleTile() {
+    public List<NobleTile> getOwnedNobleTile() {
         return ownedNobles;
     }
 
     // display noble tile
     public void addToken(Gem g, int amt) {
         tokens.put(g, tokens.get(g) + amt);
+    }
+
+    public void removeToken(Gem g, int amt) {
+        tokens.put(g, tokens.get(g) - amt);
     }
 
     public void addProduction(Gem g) {
@@ -75,35 +80,36 @@ public class Player {
         if (getReserveHandSize() == RESERVE_HAND_SIZE) {
             return false;
         }
-        reserveCards[getReserveHandSize()] = c;
+        reserveCards.add(c);
 
         return true;
     }
 
-    // for gold
-    // opt 2. user has to input all the gems.
-    // public boolean canBuy(Card c) {
-    //     // todo 
-    // }
-    // public boolean canBuy(Card c, HashMap<Gem, Integer> selectedTokens) {
-    //     // todo 
-    // }
-    // public void buyCard(Card c) {
-    //     // todo
-    //     if (canBuy(c)) {
-    //         // deduct cost from tokens
-    //         addToken(g, -i); 
-    //         addProduction(gem);
-    //         addPoints(cardPoints);
-    //     }
-    // }
-    // public void buyCard(Card c, HashMap<Gem, Integer> selectedTokens) {
-    //     // todo
-    //     if (canBuy(c, selectedTokens)) {
-    //         // deduct cost from tokens
-    //         addToken(g, -i); // need to iterate through all the gem types, and also check for user input
-    //         addProduction(gem);
-    //         addPoints(cardPoints);
-    //     }
-    // }
+    public void removeReserveCard(int pos) {
+        reserveCards.remove(pos);
+    }
+
+    public void addNobleTile(NobleTile noble) {
+        ownedNobles.add(noble);
+        addPoints(noble.getPoints());
+    }
+
+    public int getNumberOfCards() {
+        int sum = 0;
+        for (Gem g : Gem.values()) {
+            sum += production.get(g);
+        }
+        return sum;
+    }
+
+    @Override
+    public int compareTo(Player p) {
+        if (this.getPoints() == p.getPoints()) {
+            return this.getNumberOfCards() - p.getNumberOfCards();
+        }
+        return p.getPoints() - this.getPoints();
+    }
+
+
+
 }

@@ -2,20 +2,21 @@ package app;
 
 import java.util.*;
 import item.*;
+import java.lang.*;
 
 public class Game {
 
     private int playerNumber;
-    private ArrayList<Player> players;
-    private HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(6);
+    private List<Player> players;
+    private HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
     private Deck[] decks = new Deck[3];
     private Card[][] market = new Card[3][4];
-    private NobleTile[] nobles;
+    private List<NobleTile> nobles;
 
     public Game(int playerNumber) {
         this.playerNumber = playerNumber;
-        this.nobles = new NobleTile[playerNumber + 1];
-        this.players = new ArrayList<>();
+        this.nobles = new ArrayList<NobleTile>(playerNumber + 1);
+        this.players = new ArrayList<>(playerNumber);
 
         for (Gem g : Gem.values()) {
             bank.put(g, 7 - (4 - playerNumber));

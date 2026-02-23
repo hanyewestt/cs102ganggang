@@ -4,7 +4,7 @@ import java.util.*;
 
 public class NobleTile {
 
-    private HashMap<Gem, Integer> tokens = new HashMap<>(6);
+    private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
     private static final int POINTS = 3;
 
     public NobleTile(Gem gem, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
@@ -20,11 +20,7 @@ public class NobleTile {
         return this.tokens;
     }
 
-    public void setTokens(Gem g, int amount) {
-        this.tokens.put(g, amount);
-    }
-
-    public int getToken() {
+    public int getPoints() {
         return this.POINTS;
     }
 }
