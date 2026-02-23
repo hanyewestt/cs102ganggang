@@ -1,8 +1,9 @@
+package item;
 
 import java.util.*;
 
 public class NobleTile {
-    
+
     private HashMap<Gem, Integer> tokens = new HashMap<>(6);
     private static final int POINTS = 3;
 

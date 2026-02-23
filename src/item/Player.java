@@ -1,3 +1,4 @@
+package item;
 
 import java.util.*;
 // Gem, Card, NobleTile
@@ -35,7 +36,7 @@ public class Player {
     }
 
     public int getReserveHandSize() {
-        return reserveCards.size();
+        return reserveCards.length;
     }
 
     public Card[] getReserveHand() {
@@ -74,7 +75,8 @@ public class Player {
         if (getReserveHandSize() == RESERVE_HAND_SIZE) {
             return false;
         }
-        reserveCards.add(c);
+        reserveCards[getReserveHandSize()] = c;
+
         return true;
     }
 
