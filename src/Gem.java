@@ -8,8 +8,3 @@ public enum Gem {
     Gold
 
 }
-
-class Test {
-    
-}
-
