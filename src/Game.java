@@ -41,18 +41,16 @@ public class Game {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int playerNumber;
-
-        while (true) {
-            System.out.println("Enter number of players: ");
+        int playerNumber = 0;
+        System.out.println("Enter number of players: ");
+        playerNumber = sc.nextInt();
+        
+        while (playerNumber > 4 || playerNumber < 2) {
+            System.out.println("Invalid number of players, enter number between 2 and 4");
             sc.nextLine();
+            System.out.println("Enter number of players: ");
             playerNumber = sc.nextInt();
-
-            if (playerNumber > 4 && playerNumber < 2) {
-                System.out.println("Invalid number of players, enter number between 2 and 4");
-            } else {
-                break;
-            }
+            
         }
 
         Game game = new Game(playerNumber);
