@@ -2,7 +2,7 @@
 import java.util.*;
 
 public class NobleTile {
-
+    
     private HashMap<Gem, Integer> tokens = new HashMap<>(6);
     private static final int POINTS = 3;
 
@@ -14,7 +14,7 @@ public class NobleTile {
         tokens.put(Gem.Onyx, Onyx);
         tokens.put(Gem.Gold, 0);
     }
-    
+
     public HashMap<Gem, Integer> getTokens() {
         return this.tokens;
     }
