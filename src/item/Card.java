@@ -1,5 +1,6 @@
+package item;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class Card {
 
@@ -17,7 +18,6 @@ public class Card {
         tokens.put(Gem.Onyx, Onyx);
         tokens.put(Gem.Gold, 0);
     }
-
 
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
