@@ -39,6 +39,28 @@ public class Game {
 
     }
 
+    public List<Player> getWinner() {
+        Collections.sort(players);
+        List<Player> winningPlayers = new ArrayList<>();
+        winningPlayers.add(players.get(0));
+
+        int idx = 0;
+        while (idx + 1 <= players.size() - 1) {
+            Player p1 = players.get(idx);
+            Player p2 = players.get(idx + 1);
+
+            if (p1.compareTo(p2) == 0) {
+                winningPlayers.add(p2);
+                idx++;
+            } else {
+                break;
+            }
+
+        }
+        return winningPlayers;
+
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int playerNumber = 0;
