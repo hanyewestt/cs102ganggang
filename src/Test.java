@@ -5,5 +5,6 @@ public class Test {
         // Card card1 = new Card('D', 3, 2, 0, 2, 3, 0);
 
         // System.out.println(card1.toString());
+        System.out.println(Gem.values()[1]);
     }
 }

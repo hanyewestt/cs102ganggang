@@ -110,6 +110,41 @@ public class Player implements Comparable<Player>{
         return p.getPoints() - this.getPoints();
     }
 
+    public void buyCard(Card card) {
+        HashMap<Gem, Integer> cardCost = card.getTokens();
+        HashMap<Gem, Integer> playerTokens = this.getTokens();
+        for (Gem g: tokens.keySet()) {
+            if (cardCost.get(g) > playerTokens.get(g)) {
+                this.removeToken(g, playerTokens.get(g));
+            }
+            this.removeToken(g, cardCost.get(g));
+        }        
+    }
 
+    public void convertGold(HashMap<Gem, Integer> playerTokens, Card card) {
+        HashMap<Gem, Integer> cardCost = card.getTokens();
+        int difference = 0;
 
+        for (int i = 0; i < Gem.values().length - 1; i++) {
+            difference += cardCost.get(Gem.values()[i]) - playerTokens.get(Gem.values()[i]);
+        }
+
+        int gold = playerTokens.get(Gem.Gold);
+        if (difference == gold) {
+            buyCard(card);
+            return;
+        }
+
+        if (difference > gold) {
+            return; //possibly throw error? see how the player action is actually handled
+        }
+
+        if (difference < gold) {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("How many gold> ");
+            int numUsed = sc.nextInt();
+
+            this.removeToken(Gem.Gold, numUsed);
+        }
+    }
 }

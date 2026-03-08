@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Card {
 
-    HashMap<Gem, Integer> tokens = new HashMap<>(6);
+    private HashMap<Gem, Integer> tokens = new HashMap<>(6);
     private final Gem GEMTYPE;
     private final int POINTS;
 
