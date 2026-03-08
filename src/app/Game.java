@@ -1,20 +1,23 @@
+package app;
 
 import java.util.*;
+import item.*;
+import java.lang.*;
 
 public class Game {
+
     private int playerNumber;
     private static List<Player> players = new ArrayList<>();
-    private HashMap<Gem, Integer> bank;
-    private Deck[] decks;
-    private Card[][] market;
-    private NobleTile[] nobles;
+    private HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
+    private Deck[] decks = new Deck[3];
+    private Card[][] market = new Card[3][4];
+    private List<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
 
     public Game(int playerNumber) {
         this.playerNumber = playerNumber;
-        this.decks = new Deck[3];
-        this.market = new Card[3][4];
-        this.nobles = new NobleTile[playerNumber + 1];
+        this.nobles = new ArrayList<NobleTile>(playerNumber + 1);
+        this.players = new ArrayList<>(playerNumber);
 
         setPlayerArray(playerNumber);
 
