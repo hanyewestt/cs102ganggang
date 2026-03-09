@@ -83,20 +83,28 @@ public class Configuration {
      * This method MUST be called only once before using any of the above getters.
      */
     public static void load() {
-        Scanner numLoader;
-        Scanner deck1Loader;
-        Scanner deck2Loader;
-        Scanner deck3Loader;
-        Scanner nobleTilesLoader;
+        Scanner numLoader = null;
+        Scanner deck1Loader = null;
+        Scanner deck2Loader = null;
+        Scanner deck3Loader = null;
+        Scanner nobleTilesLoader = null;
+
+        ArrayList<Scanner> scanners = new ArrayList<>();
+        scanners.add(numLoader);
+        scanners.add(deck1Loader);
+        scanners.add(deck2Loader);
+        scanners.add(deck3Loader);
+        scanners.add(nobleTilesLoader);
 
         try {
-            numLoader = setupScanner("src/data/numbers.csv");
+            numLoader = setupScanner("src/data/numbers.txt");
             deck1Loader = setupScanner("src/data/deck1.csv");
             deck2Loader = setupScanner("src/data/deck2.csv");
             deck3Loader = setupScanner("src/data/deck3.csv");
             nobleTilesLoader = setupScanner("src/data/nobletiles.csv");
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
+            closeScanners(scanners);
             return;
         }
 
@@ -109,6 +117,7 @@ public class Configuration {
             }
         } catch (NumberFormatException e) {
             System.out.println("File has invalid format");
+            closeScanners(scanners);
             return;
         }
 
@@ -124,6 +133,8 @@ public class Configuration {
         } catch (IllegalArgumentException e) {
             System.out.println("Wrong parameters parsed in");
             return;
+        } finally {
+            closeScanners(scanners);
         }
     }
 
@@ -203,6 +214,22 @@ public class Configuration {
                             fromCharToGem(nobleTileGems[2].charAt(0))));
                     break;
             }
+        }
+    }
+
+    /**
+     * Closes all scanners parsed in.
+     * 
+     * @param scanners An ArrayList of the Scanners to be closed.
+     */
+
+    private static void closeScanners(ArrayList<Scanner> scanners) {
+        for (Scanner sc : scanners) {
+           if (sc == null) {
+                continue;
+           }
+           
+           sc.close();
         }
     }
 
