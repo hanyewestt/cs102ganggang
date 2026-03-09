@@ -194,5 +194,149 @@ public class Game {
     public static void printCommandList() {
 
     }
+  
+  private static Set<Gem> pickThreeDifferentGems(){
+        Set<Gem> chosen = new HashSet<>(); 
+
+        while (chosen.size() < 3){
+            try {
+                System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx) or 'cancel': ");
+                String gemInput = sc.nextLine();
+
+                if (gemInput.equalsIgnoreCase("cancel")){
+                    return new HashSet<>(); // return empty set 
+                }
+
+                Gem g = Gem.valueOf(gemInput); 
+
+                if (g == Gem.Gold) {
+                    System.out.println("Unable to take gold this way.");
+                    continue;
+                }
+
+                if (bank.get(g) <= 0) {
+                    System.out.println("Bank does not have this gem.");
+                    continue;
+                }
+
+                if (chosen.contains(g)) {
+                    System.out.println("Already chosen.");
+                    continue;
+                }
+
+                chosen.add(g); 
+            } catch (IllegalArgumentException e){
+                System.out.println("Invalid gem."); 
+            }
+        }
+
+        return chosen; 
+    }
+
+    private static Gem pickTwoSameGem(){
+        while (true){
+            System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx) or 'cancel':");
+            String gemInput = sc.nextLine();
+
+            if (gemInput.equalsIgnoreCase("cancel")) {
+                return null;  // handled in drawToken
+            }
+
+            try {
+                Gem g = Gem.valueOf(gemInput);
+
+                if (g == Gem.Gold) {
+                    System.out.println("Unable to take gold this way.");
+                    continue;  
+                }
+                if (bank.get(g) < 4) {
+                    System.out.println("Need at least 4 in bank to take 2.");
+                    continue;  
+                }
+
+                return g;  // valid gem found
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid gem.");
+            }
+        }
+    }
+
+    // drawToken function 
+    public static boolean drawToken(Player currentPlayer){ 
+
+        boolean validAction = false; 
+
+        while (!validAction){
+            System.out.println("Choose token option: "); 
+            System.out.println("1. Take 3 different tokens"); 
+            System.out.println("2. Take 2 same tokens"); 
+            System.out.println("0. Cancel");
+
+            int choice = enterNumber(0, 2); 
+
+            if (choice == 0){
+                return false; 
+            }
+
+            // add token - option 1: 3 different tokens 
+            if (choice == 1){
+
+                Set <Gem> chosen = pickThreeDifferentGems();
+
+                if (chosen.isEmpty()){
+                    continue; // user cancelled 
+                }
+
+                for (Gem g : chosen){
+                    bank.put(g, bank.get(g) - 1); 
+                    currentPlayer.addToken(g, 1); 
+                }
+
+                validAction = true; 
+
+            } else if (choice == 2) { 
+                Gem g = pickTwoSameGem(); 
+
+                if (g == null){
+                    continue; // user cancelled 
+                }
+
+                bank.put(g, bank.get(g) - 2); 
+                currentPlayer.addToken(g, 2);
+
+                validAction = true; 
+            } 
+        }
+
+        // checksize
+        // if exceed, prompt user to return tokens 
+        int totalTokens = 0; 
+        for (Gem g : Gem.values()){
+            totalTokens += currentPlayer.getTokens().get(g); 
+        }
+
+        while (totalTokens > 10){
+            System.out.println("You have more than 10 tokens. Return 1 token:"); 
+            String input = sc.nextLine(); 
+
+            try {
+                Gem g = Gem.valueOf(input); 
+
+                if (currentPlayer.getTokens().get(g) > 0){
+                    currentPlayer.removeToken(g, 1); 
+                    bank.put(g, bank.get(g) + 1); 
+                    totalTokens--; 
+                } else {
+                    System.out.println("You don't have that token."); 
+                }
+
+            } catch (IllegalArgumentException e){
+                System.out.println("Invalid gem."); 
+            }
+        }
+
+        return true; 
+    }
 
 }
