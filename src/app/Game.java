@@ -6,12 +6,12 @@ import java.lang.*;
 
 public class Game {
 
-    private int playerNumber;
+    private static int playerNumber;
     private static List<Player> players = new ArrayList<>();
-    private HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
-    private Deck[] decks = new Deck[3];
-    private Card[][] market = new Card[3][4];
-    private List<NobleTile> nobles;
+    private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
+    private static Deck[] decks = new Deck[3];
+    private static Card[][] market = new Card[3][4];
+    private static List<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
 
     public Game(int playerNumber) {
@@ -23,7 +23,7 @@ public class Game {
 
     }
 
-    public void setPlayerArray(int playerNumber) {
+    public static void setPlayerArray(int playerNumber) {
         System.out.println("\nThe first player is the youngest.");
         for (int i = 0; i < playerNumber; i++) {
             System.out.print("Enter player " + (i + 1) + " name: ");
