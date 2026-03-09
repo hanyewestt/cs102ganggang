@@ -110,6 +110,10 @@ public class Player implements Comparable<Player>{
         return p.getPoints() - this.getPoints();
     }
 
+    public String getName() {
+        return name;
+    }
+
 
 
 }
