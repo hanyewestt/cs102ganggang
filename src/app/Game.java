@@ -79,9 +79,9 @@ public class Game {
                     if (visitingNobles().size() > 1) {
                         System.out.print("Please select a noble: ");
                         int choice = enterNumber(1, visitingNobles().size());
-                        player.setNoble(); // are we setting it like that ??
+                        player.addNobleTile();
                     } else if (visitingNobles().size == 1) {
-                        player.setNoble(); // are we setting it like that ??
+                        player.addNobleTile();
                     }
                     break;
                 case 4: 
@@ -124,7 +124,7 @@ public class Game {
         }
         List<Player> winningPlayers = getWinner();
         for (int i = 0; i < winningPlayers.size(); i++) {
-            System.out.println(winningPlayers.get(i).getName());// is there a getName?
+            System.out.println(winningPlayers.get(i).getName());
         }
         sc.close();
 
