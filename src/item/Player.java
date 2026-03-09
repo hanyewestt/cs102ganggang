@@ -145,6 +145,10 @@ public class Player implements Comparable<Player>{
         output += ownedNobles.get(size);
         return output;
     }
+    public String getName() {
+        return name;
+    }
+
 
 
 }
