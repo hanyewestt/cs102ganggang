@@ -56,4 +56,121 @@ public class Game {
         Game game = new Game(playerNumber);
 
     }
+
+    // drawToken function 
+    public void drawToken(Player currentPlayer){ 
+
+        // prompt user 
+        Scanner sc = new Scanner(System.in); 
+        boolean validAction = false; 
+
+        while (!validAction){
+            System.out.println("Choose token option: "); 
+            System.out.println("1. Take 3 different tokens"); 
+            System.out.println("2. Take 2 same tokens"); 
+
+            int choice = sc.nextInt(); 
+            sc.nextLine(); 
+
+            // add token - option 1: 3 different tokens 
+            if (choice == 1){
+
+                // HashSet is a list which ignores duplicates
+                Set<Gem> chosen = new HashSet<>(); 
+
+                while (chosen.size() < 3){
+                    System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx): "); 
+                    String gemInput = sc.nextLine(); 
+
+                    try {
+                        Gem g = Gem.valueOf(gemInput); 
+
+                        if (g == Gem.Gold){
+                            System.out.println("Unable to take gold this way.");
+                            continue; 
+                        }
+
+                        if (bank.get(g) <= 0){
+                            System.out.println("Bank does not have this gem."); 
+                            continue; 
+                        }
+
+                        if (chosen.contains(g)){
+                            System.out.println("Already chosen"); 
+                            continue; 
+                        }
+
+                        chosen.add(g); 
+
+                    } catch (IllegalArgumentException e){
+                        System.out.println("Invalid gem."); 
+                    }
+                }
+
+                for (Gem g : chosen){
+                    bank.put(g, bank.get(g) - 1); 
+                    currentPlayer.addToken(g, 1); 
+                }
+
+                validAction = true; 
+
+            } else if (choice == 2) { // add token - option 2: 2 same tokens 
+                System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx):"); 
+                String gemInput = sc.nextLine(); 
+
+                try {
+                    Gem g = Gem.valueOf(gemInput); 
+
+                    if (g == Gem.Gold){
+                        System.out.println("Unable to take gold this way."); 
+                        continue; 
+                    }
+
+                    if (bank.get(g) < 4){
+                        System.out.println("Need at least 4 in bank to take 2."); 
+                        continue; 
+                    }
+
+                    bank.put(g, bank.get(g) - 2); 
+                    currentPlayer.addToken(g, 2); 
+
+                    validAction = true; 
+
+                } catch (IllegalArgumentException e){
+                    System.out.println("Invalid gem"); 
+                } 
+            
+            } else {
+                System.out.println("Invalid choice"); 
+            }
+        }
+
+
+        // checksize
+        // if exceed, prompt user to return tokens 
+        int totalTokens = 0; 
+        for (Gem g : Gem.values()){
+            totalTokens += currentPlayer.getTokens().get(g); 
+        }
+
+        while (totalTokens > 10){
+            System.out.println("You have more than 10 tokens. Return 1 token:"); 
+            String input = sc.nextLine(); 
+
+            try {
+                Gem g = Gem.valueOf(input); 
+
+                if (currentPlayer.getTokens().get(g) > 0){
+                    currentPlayer.removeToken(g, 1); 
+                    bank.put(g, bank.get(g) + 1); 
+                    totalTokens--; 
+                } else {
+                    System.out.println("You don't have that token."); 
+                }
+
+            } catch (IllegalArgumentException e){
+                System.out.println("Invalid gem."); 
+            }
+        }
+    }
 }
