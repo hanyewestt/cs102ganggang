@@ -16,40 +16,72 @@ public class Configuration {
 
     private static Deck<NobleTile> nobleTiles = new Deck<NobleTile>();
 
+    /**
+     * Getter to retrieve how many points a noble tile is worth.
+     * 
+     * @return The amount of points a noble tile is worth.
+     */
+
     public static int getNobleTilePoints() {
         return nobleTilePoints;
     }
 
+    /**
+     * Getter to retrieve how many points are needed to win.
+     * 
+     * @return The amount of points needed to win.
+     */
     public static int getPointsToWin() {
         return pointsToWin;
     }
 
+    /**
+     * Getter to retrieve the starting number of gems in the bank based on a player no.
+     * 
+     * @param playerNo The amount of players in the game. Guaranteed to be between 2 to 4 (inclusive).
+     * @return The amount of starting gems in the bank.
+     */
     public static int getStartingGems(int playerNo) {
         return startingGems[playerNo - 2];
     }
 
+    /**
+     * Getter to retrieve a deep copy of a deck of cards to be used.
+     * 
+     * @param deckNo The deck no to be retrieved.
+     * @return The deep copy of said deck.
+     */
     public static Deck<Card> getDeck(int deckNo) {
         Deck<Card> result = null;
 
         switch (deckNo) {
             case 1:
-                result = deck1;
+                result = new Deck<Card>(deck1);
                 break;
             case 2:
-                result = deck2;
+                result = new Deck<Card>(deck2);
                 break;
             case 3:
-                result = deck3;
+                result = new Deck<Card>(deck3);
                 break;
         }
 
         return result;
     }
 
+    /**
+     * Getter to retrieve a deep copy of the noble tile deck.
+     * 
+     * @return The deep copy of the noble tile deck.
+     */
     public static Deck<NobleTile> getNobleTiles() {
-        return nobleTiles;
+        return new Deck<NobleTile>(nobleTiles);
     }
 
+    /**
+     * Loads all the relevant data from files to the Configuration class.
+     * This method MUST be called only once before using any of the above getters.
+     */
     public static void load() {
         Scanner numLoader;
         Scanner deck1Loader;
@@ -95,6 +127,14 @@ public class Configuration {
         }
     }
 
+    /**
+     * Method that returns a Scanner that is ready to scan a file.
+     * 
+     * @param filePathAndName The file path to the desired file, and the file name.
+     * @return A Scanner ready to read the file.
+     * @throws FileNotFoundException If the desired file cannot be found from the given filepath.
+     */
+
     private static Scanner setupScanner(String filePathAndName) throws FileNotFoundException {
         try {
             Scanner sc = new Scanner(new File(filePathAndName));
@@ -105,7 +145,15 @@ public class Configuration {
         }
     }
 
-    private static int getNextNo(Scanner fileScanner) {
+    /**
+     * Returns the next integer number in the file that exists on a line by itself.
+     * Will ignore empty lines or commented lines (With a '#') in the file.
+     * 
+     * @param fileScanner The Scanner currently looking through the file.
+     * @return The next integer retrieved from the file.
+     * @throws NumberFormatException If a line that's not empty or a comment can't be parsed into an integer.
+     */
+    private static int getNextNo(Scanner fileScanner) throws NumberFormatException {
         while (fileScanner.hasNextLine()) {
             String line = fileScanner.nextLine();
             if (line.equals("") || line.charAt(0) == '#') {
@@ -118,6 +166,12 @@ public class Configuration {
         return -1;
     }
 
+    /**
+     * Will fill a given deck with cards using information from a file Scanner.
+     * 
+     * @param deck The deck to be filled with cards.
+     * @param sc The Scanner reading from a file.
+     */
     private static void fillCardDeck(Deck<Card> deck, Scanner sc) {
         sc.useDelimiter(",|\r\n|\n");
 
@@ -127,6 +181,12 @@ public class Configuration {
         }
     }
 
+    /**
+     * Will fill a given deck with noble tiles using information from a file Scanner.
+     * 
+     * @param deck The deck to be filled with noble tiles.
+     * @param sc The Scanner reading from a file.
+     */
     private static void fillNobleTileDeck(Deck<NobleTile> nobleTiles, Scanner nobleTilesLoader) {
         while (nobleTilesLoader.hasNextLine()) {
             String line = nobleTilesLoader.nextLine();
@@ -146,6 +206,13 @@ public class Configuration {
         }
     }
 
+    /**
+     * Converts a char to a Gem.
+     * Returns null if char is invalid.
+     * 
+     * @param character The char to be read.
+     * @return The Gem represented by that char.
+     */
     private static Gem fromCharToGem(char character) {
         switch (character) {
             case 'D':
