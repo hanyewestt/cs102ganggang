@@ -11,15 +11,15 @@ public class Player implements Comparable<Player>{
     private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
 
     private static final int RESERVE_HAND_SIZE = 3;
-    private List<Card> reserveCards = new ArrayList<Card>(RESERVE_HAND_SIZE);
+    private List<Card> reserveCards = new ArrayList<>(RESERVE_HAND_SIZE);
 
     private HashMap<Gem, Integer> production = new HashMap<>(Gem.values().length);
-    private List<NobleTile> ownedNobles = new ArrayList<NobleTile>(5);
+    private List<NobleTile> ownedNobles = new ArrayList<>(5);
 
     private int points = 0;
 
     public Player() {
-
+        this.name = "no name";
         for (Gem g : Gem.values()) {
             tokens.put(g, 0);
             production.put(g, 0);
@@ -72,7 +72,7 @@ public class Player implements Comparable<Player>{
         production.put(g, production.get(g) + 1);
     }
 
-    private void addPoints(int p) {
+    public void addPoints(int p) {
         points += p;
     }
 
@@ -108,6 +108,45 @@ public class Player implements Comparable<Player>{
             return this.getNumberOfCards() - p.getNumberOfCards();
         }
         return p.getPoints() - this.getPoints();
+    }
+
+    @Override
+    public String toString() {
+        String output = "{ Player [" + name +"]\n";
+        output +=       "   Points     : "+points+"\n";
+        output +=       "   Production : "+displayProduction();
+        output +=       "   NumberCards: "+getNumberOfCards()+"\n";
+        output +=       "   Nobles     : "+displayNobles();
+        output += " }";
+        return output;
+    }
+
+    public String displayProduction() {
+
+        String output = "\n";
+        for (Gem g : Gem.values()) {
+            output += "     "+ g +" = "+ production.get(g) + "\n";
+        }
+        return output;
+    }
+
+    public String displayNobles() {
+
+        if (ownedNobles.size() == 0) {
+            return "None";
+        }
+
+        String output = "";
+        int size = ownedNobles.size() - 1;
+        for (int idx = 0; idx < size ; idx++) {
+            NobleTile noble = ownedNobles.get(idx);
+            output += noble + ",";
+        }
+        output += ownedNobles.get(size);
+        return output;
+    }
+    public String getName() {
+        return name;
     }
 
 
