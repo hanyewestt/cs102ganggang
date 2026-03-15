@@ -48,6 +48,9 @@ public class Game {
         this.players = new ArrayList<>(playerNumber);
 
         setPlayerArray(playerNumber);
+        // set nobles?
+        // set bank?
+        // set market?
 
     }
 
