@@ -3,6 +3,7 @@ package app;
 import java.util.*;
 import item.*;
 import java.lang.*;
+import util.Utility;
 
 public class Game {
 
@@ -169,12 +170,27 @@ public class Game {
     }
 
     public static boolean reserveCard(Player p) {
+        // printBoard();
+
+        String rowMessage = "Enter row number of your chosen card (row.col)";
+        String colMessage = "Enter col number of your chosen card (row.col)";
+        int row = Utility.askForNum(sc, 3, rowMessage);
+        int col = Utility.askForNum(sc, 4, colMessage);
+
         // convert choice to corresponding card
-        // p.reserveCard(card)
-        // add gold if gold in market
+        Card card = market[row][col];
+        p.reserveCard(card);
+
         // add to player
+        // add gold if gold in bank
+        if (bank.get(Gem.Gold) > 0) {
+            p.addToken(Gem.Gold, 1);
+            bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
+        }
+        
         // remove from market
-        System.out.println("todo");
+        System.out.println("todo: remove from market");
+        
         return true;
     }
 
