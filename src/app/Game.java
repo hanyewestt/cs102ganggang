@@ -103,10 +103,10 @@ public class Game {
                         // display choices
                         NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
                         player.addNobleTile(noble);
-                        // remove from nobles
+                        nobles.remove(noble);
                     } else if (visitingNobles.size() == 1) {
                         player.addNobleTile(visitingNobles.get(0));
-                        // remove from nobles
+                        nobles.remove(visitingNobles.get(0));
                     }
                     break;
                 case 4:
@@ -144,8 +144,22 @@ public class Game {
     public static List<NobleTile> visitingNobles(Player p) {
         System.out.println("todo");
         List<NobleTile> result = new ArrayList<>();
-        // from nobles, check which ones hit the condition
-        // add a copy to result
+        HashMap<Gem, Integer> playerTokens = p.getTokens();
+
+        for (Noble n : nobles) {
+            boolean qualify = true;
+            HashMap< Gem, Integer> nobleTokens = n.getTokens();
+            for (Map.Entry<Gem, Integer> entry : nobleTokens.entrySet()) {
+                if (playerTokens.get(entry.getKey()) < entry.getValue()) {
+                    qualify = false;
+                    break;
+                }
+            }
+            if (qualify) {
+                result.add(n);
+            }
+
+        }
         return result;
     }
 
