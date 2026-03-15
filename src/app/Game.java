@@ -88,6 +88,8 @@ public class Game {
 
         boolean turnDone = false;
         while (!turnDone) {
+            // show board every turn? might affect the choice they make
+            // printBoard();
             turnOptionDisplay();
 
             switch (enterNumber(1, 4)) {
