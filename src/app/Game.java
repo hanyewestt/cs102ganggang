@@ -152,6 +152,10 @@ public class Game {
       
     }
 
+    /**
+     * Prints out the current state of the board, 
+     * Includes: the bank, nobile tiles, avaliable cards
+     */
     public static void printBoard() {
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf("Bank: ");
@@ -187,7 +191,7 @@ public class Game {
 
     }
 
-    public static void printAllPlayers(){
+    public static void printAllPlayers() {
 
     }
 
