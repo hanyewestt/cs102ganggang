@@ -155,7 +155,7 @@ public class Game {
     }
 
     public static boolean reserveCard(Player p) {
-        printBoard();
+        // printBoard();
 
         String rowMessage = "Enter row number of your chosen card (row.col)";
         String colMessage = "Enter col number of your chosen card (row.col)";
