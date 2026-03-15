@@ -146,7 +146,7 @@ public class Game {
         List<NobleTile> result = new ArrayList<>();
         HashMap<Gem, Integer> playerTokens = p.getTokens();
 
-        for (Noble n : nobles) {
+        for (NobleTile n : nobles) {
             boolean qualify = true;
             HashMap< Gem, Integer> nobleTokens = n.getTokens();
             for (Map.Entry<Gem, Integer> entry : nobleTokens.entrySet()) {
@@ -351,11 +351,17 @@ public class Game {
         }
         System.out.printf("------------------------------------------------------------------\n");
 
+        printNobles();
+
+        System.out.printf("------------------------------------------------------------------\n\n");
+    }
+
+    public static void printNobles() {
+
         System.out.printf("<NOBLE TILES>\n");
         for (int i = 0; i < nobles.size(); i++) {
             System.out.printf("%s\n", nobles.get(i).toString());
         }
-        System.out.printf("------------------------------------------------------------------\n\n");
     }
 
     // Overloaded printPlayer method 1
