@@ -116,8 +116,7 @@ public class Game {
     }
 
     public static boolean hitWinCondition(Player p) {
-        System.out.println("todo");
-        return true;
+        return p.getPoints() == 15;
     }
 
     public static List<Player> getWinner() {
