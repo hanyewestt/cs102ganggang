@@ -44,8 +44,8 @@ public class Deck<T> {
     /**
      * Shuffles the deck.
      */
-    public void shuffleDeck() {
-        Collections.shuffle(deck);
+    public void shuffleDeck(long seed) {
+        Collections.shuffle(deck, new Random(seed));
     }
 
     /**

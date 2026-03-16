@@ -26,4 +26,14 @@ public class NobleTile {
     public int getPoints() {
         return POINTS;
     }
+
+    public String toString() {
+        String output = "{ Noble []\n";
+        output += "    Cost: " + tokens + "\n";
+        output += "    Pts : " + POINTS + "\n";
+        output += "}\n";
+
+        return output;
+    }
+
 }
