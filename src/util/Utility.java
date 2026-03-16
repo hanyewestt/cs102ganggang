@@ -99,15 +99,16 @@ public class Utility {
     }
 
     /**
-     * Will prompt the user for an positive integer with a max number
+     * Will prompt the user for an positive integer with a min and max number
      * limitation. Keeps prompting until a valid input is given.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
+     * @param min The minimum integer allowed (includive).
      * @param max The maximum integer allowed (inclusive).
      * @param message The message to prompt for user input.
      * @return The integer that the user inputs.
      */
-    public static int askForNum(Scanner keyboard, int max, String message) {
+    public static int askForNum(Scanner keyboard, int min, int max, String message) {
         boolean isValid;
 
         do {
@@ -116,11 +117,11 @@ public class Utility {
             try {
                 int num = keyboard.nextInt();
 
-                if (num > 0 && num <= max) {
+                if (num >= min && num <= max) {
                     keyboard.nextLine();
                     return num;
                 } else {
-                    System.out.println("Out of bounds! Enter a number between 1 and " + max);
+                    System.out.println("Out of bounds! Enter a number between " + min + " and " + max);
                 }
             } catch (Exception e) {
                 System.out.println("Invalid format for a number! Try again!");
