@@ -62,7 +62,7 @@ public class Game {
         }
 
         for (int i = 0; i < 3; i++) {
-            decks.add(new Deck(Configuration.getDeck(i+1)));
+            decks.add(new Deck(Configuration.getDeck(i + 1)));
             decks.get(i).shuffleDeck(seed);
         }
 
@@ -202,9 +202,11 @@ public class Game {
 
     public static boolean reserveCard(Player p) {
 
+        
+
         int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
-        Card card = market[choice[0]][choice[1]];
+        Card card = market[choice[0] - 1][choice[1] - 1];
 
         boolean success = p.reserveCard(card);
         if (!success) {
@@ -216,10 +218,10 @@ public class Game {
         // add gold if gold in bank
         if (bank.get(Gem.Gold) > 0) {
             p.addToken(Gem.Gold, 1);
-            bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
+            bank.replace(Gem.Gold, bank.get(Gem.Gold) - 1);
         }
         // remove from market
-        System.out.println("todo: remove from market");
+        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
 
         return true;
     }
@@ -230,7 +232,7 @@ public class Game {
 
         int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
-        Card card = market[choice[0]][choice[1]];// p.buyCard(card, sc);
+        Card card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
 
         // I assume that if the card is not in market, value at that pos is null.
         if (card == null) {
@@ -238,13 +240,22 @@ public class Game {
             return false;
         }
 
+        Map<Gem, Integer> pBefore = p.getTokens();
+
         boolean success = p.buyCard(card, sc);
         if (!success) {
             System.out.println("error: unable to buy card");
             return false;
         }
+        Map<Gem, Integer> pAfter = p.getTokens();
+
+        for (Gem g : Gem.values()) {
+            int diff =  pBefore.get(g) - pAfter.get(g);
+            bank.replace(g, diff + bank.get(g));
+        }
+
         // remove from market
-        System.out.println("todo: remove from market");
+        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
 
         return true;
     }
@@ -276,7 +287,7 @@ public class Game {
                 }
 
                 for (Gem g : chosen) {
-                    bank.put(g, bank.get(g) - 1);
+                    bank.replace(g, bank.get(g) - 1);
                     currentPlayer.addToken(g, 1);
                 }
 
@@ -289,7 +300,7 @@ public class Game {
                     continue; // user cancelled 
                 }
 
-                bank.put(g, bank.get(g) - 2);
+                bank.replace(g, bank.get(g) - 2);
                 currentPlayer.addToken(g, 2);
 
                 validAction = true;
@@ -304,6 +315,8 @@ public class Game {
         }
 
         while (totalTokens > 10) {
+
+            currentPlayer.displayTokens();
             System.out.println("You have more than 10 tokens. Return 1 token:");
             String input = sc.nextLine();
 
@@ -312,7 +325,7 @@ public class Game {
 
                 if (currentPlayer.getTokens().get(g) > 0) {
                     currentPlayer.removeToken(g, 1);
-                    bank.put(g, bank.get(g) + 1);
+                    bank.replace(g, bank.get(g) + 1);
                     totalTokens--;
                 } else {
                     System.out.println("You don't have that token.");

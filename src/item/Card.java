@@ -35,13 +35,13 @@ public class Card {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[ ").append(GEMTYPE).append("| ");
-        sb.append(POINTS).append("| ");
+        sb.append("[ ").append(GEMTYPE).append(" | ");
+        sb.append(POINTS).append(" | ");
 
         Iterator tokenIterator = tokens.entrySet().iterator();
+        boolean first = true;
         while (tokenIterator.hasNext()) {
             Map.Entry entry = (Map.Entry) tokenIterator.next();
-            boolean first = true;
 
             if ((int) entry.getValue() > 0) {
                 if (first) {
@@ -52,7 +52,7 @@ public class Card {
                 }
             }
         }
-        sb.append("]");
+        sb.append(" ]");
 
         return sb.toString();
     }

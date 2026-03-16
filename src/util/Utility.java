@@ -135,8 +135,6 @@ public class Utility {
         return -1;
     }
 
-
-
     public static int[] getPositionOnBoard(Scanner sc) {
         final int ROW_MAX = 3;
         final int COL_MAX = 4;
@@ -154,10 +152,9 @@ public class Utility {
 
     }
 
-    /** 
-     * Converts a Gem to a char
-     * Returns X if Gem is invalid. 
-     * 
+    /**
+     * Converts a Gem to a char Returns X if Gem is invalid.
+     *
      * @param Gem The Gem to be read.
      * @return The char representing that Gem.
      */
@@ -180,15 +177,13 @@ public class Utility {
         }
     }
 
-    /** 
-     * Converts a char to a Gem.
-     * Returns null if char is invalid.
-     * 
+    /**
+     * Converts a char to a Gem. Returns null if char is invalid.
+     *
      * @param character The char to be read.
      * @return The Gem represented by that char.
      */
-    
-    private static Gem fromCharToGem(char character) {
+    public static Gem fromCharToGem(char character) {
         switch (character) {
             case 'D':
                 return Gem.Diamond;
@@ -205,5 +200,4 @@ public class Utility {
         }
     }
 
-    
 }

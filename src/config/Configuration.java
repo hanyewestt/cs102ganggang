@@ -3,6 +3,7 @@ package config;
 import item.*;
 import java.io.*;
 import java.util.*;
+import util.Utility;
 
 public class Configuration {
 
@@ -199,7 +200,7 @@ public class Configuration {
         sc.useDelimiter(",|\r\n|\n");
 
         while (sc.hasNext()) {
-            deck.addToDeck(new Card(fromCharToGem(sc.next().charAt(0)), sc.nextInt(), sc.nextInt(),
+            deck.addToDeck(new Card(Utility.fromCharToGem(sc.next().charAt(0)), sc.nextInt(), sc.nextInt(),
                     sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt()));
         }
     }
@@ -218,13 +219,13 @@ public class Configuration {
 
             switch (nobleTileGems.length) {
                 case 2:
-                    nobleTiles.addToDeck(new NobleTile(fromCharToGem(nobleTileGems[0].charAt(0)),
-                            fromCharToGem(nobleTileGems[1].charAt(0))));
+                    nobleTiles.addToDeck(new NobleTile(Utility.fromCharToGem(nobleTileGems[0].charAt(0)),
+                            Utility.fromCharToGem(nobleTileGems[1].charAt(0))));
                     break;
                 case 3:
-                    nobleTiles.addToDeck(new NobleTile(fromCharToGem(nobleTileGems[0].charAt(0)),
-                            fromCharToGem(nobleTileGems[1].charAt(0)),
-                            fromCharToGem(nobleTileGems[2].charAt(0))));
+                    nobleTiles.addToDeck(new NobleTile(Utility.fromCharToGem(nobleTileGems[0].charAt(0)),
+                            Utility.fromCharToGem(nobleTileGems[1].charAt(0)),
+                            Utility.fromCharToGem(nobleTileGems[2].charAt(0))));
                     break;
             }
         }
