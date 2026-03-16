@@ -83,13 +83,8 @@ public class Player implements Comparable<Player> {
         addProduction(c.getGEMTYPE());
     }
 
-    public boolean reserveCard(Card c) {
-        if (getReserveHandSize() == MAX_RESERVE_HAND_SIZE) {
-            return false;
-        }
+    public void reserveCard(Card c) {
         reserveCards.add(c);
-
-        return true;
     }
 
     public boolean buyCard(Card c, Scanner keyboard) {
@@ -256,6 +251,19 @@ public class Player implements Comparable<Player> {
 
     @Override
     public String toString() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.printf("Player Name: %s\n", name);
+        System.out.printf("Player Number: %d\n", 0);
+        System.out.printf("Gems: ");
+        displayTokens();
+        System.out.println("Reserved: ");
+        System.out.printf("* to add");
+        // displayReserved();
+        System.out.print("Produces: ");
+        displayProduction();
+        System.out.printf("Prestige: %d\n", points);
+        System.out.printf("------------------------------------------------------------------\n\n");
+
         String output = "{ Player [" + name + "]\n";
         output += "   Points     : " + points + "\n";
         output += "   Production : " + displayProduction();

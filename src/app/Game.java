@@ -124,7 +124,7 @@ public class Game {
             printBoard();
             turnOptionDisplay();
 
-            switch (enterNumber(1, 4)) {
+            switch (enterNumber(1, 5)) {
                 case 1:
                     turnDone = drawToken(player);
                     break;
@@ -147,7 +147,10 @@ public class Game {
                         nobles.remove(visitingNobles.get(0));
                     }
                     break;
+                case 5:
+                    System.out.println("admin eprms");
                 case 4:
+
                 //skip turn????
             }
         }
@@ -202,28 +205,62 @@ public class Game {
 
     public static boolean reserveCard(Player p) {
 
-        
-
-        int[] choice = Utility.getPositionOnBoard(sc);
-        // convert choice to corresponding card
-        Card card = market[choice[0] - 1][choice[1] - 1];
-
-        boolean success = p.reserveCard(card);
-        if (!success) {
-            System.out.println("error: unable to reserve Card. Hand Limit reached");
+        if (p.getReserveHandSize() == 3) {
+            System.out.println("Your hand size is full.");
             return false;
         }
 
-        // add to player
-        // add gold if gold in bank
-        if (bank.get(Gem.Gold) > 0) {
-            p.addToken(Gem.Gold, 1);
-            bank.replace(Gem.Gold, bank.get(Gem.Gold) - 1);
+        boolean validAction = false;
+
+        while (!validAction) {
+            System.out.println("Choose option: ");
+            System.out.println("1. Reserve from market");
+            System.out.println("2. Reserve from deck");
+            System.out.println("0. Cancel");
+
+            int choice = enterNumber(0, 2);
+
+            if (choice == 0) {
+                return false;
+            }
+
+            if (choice == 1) {
+                int[] choice2 = Utility.getPositionOnBoard(sc);
+                // convert choice to corresponding card
+                Card card = market[choice2[0] - 1][choice2[1] - 1];
+
+                if (card == null) {
+                    System.out.println("Market is empty");
+                    continue;
+                }
+
+                // remove from market
+                market[choice2[0] - 1][choice2[1] - 1] = decks.get(choice2[0] - 1).draw();
+
+            }
+
+            if (choice == 2) {
+                System.out.print("Enter deck no. (1, 2, 3): ");
+                int choice2 = enterNumber(1, 3);
+                Card card = decks.get(choice2 - 1).draw();
+                if (card == null) {
+                    System.out.println("Deck is empty");
+                    continue;
+                }
+
+            }
+            // add to player
+            // add gold if gold in bank
+            if (bank.get(Gem.Gold) > 0) {
+                p.addToken(Gem.Gold, 1);
+                bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
+            }
+            validAction = true;
+            
         }
-        // remove from market
-        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
 
         return true;
+
     }
 
     public static boolean buyCard(Player p) {
@@ -250,7 +287,7 @@ public class Game {
         Map<Gem, Integer> pAfter = p.getTokens();
 
         for (Gem g : Gem.values()) {
-            int diff =  pBefore.get(g) - pAfter.get(g);
+            int diff = pBefore.get(g) - pAfter.get(g);
             bank.replace(g, diff + bank.get(g));
         }
 
@@ -410,6 +447,7 @@ public class Game {
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
         System.out.println("3. buy a card");
+        System.out.println("5. admin perms");
         System.out.println();
         System.out.print("Please enter your choice:");
     }
@@ -424,6 +462,8 @@ public class Game {
         System.out.printf(bank.get(Gem.Onyx) + "O , ");
         System.out.printf(bank.get(Gem.Gold) + "G\n");
 
+        System.out.println("Example Card");
+        System.out.println("[Gem Produced | Prestige | Card Cost]");
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
