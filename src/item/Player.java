@@ -69,8 +69,12 @@ public class Player implements Comparable<Player> {
         tokens.put(g, tokens.get(g) - amt);
     }
 
+    public void addProduction(Gem g, int amt) {
+        production.put(g, production.get(g) + amt);
+    }
+
     public void addProduction(Gem g) {
-        production.put(g, production.get(g) + 1);
+        this.addProduction(g, 1);
     }
 
     public void addPoints(int p) {

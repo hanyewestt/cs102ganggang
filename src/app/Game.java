@@ -148,7 +148,10 @@ public class Game {
                     }
                     break;
                 case 5:
-                    System.out.println("admin eprms");
+                    int idx = players.indexOf(player);
+                    player = adminPerms(player);
+                    players.set(idx, player);
+                    break;
                 case 4:
 
                 //skip turn????
@@ -256,7 +259,7 @@ public class Game {
                 bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
             }
             validAction = true;
-            
+
         }
 
         return true;
@@ -443,10 +446,65 @@ public class Game {
         }
     }
 
+
+    /**
+     * Admin Permissions
+     * Allows user to set token, set production, set points
+     * @param p the current player
+     */
+    public static Player adminPerms(Player p) {
+        boolean finishAction = false;
+        while (!finishAction) {
+            if (p instanceof Admin a) {
+                System.out.println("1. Set Token");
+                System.out.println("2. Set Production");
+                System.out.println("3. Set Points");
+                System.out.println("0. Quit this page");
+
+                int choice = Utility.askForNum(sc, 0, 3, "Enter your choice: ");
+
+                Gem g = null;
+                int amt = 0;
+                switch (choice) {
+                    case 0:
+                        finishAction = true;
+                        break;
+                    case 1:
+                        g = Utility.askForGem(sc, "Enter Gem type. Must be spelt: ");
+                        amt = Utility.askForNum(sc, 0, Integer.MAX_VALUE, "Enter amount: ");
+                        a.setToken(g, amt);
+                        break;
+                    case 2:
+                        g = Utility.askForGem(sc, "Enter Gem type. Must be spelt: ");
+                        amt = Utility.askForNum(sc, 0, Integer.MAX_VALUE, "Enter amount: ");
+                        a.setProduction(g, amt);
+                        break;
+                    case 3:
+                        amt = Utility.askForNum(sc, 0, Integer.MAX_VALUE, "Enter amount: ");
+                        a.setPoints(amt);
+                        break;
+                }
+                System.out.println(a);
+
+            } else {
+                System.out.println("1. Make player into admin");
+                System.out.println("0. Quit this page");
+                int choice = Utility.askForNum(sc, 0, 1, "Enter your choice: ");
+                if (choice == 0) {
+                    break;
+                }
+
+                p = new Admin(p);
+                System.out.println("Player is now admin");
+            }
+        }
+        return p;
+    }
+
     public static void turnOptionDisplay() {
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
-        System.out.println("3. buy a card");
+        System.out.println("3. Buy a card");
         System.out.println("5. admin perms");
         System.out.println();
         System.out.print("Please enter your choice:");
