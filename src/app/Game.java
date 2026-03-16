@@ -49,14 +49,12 @@ public class Game {
         this.players = new ArrayList<>(playerNumber);
         setPlayerArray(playerNumber);
 
-
         System.out.println("todo: load config");
         // Configuration.load(); ?
         // set nobles?
         // set bank?
         // set market?
 
-        
         // code below for testing purposes.
         // --------------------- { start } ---------------------
         // nobles = new ArrayList<>(playerNumber + 1);
@@ -75,14 +73,11 @@ public class Game {
         //     decks[i].addToDeck(sapphireCard);
         //     decks[i].addToDeck(emeraldCard);
         //     decks[i].addToDeck(onyxCard);
-
         //     for (int j = 0; j < 4; j++) {
         //         market[i][j] = diamondCard;
         //     }
-
         // }
         // --------------------- { end } ---------------------
-
     }
 
     public static void setPlayerArray(int playerNumber) {
@@ -200,14 +195,14 @@ public class Game {
     }
 
     public static boolean reserveCard(Player p) {
-        // printBoard();
 
         int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
         Card card = market[choice[0]][choice[1]];
+
         boolean success = p.reserveCard(card);
         if (!success) {
-            System.out.println("error: unable to reserce Card. Hand Limit reached");
+            System.out.println("error: unable to reserve Card. Hand Limit reached");
             return false;
         }
 
@@ -224,9 +219,18 @@ public class Game {
     }
 
     public static boolean buyCard(Player p) {
+
+        System.out.println("todo: buy from reserve");
+
         int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
         Card card = market[choice[0]][choice[1]];// p.buyCard(card, sc);
+
+        // I assume that if the card is not in market, value at that pos is null.
+        if (card == null) {
+            System.out.println("error: card does not exist in market");
+            return false;
+        }
 
         boolean success = p.buyCard(card, sc);
         if (!success) {
