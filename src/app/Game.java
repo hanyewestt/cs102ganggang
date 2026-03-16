@@ -373,6 +373,10 @@ public class Game {
         System.out.print("Please enter your choice:");
     }
 
+    /**
+     * Displays the current board
+     * Includes: Avaliable cards, Bank, Nobile Tiles
+     */
     public static void printBoard() {
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf("Bank: ");
@@ -383,6 +387,8 @@ public class Game {
         System.out.printf(bank.get(Gem.Onyx) + "O , ");
         System.out.printf(bank.get(Gem.Gold) + "G\n");
 
+        System.out.println("Example Card");
+        System.out.println("[Gem Produced | Prestige | Card Cost]");
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
