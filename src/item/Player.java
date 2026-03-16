@@ -144,7 +144,7 @@ public class Player implements Comparable<Player> {
                 } else {
                     int goldToSpend = Math.min(tokensLeft.get(Gem.Gold), Utility.getTotalGems(discountCardCost));
                     String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
-                    int spentGold = Utility.askForNum(keyboard, goldToSpend, goldPrompt);
+                    int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
 
                     if (spentGold == Utility.getTotalGems(discountCardCost)) {
                         removeToken(Gem.Gold, spentGold);
@@ -200,7 +200,7 @@ public class Player implements Comparable<Player> {
             }
 
             String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
-            int spentGold = Utility.askForNum(keyboard, goldToSpend, goldPrompt);
+            int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
 
             if (spentGold + necessaryGold == Utility.getTotalGems(discountCardCost)) {
                 removeToken(Gem.Gold, spentGold + necessaryGold);

@@ -135,14 +135,16 @@ public class Utility {
         return -1;
     }
 
+
+
     public static int[] getPositionOnBoard(Scanner sc) {
         final int ROW_MAX = 3;
         final int COL_MAX = 4;
 
         String rowMessage = "Enter row number of your chosen card (row.col)";
         String colMessage = "Enter col number of your chosen card (row.col)";
-        int row = askForNum(sc, 3, rowMessage);
-        int col = askForNum(sc, 4, colMessage);
+        int row = askForNum(sc, 1, 3, rowMessage);
+        int col = askForNum(sc, 1, 4, colMessage);
 
         int[] result = new int[2];
         result[0] = row;
@@ -151,4 +153,57 @@ public class Utility {
         return result;
 
     }
+
+    /** 
+     * Converts a Gem to a char
+     * Returns X if Gem is invalid. 
+     * 
+     * @param Gem The Gem to be read.
+     * @return The char representing that Gem.
+     */
+    public static char fromGemToChar(Gem gem) {
+        switch (gem) {
+            case Diamond:
+                return 'D';
+            case Ruby:
+                return 'R';
+            case Sapphire:
+                return 'S';
+            case Emerald:
+                return 'E';
+            case Onyx:
+                return 'O';
+            case Gold:
+                return 'G';
+            default:
+                return 'X';
+        }
+    }
+
+    /** 
+     * Converts a char to a Gem.
+     * Returns null if char is invalid.
+     * 
+     * @param character The char to be read.
+     * @return The Gem represented by that char.
+     */
+    
+    private static Gem fromCharToGem(char character) {
+        switch (character) {
+            case 'D':
+                return Gem.Diamond;
+            case 'R':
+                return Gem.Ruby;
+            case 'S':
+                return Gem.Sapphire;
+            case 'E':
+                return Gem.Emerald;
+            case 'O':
+                return Gem.Onyx;
+            default:
+                return null;
+        }
+    }
+
+    
 }

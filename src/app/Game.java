@@ -62,7 +62,7 @@ public class Game {
         }
 
         for (int i = 0; i < 3; i++) {
-            decks.add(new Deck(Configuration.getDeck(i)));
+            decks.add(new Deck(Configuration.getDeck(i+1)));
             decks.get(i).shuffleDeck(seed);
         }
 
