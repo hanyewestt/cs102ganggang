@@ -16,6 +16,8 @@ public class Configuration {
 
     private static Deck<NobleTile> nobleTiles = new Deck<NobleTile>();
 
+    private static boolean hasDataBeenLoaded = false;
+
     /**
      * Getter to retrieve how many points a noble tile is worth.
      * 
@@ -83,6 +85,10 @@ public class Configuration {
      * This method MUST be called only once before using any of the above getters.
      */
     public static void load() {
+        if (hasDataBeenLoaded) {
+            return; 
+        }
+
         Scanner numLoader = null;
         Scanner deck1Loader = null;
         Scanner deck2Loader = null;
@@ -136,6 +142,8 @@ public class Configuration {
         } finally {
             closeScanners(scanners);
         }
+
+        hasDataBeenLoaded = true;
     }
 
     /**
