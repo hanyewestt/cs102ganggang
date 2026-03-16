@@ -11,11 +11,39 @@ public class Game {
     private static int playerNumber;
     private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
-    private static Deck<Card>[] decks = new Deck<Card>[3];
+    private static ArrayList<Deck<Card>> decks = new ArrayList<>();
     private static Card[][] market = new Card[3][4];
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
     private static long seed;
+
+    public static void main(String[] args) {
+
+        System.out.print("Enter number of players (between 2 and 4): ");
+        int playerNumber = enterNumber(2, 4);
+
+        Game game = new Game(playerNumber);
+
+        boolean lastRound = false;
+        int roundNumber = 1;
+        while (!lastRound) {
+            System.out.println("\n---------- Round " + roundNumber + " ----------");
+            for (int i = 0; i < playerNumber; i++) {
+                System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
+                System.out.println(players.get(i));
+                doPlayerTurn(players.get(i));
+                lastRound = hitWinCondition(players.get(i));
+            }
+            roundNumber++;
+            // clear terminal
+        }
+        List<Player> winningPlayers = getWinner();
+        for (int i = 0; i < winningPlayers.size(); i++) {
+            System.out.println(winningPlayers.get(i).getName());
+        }
+        sc.close();
+
+    }
 
     public Game(int playerNumber) {
         this(playerNumber, (new Random()).nextLong());
@@ -23,7 +51,7 @@ public class Game {
 
     public Game(int playerNumber, long seed) {
         Configuration.load();
-        
+
         this.playerNumber = playerNumber;
         this.seed = seed;
         players = new ArrayList<>(playerNumber);
@@ -34,13 +62,13 @@ public class Game {
         }
 
         for (int i = 0; i < 3; i++) {
-            decks[i] = Configuration.getDeck(i);
-            decks[i].shuffleDeck(seed);
+            decks.add(new Deck(Configuration.getDeck(i)));
+            decks.get(i).shuffleDeck(seed);
         }
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
-                market[i][j] = decks[i].draw();
+                market[i][j] = decks.get(i).draw();
             }
         }
 
