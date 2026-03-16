@@ -21,7 +21,7 @@ public class Game {
      * Entry point of the game program. 
      * Prompts the user to enter the number of players, creates a new Game instance,
      * and conducts rounds until win condition is reached. 
-     * Once the game ends, it retrieves the winners using <code>getWinner()</code>
+     * Once the game ends, it retrieves the winners using {@link getWinner()}
      * and prints out the winning players.
      *
      * @param args 
@@ -102,7 +102,7 @@ public class Game {
 
     /**
      * Initializes the player array by prompting each player to enter their name
-     * and creating a corresponding <code>Player</code> for each entry.
+     * and creating a corresponding {@link Player} for each entry.
      *
      * @param playerNumber the total number of players participating in the game
      */
@@ -122,7 +122,7 @@ public class Game {
      * The player is repeatedly prompted to enter a choice until a valid
      * action is performed.
      *
-     * @param player the <code>Player</code> whose turn is being executed
+     * @param player the {@link Player} whose turn is being executed
      */
 
     public static void doPlayerTurn(Player player) {
@@ -170,7 +170,7 @@ public class Game {
      * Checks whether the player has met the win condition.
      * The win condition is reached when the player's points total is 15.
      *
-     * @param p the <code>Player</code> being checked
+     * @param p the {@link Player} being checked
      * @return true if the player has reached the win condition, false otherwise
      */
     public static boolean hitWinCondition(Player p) {
@@ -200,10 +200,10 @@ public class Game {
     }
 
     /**
-     * Determines which <code>NobleTile</code> are visiting the specified player.
+     * Determines which {@link NobleTile} are visiting the specified player.
      * 
-     * @param p the <code>Player</code> being checked
-     * @return a list of <code>NobleTile</code> that are visiting the player
+     * @param p the {@link Player} being checked
+     * @return a list of {@link NobleTile} that are visiting the player
      */
     public static List<NobleTile> visitingNobles(Player p) {
         List<NobleTile> result = new ArrayList<>();
@@ -227,10 +227,10 @@ public class Game {
     }
 
     /**
-     * Performs the reserve card action. The player selects a card to reserve,
+     * Performs the reserve card action. The {@link Player} selects a card to reserve,
      * and receives 1 gold if the bank has gold available.
      * 
-     * @param p the <code>Player</code> performing the action
+     * @param p the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
     public static boolean reserveCard(Player p) {
@@ -258,10 +258,10 @@ public class Game {
     }
 
     /**
-     * Performs the buy card action. The player selects a card to buy,
+     * Performs the buy card action. The {@link Player} selects a card to buy,
      * and the player's tokens and the bank are updated accordingly.
      * 
-     * @param p the <code>Player</code> performing the action
+     * @param p the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
     public static boolean buyCard(Player p) {
@@ -290,11 +290,11 @@ public class Game {
     }
 
     /**
-     * Performs the draw token action. The player may choose to take 2 tokens of the same type, 3 tokens of different types, or cancel action.
-     * If the player has more than 10 tokens, prompts the user to return excess
-     * The player's tokens and the bank are updated accordingly.
+     * Performs the draw token action. The {@link Player} may choose to take 2 tokens of the same type, 3 tokens of different types, or cancel action.
+     * If the {@link Player} has more than 10 tokens, prompts the user to return excess
+     * The {@link Player}'s tokens and the bank are updated accordingly.
      * 
-     * @param p the <code>Player</code> performing the action
+     * @param p the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
     public static boolean drawToken(Player currentPlayer) {
@@ -378,7 +378,7 @@ public class Game {
      * Prompts the player to select three tokens of different types,
      * ensuring that the selected tokens are available in the bank.
      *
-     * @return a set of <code>Gem</code> selected by the player
+     * @return a set of {@link Gem} selected by the player
     */
     private static Set<Gem> pickThreeDifferentGems() {
         Set<Gem> chosen = new HashSet<>();
@@ -423,7 +423,7 @@ public class Game {
      * Ensures that the selected token type is available in the bank
      * (at least four tokens must be present).
      *
-     * @return the <code>Gem</code> selected by the player
+     * @return the {@link Gem} selected by the player
     */
     private static Gem pickTwoSameGem() {
         while (true) {
@@ -481,7 +481,7 @@ public class Game {
     }
 
     /**
-     * Prints noble tiles.
+     * Prints {@link NobleTile}s on the board.
      */
     public static void printNobles() {
 
