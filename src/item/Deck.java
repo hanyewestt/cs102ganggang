@@ -8,17 +8,44 @@ public class Deck<T> {
 
     /**
      * Constructor that makes an empty deck.
-     *
      */
     public Deck() {
         deck = new ArrayList<T>();
     }
 
     /**
+     * Constructor that takes in a previously constructed deck.
+     * Returns a deep copy of the given deck.
+     * If passed a null reference, constructs an empty deck.
+     * 
+     * @param orig The deck to be copied.
+     */
+    public Deck(Deck<T> orig) {
+        this();
+        if (orig == null) {
+            return;
+        }
+        
+        for (T object : orig.getDeck()) {
+            deck.add(object);
+        }
+    }
+
+    /**
+     * Getter to retrieve the ArrayList of the deck.
+     * 
+     * @return The ArrayList that represents the deck.
+     */
+
+    public ArrayList<T> getDeck() {
+        return deck;
+    }
+
+    /**
      * Shuffles the deck.
      */
-    public void shuffleDeck() {
-        Collections.shuffle(deck);
+    public void shuffleDeck(long seed) {
+        Collections.shuffle(deck, new Random(seed));
     }
 
     /**

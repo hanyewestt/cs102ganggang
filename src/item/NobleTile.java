@@ -1,26 +1,39 @@
 package item;
 
 import java.util.*;
+import util.Utility;
 
 public class NobleTile {
 
-    private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
+    private HashMap<Gem, Integer> tokens = Utility.generateEmptyHashmap();
     private static final int POINTS = 3;
 
-    public NobleTile(Gem gem, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
-        tokens.put(Gem.Diamond, Diamond);
-        tokens.put(Gem.Ruby, Ruby);
-        tokens.put(Gem.Sapphire, Sapphire);
-        tokens.put(Gem.Emerald, Emerald);
-        tokens.put(Gem.Onyx, Onyx);
-        tokens.put(Gem.Gold, 0);
+    public NobleTile(Gem gem1, Gem gem2, Gem gem3) {
+        tokens.replace(gem1, 3);
+        tokens.replace(gem2, 3);
+        tokens.replace(gem3, 3);
+    }
+
+    public NobleTile(Gem gem1, Gem gem2) {
+        tokens.replace(gem1, 4);
+        tokens.replace(gem2, 4);
     }
 
     public HashMap<Gem, Integer> getTokens() {
-        return this.tokens;
+        return tokens;
     }
 
     public int getPoints() {
-        return this.POINTS;
+        return POINTS;
     }
+
+    public String toString() {
+        String output = "{ Noble []\n";
+        output += "    Cost: " + tokens + "\n";
+        output += "    Pts : " + POINTS + "\n";
+        output += "}\n";
+
+        return output;
+    }
+
 }

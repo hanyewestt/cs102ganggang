@@ -1,0 +1,10 @@
+# Noble Tile Points
+3
+
+# Points to Win
+15
+
+# No of Starting Gems (In Increasing Player No Order)
+4
+5
+7
