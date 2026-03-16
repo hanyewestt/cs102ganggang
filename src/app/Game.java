@@ -9,75 +9,53 @@ import config.*;
 public class Game {
 
     private static int playerNumber;
-    private static List<Player> players = new ArrayList<>();
+    private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
-    private static Deck[] decks = new Deck[3];
+    private static Deck<Card>[] decks = new Deck<Card>[3];
     private static Card[][] market = new Card[3][4];
-    private static List<NobleTile> nobles;
-    private static Scanner sc = new Scanner(System.in);
-
-    public static void main(String[] args) {
-
-        // Commented out for debug, uncomment when done
-        // --------------------- { start } ---------------------
-        System.out.print("Enter number of players (between 2 and 4): ");
-        int playerNumber = enterNumber(2, 4);
-        Game game = new Game(playerNumber);
-        boolean lastRound = false;
-        int roundNumber = 1;
-        while (!lastRound) {
-            System.out.println("\n---------- Round " + roundNumber + " ----------");
-            for (int i = 0; i < playerNumber; i++) {
-                System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
-                System.out.println(players.get(i));
-                doPlayerTurn(players.get(i));
-                lastRound = hitWinCondition(players.get(i));
-            }
-            roundNumber++;
-            // clear terminal
-        }
-        List<Player> winningPlayers = getWinner();
-        for (int i = 0; i < winningPlayers.size(); i++) {
-            System.out.println(winningPlayers.get(i).getName());
-        }
-        sc.close();
-        // --------------------- { end } ---------------------
-    }
+    private static ArrayList<NobleTile> nobles;
+    private static Scanner sc = new Scanner(System.in); // can like that??
+    private static long seed;
 
     public Game(int playerNumber) {
+        this(playerNumber, (new Random()).nextLong());
+    }
+
+    public Game(int playerNumber, long seed) {
+        Configuration.load();
+        
         this.playerNumber = playerNumber;
-        this.players = new ArrayList<>(playerNumber);
+        this.seed = seed;
+        players = new ArrayList<>(playerNumber);
+
+        int startingGems = Configuration.getStartingGems(playerNumber);
+        for (Gem gem : Gem.values()) {
+            bank.put(gem, startingGems);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            decks[i] = Configuration.getDeck(i);
+            decks[i].shuffleDeck(seed);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                market[i][j] = decks[i].draw();
+            }
+        }
+
+        nobles = new ArrayList<NobleTile>(playerNumber + 1);
+        Deck<NobleTile> nobleTileDeck = Configuration.getNobleTiles();
+        nobleTileDeck.shuffleDeck(seed);
+        for (int i = 0; i < playerNumber + 1; i++) {
+            nobles.add(nobleTileDeck.draw());
+        }
+
         setPlayerArray(playerNumber);
+    }
 
-        System.out.println("todo: load config");
-        // Configuration.load(); ?
-        // set nobles?
-        // set bank?
-        // set market?
-
-        // code below for testing purposes.
-        // --------------------- { start } ---------------------
-        // nobles = new ArrayList<>(playerNumber + 1);
-        // for (Gem g : Gem.values()) {
-        //     bank.put(g, 5);
-        // }
-        // for (int i = 0; i < decks.length; i++) {
-        //     decks[i] = new Deck();
-        //     Card diamondCard = new Card(Gem.Diamond, i, 1 + i, 0, 0, 0, 0);
-        //     Card rubyCard = new Card(Gem.Ruby, i, 1 + i, 0, 0, 0, 0);
-        //     Card sapphireCard = new Card(Gem.Sapphire, i, 1 + i, 0, 0, 0, 0);
-        //     Card emeraldCard = new Card(Gem.Emerald, i, 1 + i, 0, 0, 0, 0);
-        //     Card onyxCard = new Card(Gem.Onyx, i, 1 + i, 0, 0, 0, 0);
-        //     decks[i].addToDeck(diamondCard);
-        //     decks[i].addToDeck(rubyCard);
-        //     decks[i].addToDeck(sapphireCard);
-        //     decks[i].addToDeck(emeraldCard);
-        //     decks[i].addToDeck(onyxCard);
-        //     for (int j = 0; j < 4; j++) {
-        //         market[i][j] = diamondCard;
-        //     }
-        // }
-        // --------------------- { end } ---------------------
+    public long getSeed() {
+        return seed;
     }
 
     public static void setPlayerArray(int playerNumber) {
