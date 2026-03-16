@@ -1,9 +1,10 @@
 package app;
 
 import java.util.*;
-import item.*;
 import java.lang.*;
-import util.Utility;
+import item.*;
+import util.*;
+import config.*;
 
 public class Game {
 
@@ -17,11 +18,11 @@ public class Game {
 
     public static void main(String[] args) {
 
+        // Commented out for debug, uncomment when done
+        // --------------------- { start } ---------------------
         System.out.print("Enter number of players (between 2 and 4): ");
         int playerNumber = enterNumber(2, 4);
-
         Game game = new Game(playerNumber);
-
         boolean lastRound = false;
         int roundNumber = 1;
         while (!lastRound) {
@@ -40,18 +41,47 @@ public class Game {
             System.out.println(winningPlayers.get(i).getName());
         }
         sc.close();
-
+        // --------------------- { end } ---------------------
     }
 
     public Game(int playerNumber) {
         this.playerNumber = playerNumber;
-        this.nobles = new ArrayList<NobleTile>(playerNumber + 1);
         this.players = new ArrayList<>(playerNumber);
-
         setPlayerArray(playerNumber);
+
+
+        System.out.println("todo: load config");
+        // Configuration.load(); ?
         // set nobles?
         // set bank?
         // set market?
+
+        
+        // code below for testing purposes.
+        // --------------------- { start } ---------------------
+        // nobles = new ArrayList<>(playerNumber + 1);
+        // for (Gem g : Gem.values()) {
+        //     bank.put(g, 5);
+        // }
+        // for (int i = 0; i < decks.length; i++) {
+        //     decks[i] = new Deck();
+        //     Card diamondCard = new Card(Gem.Diamond, i, 1 + i, 0, 0, 0, 0);
+        //     Card rubyCard = new Card(Gem.Ruby, i, 1 + i, 0, 0, 0, 0);
+        //     Card sapphireCard = new Card(Gem.Sapphire, i, 1 + i, 0, 0, 0, 0);
+        //     Card emeraldCard = new Card(Gem.Emerald, i, 1 + i, 0, 0, 0, 0);
+        //     Card onyxCard = new Card(Gem.Onyx, i, 1 + i, 0, 0, 0, 0);
+        //     decks[i].addToDeck(diamondCard);
+        //     decks[i].addToDeck(rubyCard);
+        //     decks[i].addToDeck(sapphireCard);
+        //     decks[i].addToDeck(emeraldCard);
+        //     decks[i].addToDeck(onyxCard);
+
+        //     for (int j = 0; j < 4; j++) {
+        //         market[i][j] = diamondCard;
+        //     }
+
+        // }
+        // --------------------- { end } ---------------------
 
     }
 
@@ -90,7 +120,7 @@ public class Game {
         boolean turnDone = false;
         while (!turnDone) {
             // show board every turn? might affect the choice they make
-            // printBoard();
+            printBoard();
             turnOptionDisplay();
 
             switch (enterNumber(1, 4)) {
@@ -149,7 +179,6 @@ public class Game {
     }
 
     public static List<NobleTile> visitingNobles(Player p) {
-        System.out.println("todo");
         List<NobleTile> result = new ArrayList<>();
         HashMap<Gem, Integer> playerTokens = p.getTokens();
 
@@ -375,7 +404,7 @@ public class Game {
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
-                System.out.printf("%d.%d %s\n", i, j, market[i][j].toString());
+                System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
             }
         }
         System.out.printf("------------------------------------------------------------------\n");
@@ -389,7 +418,7 @@ public class Game {
 
         System.out.printf("<NOBLE TILES>\n");
         for (int i = 0; i < nobles.size(); i++) {
-            System.out.printf("%s\n", nobles.get(i).toString());
+            System.out.printf("%s\n", nobles.get(i));
         }
     }
 
