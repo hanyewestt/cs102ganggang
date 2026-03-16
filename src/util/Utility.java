@@ -134,6 +134,23 @@ public class Utility {
         return -1;
     }
 
+    public static int[] getPositionOnBoard(Scanner sc) {
+        final int ROW_MAX = 3;
+        final int COL_MAX = 4;
+
+        String rowMessage = "Enter row number of your chosen card (row.col)";
+        String colMessage = "Enter col number of your chosen card (row.col)";
+        int row = askForNum(sc, 3, rowMessage);
+        int col = askForNum(sc, 4, colMessage);
+
+        int[] result = new int[2];
+        result[0] = row;
+        result[1] = col;
+
+        return result;
+
+    }
+
     /**
      * Converts a Gem to a char
      * Returns X if Gem is invalid. 
