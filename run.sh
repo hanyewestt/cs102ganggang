@@ -1,1 +1,1 @@
-java -cp classes Test
+java -cp classes app.Game
