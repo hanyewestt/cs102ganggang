@@ -259,8 +259,9 @@ public class Player implements Comparable<Player> {
         String output = "{ Player [" + name + "]\n";
         output += "   Points     : " + points + "\n";
         output += "   Production : " + displayProduction();
-        output += "   NumberCards: " + getNumberOfCards() + "\n";
-        output += "   Nobles     : " + displayNobles();
+        // output += "   NumberCards: " + getNumberOfCards() + "\n";
+        output += "   Nobles     : " + displayNobles() + "\n";
+        output += "   Tokens     : " + displayTokens();
         output += " }";
         return output;
     }
@@ -287,11 +288,20 @@ public class Player implements Comparable<Player> {
             output += noble + ",";
         }
         output += ownedNobles.get(size);
+        output += "\n";
         return output;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String displayTokens() {
+        String output = "\n";
+        for (Gem g : Gem.values()) {
+            output += "     " + g + " = " + tokens.get(g) + "\n";
+        }
+        return output;
     }
 
 }
