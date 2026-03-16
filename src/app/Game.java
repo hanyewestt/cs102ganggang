@@ -10,7 +10,7 @@ public class Game {
     private static int playerNumber;
     private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
-    private static Deck<Card>[] decks = new Deck[3];
+    private static Deck<Card>[] decks = new Deck<Card>[3];
     private static Card[][] market = new Card[3][4];
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
