@@ -107,6 +107,7 @@ public class Game {
                         System.out.print("Please select a noble: ");
                         int choice = enterNumber(1, visitingNobles.size());
                         // display choices
+                        System.out.println("todo: display visiting nobles");
                         NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
                         player.addNobleTile(noble);
                         nobles.remove(noble);
