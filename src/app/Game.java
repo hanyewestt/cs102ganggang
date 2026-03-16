@@ -239,6 +239,8 @@ public class Game {
 
                 // remove from market
                 market[choice2[0] - 1][choice2[1] - 1] = decks.get(choice2[0] - 1).draw();
+                // add to player
+                p.reserveCard(card);
 
             }
 
@@ -250,9 +252,11 @@ public class Game {
                     System.out.println("Deck is empty");
                     continue;
                 }
+                // add to player
+                p.reserveCard(card);
 
             }
-            // add to player
+
             // add gold if gold in bank
             if (bank.get(Gem.Gold) > 0) {
                 p.addToken(Gem.Gold, 1);
@@ -446,10 +450,9 @@ public class Game {
         }
     }
 
-
     /**
-     * Admin Permissions
-     * Allows user to set token, set production, set points
+     * Admin Permissions Allows user to set token, set production, set points
+     *
      * @param p the current player
      */
     public static Player adminPerms(Player p) {
