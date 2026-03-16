@@ -173,14 +173,14 @@ public class Game {
     public static boolean reserveCard(Player p) {
         // printBoard();
 
-        String rowMessage = "Enter row number of your chosen card (row.col)";
-        String colMessage = "Enter col number of your chosen card (row.col)";
-        int row = Utility.askForNum(sc, 3, rowMessage);
-        int col = Utility.askForNum(sc, 4, colMessage);
-
+        int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
-        Card card = market[row][col];
-        p.reserveCard(card);
+        Card card = market[choice[0]][choice[1]];
+        boolean success = p.reserveCard(card);
+        if (!success) {
+            System.out.println("error: unable to reserce Card. Hand Limit reached");
+            return false;
+        }
 
         // add to player
         // add gold if gold in bank
@@ -188,18 +188,25 @@ public class Game {
             p.addToken(Gem.Gold, 1);
             bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
         }
-        
         // remove from market
         System.out.println("todo: remove from market");
-        
+
         return true;
     }
 
     public static boolean buyCard(Player p) {
+        int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
-        // p.buyCard(card, sc);
-        // remove from market (replaceCard())
-        System.out.println("todo");
+        Card card = market[choice[0]][choice[1]];// p.buyCard(card, sc);
+
+        boolean success = p.buyCard(card, sc);
+        if (!success) {
+            System.out.println("error: unable to buy card");
+            return false;
+        }
+        // remove from market
+        System.out.println("todo: remove from market");
+
         return true;
     }
 

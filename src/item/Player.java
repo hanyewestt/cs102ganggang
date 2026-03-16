@@ -11,8 +11,8 @@ public class Player implements Comparable<Player> {
 
     private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
 
-    private static final int RESERVE_HAND_SIZE = 3;
-    private List<Card> reserveCards = new ArrayList<>(RESERVE_HAND_SIZE);
+    private static final int MAX_RESERVE_HAND_SIZE = 3;
+    private List<Card> reserveCards = new ArrayList<>(MAX_RESERVE_HAND_SIZE);
 
     private HashMap<Gem, Integer> production = new HashMap<>(Gem.values().length);
     private List<NobleTile> ownedNobles = new ArrayList<>(5);
@@ -84,7 +84,7 @@ public class Player implements Comparable<Player> {
     }
 
     public boolean reserveCard(Card c) {
-        if (getReserveHandSize() == RESERVE_HAND_SIZE) {
+        if (getReserveHandSize() == MAX_RESERVE_HAND_SIZE) {
             return false;
         }
         reserveCards.add(c);
