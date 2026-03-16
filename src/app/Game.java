@@ -3,24 +3,58 @@ package app;
 import java.util.*;
 import item.*;
 import java.lang.*;
+import config.Configuration;
 
 public class Game {
 
     private static int playerNumber;
-    private static List<Player> players = new ArrayList<>();
+    private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
-    private static Deck[] decks = new Deck[3];
+    private static Deck<Card>[] decks = new Deck<Card>[3];
     private static Card[][] market = new Card[3][4];
-    private static List<NobleTile> nobles;
+    private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
+    private static long seed;
 
     public Game(int playerNumber) {
+        this(playerNumber, (new Random()).nextLong());
+    }
+
+    public Game(int playerNumber, long seed) {
+        Configuration.load();
+        
         this.playerNumber = playerNumber;
-        this.nobles = new ArrayList<NobleTile>(playerNumber + 1);
-        this.players = new ArrayList<>(playerNumber);
+        this.seed = seed;
+        players = new ArrayList<>(playerNumber);
+
+        int startingGems = Configuration.getStartingGems(playerNumber);
+        for (Gem gem : Gem.values()) {
+            bank.put(gem, startingGems);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            decks[i] = Configuration.getDeck(i);
+            decks[i].shuffleDeck(seed);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                market[i][j] = decks[i].draw();
+            }
+        }
+
+        nobles = new ArrayList<NobleTile>(playerNumber + 1);
+        Deck<NobleTile> nobleTileDeck = Configuration.getNobleTiles();
+        nobleTileDeck.shuffleDeck(seed);
+        for (int i = 0; i < playerNumber + 1; i++) {
+            nobles.add(nobleTileDeck.draw());
+        }
 
         setPlayerArray(playerNumber);
+    }
 
+    public long getSeed() {
+        return seed;
     }
 
     public static void setPlayerArray(int playerNumber) {
