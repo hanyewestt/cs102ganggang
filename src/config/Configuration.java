@@ -3,6 +3,7 @@ package config;
 import item.*;
 import java.io.*;
 import java.util.*;
+import util.Utility;
 
 public class Configuration {
 
@@ -20,17 +21,16 @@ public class Configuration {
 
     /**
      * Getter to retrieve how many points a noble tile is worth.
-     * 
+     *
      * @return The amount of points a noble tile is worth.
      */
-
     public static int getNobleTilePoints() {
         return nobleTilePoints;
     }
 
     /**
      * Getter to retrieve how many points are needed to win.
-     * 
+     *
      * @return The amount of points needed to win.
      */
     public static int getPointsToWin() {
@@ -38,9 +38,11 @@ public class Configuration {
     }
 
     /**
-     * Getter to retrieve the starting number of gems in the bank based on a player no.
-     * 
-     * @param playerNo The amount of players in the game. Guaranteed to be between 2 to 4 (inclusive).
+     * Getter to retrieve the starting number of gems in the bank based on a
+     * player no.
+     *
+     * @param playerNo The amount of players in the game. Guaranteed to be
+     * between 2 to 4 (inclusive).
      * @return The amount of starting gems in the bank.
      */
     public static int getStartingGems(int playerNo) {
@@ -49,7 +51,7 @@ public class Configuration {
 
     /**
      * Getter to retrieve a deep copy of a deck of cards to be used.
-     * 
+     *
      * @param deckNo The deck no to be retrieved.
      * @return The deep copy of said deck.
      */
@@ -73,7 +75,7 @@ public class Configuration {
 
     /**
      * Getter to retrieve a deep copy of the noble tile deck.
-     * 
+     *
      * @return The deep copy of the noble tile deck.
      */
     public static Deck<NobleTile> getNobleTiles() {
@@ -81,12 +83,12 @@ public class Configuration {
     }
 
     /**
-     * Loads all the relevant data from files to the Configuration class.
-     * This method MUST be called only once before using any of the above getters.
+     * Loads all the relevant data from files to the Configuration class. This
+     * method MUST be called only once before using any of the above getters.
      */
     public static void load() {
         if (hasDataBeenLoaded) {
-            return; 
+            return;
         }
 
         Scanner numLoader = null;
@@ -148,12 +150,13 @@ public class Configuration {
 
     /**
      * Method that returns a Scanner that is ready to scan a file.
-     * 
-     * @param filePathAndName The file path to the desired file, and the file name.
+     *
+     * @param filePathAndName The file path to the desired file, and the file
+     * name.
      * @return A Scanner ready to read the file.
-     * @throws FileNotFoundException If the desired file cannot be found from the given filepath.
+     * @throws FileNotFoundException If the desired file cannot be found from
+     * the given filepath.
      */
-
     private static Scanner setupScanner(String filePathAndName) throws FileNotFoundException {
         try {
             Scanner sc = new Scanner(new File(filePathAndName));
@@ -165,12 +168,14 @@ public class Configuration {
     }
 
     /**
-     * Returns the next integer number in the file that exists on a line by itself.
-     * Will ignore empty lines or commented lines (With a '#') in the file.
-     * 
+     * Returns the next integer number in the file that exists on a line by
+     * itself. Will ignore empty lines or commented lines (With a '#') in the
+     * file.
+     *
      * @param fileScanner The Scanner currently looking through the file.
      * @return The next integer retrieved from the file.
-     * @throws NumberFormatException If a line that's not empty or a comment can't be parsed into an integer.
+     * @throws NumberFormatException If a line that's not empty or a comment
+     * can't be parsed into an integer.
      */
     private static int getNextNo(Scanner fileScanner) throws NumberFormatException {
         while (fileScanner.hasNextLine()) {
@@ -187,7 +192,7 @@ public class Configuration {
 
     /**
      * Will fill a given deck with cards using information from a file Scanner.
-     * 
+     *
      * @param deck The deck to be filled with cards.
      * @param sc The Scanner reading from a file.
      */
@@ -195,14 +200,15 @@ public class Configuration {
         sc.useDelimiter(",|\r\n|\n");
 
         while (sc.hasNext()) {
-            deck.addToDeck(new Card(fromCharToGem(sc.next().charAt(0)), sc.nextInt(), sc.nextInt(),
+            deck.addToDeck(new Card(Utility.fromCharToGem(sc.next().charAt(0)), sc.nextInt(), sc.nextInt(),
                     sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt()));
         }
     }
 
     /**
-     * Will fill a given deck with noble tiles using information from a file Scanner.
-     * 
+     * Will fill a given deck with noble tiles using information from a file
+     * Scanner.
+     *
      * @param deck The deck to be filled with noble tiles.
      * @param sc The Scanner reading from a file.
      */
@@ -213,13 +219,13 @@ public class Configuration {
 
             switch (nobleTileGems.length) {
                 case 2:
-                    nobleTiles.addToDeck(new NobleTile(fromCharToGem(nobleTileGems[0].charAt(0)),
-                            fromCharToGem(nobleTileGems[1].charAt(0))));
+                    nobleTiles.addToDeck(new NobleTile(Utility.fromCharToGem(nobleTileGems[0].charAt(0)),
+                            Utility.fromCharToGem(nobleTileGems[1].charAt(0))));
                     break;
                 case 3:
-                    nobleTiles.addToDeck(new NobleTile(fromCharToGem(nobleTileGems[0].charAt(0)),
-                            fromCharToGem(nobleTileGems[1].charAt(0)),
-                            fromCharToGem(nobleTileGems[2].charAt(0))));
+                    nobleTiles.addToDeck(new NobleTile(Utility.fromCharToGem(nobleTileGems[0].charAt(0)),
+                            Utility.fromCharToGem(nobleTileGems[1].charAt(0)),
+                            Utility.fromCharToGem(nobleTileGems[2].charAt(0))));
                     break;
             }
         }
@@ -227,41 +233,17 @@ public class Configuration {
 
     /**
      * Closes all scanners parsed in.
-     * 
+     *
      * @param scanners An ArrayList of the Scanners to be closed.
      */
-
     private static void closeScanners(ArrayList<Scanner> scanners) {
         for (Scanner sc : scanners) {
-           if (sc == null) {
+            if (sc == null) {
                 continue;
-           }
-           
-           sc.close();
+            }
+
+            sc.close();
         }
     }
 
-    /**
-     * Converts a char to a Gem.
-     * Returns null if char is invalid.
-     * 
-     * @param character The char to be read.
-     * @return The Gem represented by that char.
-     */
-    private static Gem fromCharToGem(char character) {
-        switch (character) {
-            case 'D':
-                return Gem.Diamond;
-            case 'R':
-                return Gem.Ruby;
-            case 'S':
-                return Gem.Sapphire;
-            case 'E':
-                return Gem.Emerald;
-            case 'O':
-                return Gem.Onyx;
-            default:
-                return null;
-        }
-    }
 }

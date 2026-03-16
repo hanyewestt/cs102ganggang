@@ -11,11 +11,39 @@ public class Game {
     private static int playerNumber;
     private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
-    private static Deck<Card>[] decks = new Deck<Card>[3];
+    private static ArrayList<Deck<Card>> decks = new ArrayList<>();
     private static Card[][] market = new Card[3][4];
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
     private static long seed;
+
+    public static void main(String[] args) {
+
+        System.out.print("Enter number of players (between 2 and 4): ");
+        int playerNumber = enterNumber(2, 4);
+
+        Game game = new Game(playerNumber);
+
+        boolean lastRound = false;
+        int roundNumber = 1;
+        while (!lastRound) {
+            System.out.println("\n---------- Round " + roundNumber + " ----------");
+            for (int i = 0; i < playerNumber; i++) {
+                System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
+                System.out.println(players.get(i));
+                doPlayerTurn(players.get(i));
+                lastRound = hitWinCondition(players.get(i));
+            }
+            roundNumber++;
+            // clear terminal
+        }
+        List<Player> winningPlayers = getWinner();
+        for (int i = 0; i < winningPlayers.size(); i++) {
+            System.out.println(winningPlayers.get(i).getName());
+        }
+        sc.close();
+
+    }
 
     public Game(int playerNumber) {
         this(playerNumber, (new Random()).nextLong());
@@ -23,7 +51,7 @@ public class Game {
 
     public Game(int playerNumber, long seed) {
         Configuration.load();
-        
+
         this.playerNumber = playerNumber;
         this.seed = seed;
         players = new ArrayList<>(playerNumber);
@@ -34,13 +62,13 @@ public class Game {
         }
 
         for (int i = 0; i < 3; i++) {
-            decks[i] = Configuration.getDeck(i);
-            decks[i].shuffleDeck(seed);
+            decks.add(new Deck(Configuration.getDeck(i + 1)));
+            decks.get(i).shuffleDeck(seed);
         }
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
-                market[i][j] = decks[i].draw();
+                market[i][j] = decks.get(i).draw();
             }
         }
 
@@ -96,7 +124,7 @@ public class Game {
             printBoard();
             turnOptionDisplay();
 
-            switch (enterNumber(1, 4)) {
+            switch (enterNumber(1, 5)) {
                 case 1:
                     turnDone = drawToken(player);
                     break;
@@ -119,7 +147,13 @@ public class Game {
                         nobles.remove(visitingNobles.get(0));
                     }
                     break;
+                case 5:
+                    int idx = players.indexOf(player);
+                    player = adminPerms(player);
+                    players.set(idx, player);
+                    break;
                 case 4:
+
                 //skip turn????
             }
         }
@@ -174,26 +208,62 @@ public class Game {
 
     public static boolean reserveCard(Player p) {
 
-        int[] choice = Utility.getPositionOnBoard(sc);
-        // convert choice to corresponding card
-        Card card = market[choice[0]][choice[1]];
-
-        boolean success = p.reserveCard(card);
-        if (!success) {
-            System.out.println("error: unable to reserve Card. Hand Limit reached");
+        if (p.getReserveHandSize() == 3) {
+            System.out.println("Your hand size is full.");
             return false;
         }
 
-        // add to player
-        // add gold if gold in bank
-        if (bank.get(Gem.Gold) > 0) {
-            p.addToken(Gem.Gold, 1);
-            bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
+        boolean validAction = false;
+
+        while (!validAction) {
+            System.out.println("Choose option: ");
+            System.out.println("1. Reserve from market");
+            System.out.println("2. Reserve from deck");
+            System.out.println("0. Cancel");
+
+            int choice = enterNumber(0, 2);
+
+            if (choice == 0) {
+                return false;
+            }
+
+            if (choice == 1) {
+                int[] choice2 = Utility.getPositionOnBoard(sc);
+                // convert choice to corresponding card
+                Card card = market[choice2[0] - 1][choice2[1] - 1];
+
+                if (card == null) {
+                    System.out.println("Market is empty");
+                    continue;
+                }
+
+                // remove from market
+                market[choice2[0] - 1][choice2[1] - 1] = decks.get(choice2[0] - 1).draw();
+
+            }
+
+            if (choice == 2) {
+                System.out.print("Enter deck no. (1, 2, 3): ");
+                int choice2 = enterNumber(1, 3);
+                Card card = decks.get(choice2 - 1).draw();
+                if (card == null) {
+                    System.out.println("Deck is empty");
+                    continue;
+                }
+
+            }
+            // add to player
+            // add gold if gold in bank
+            if (bank.get(Gem.Gold) > 0) {
+                p.addToken(Gem.Gold, 1);
+                bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
+            }
+            validAction = true;
+
         }
-        // remove from market
-        System.out.println("todo: remove from market");
 
         return true;
+
     }
 
     public static boolean buyCard(Player p) {
@@ -202,7 +272,7 @@ public class Game {
 
         int[] choice = Utility.getPositionOnBoard(sc);
         // convert choice to corresponding card
-        Card card = market[choice[0]][choice[1]];// p.buyCard(card, sc);
+        Card card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
 
         // I assume that if the card is not in market, value at that pos is null.
         if (card == null) {
@@ -210,13 +280,22 @@ public class Game {
             return false;
         }
 
+        Map<Gem, Integer> pBefore = p.getTokens();
+
         boolean success = p.buyCard(card, sc);
         if (!success) {
             System.out.println("error: unable to buy card");
             return false;
         }
+        Map<Gem, Integer> pAfter = p.getTokens();
+
+        for (Gem g : Gem.values()) {
+            int diff = pBefore.get(g) - pAfter.get(g);
+            bank.replace(g, diff + bank.get(g));
+        }
+
         // remove from market
-        System.out.println("todo: remove from market");
+        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
 
         return true;
     }
@@ -248,7 +327,7 @@ public class Game {
                 }
 
                 for (Gem g : chosen) {
-                    bank.put(g, bank.get(g) - 1);
+                    bank.replace(g, bank.get(g) - 1);
                     currentPlayer.addToken(g, 1);
                 }
 
@@ -261,7 +340,7 @@ public class Game {
                     continue; // user cancelled 
                 }
 
-                bank.put(g, bank.get(g) - 2);
+                bank.replace(g, bank.get(g) - 2);
                 currentPlayer.addToken(g, 2);
 
                 validAction = true;
@@ -276,6 +355,8 @@ public class Game {
         }
 
         while (totalTokens > 10) {
+
+            currentPlayer.displayTokens();
             System.out.println("You have more than 10 tokens. Return 1 token:");
             String input = sc.nextLine();
 
@@ -284,7 +365,7 @@ public class Game {
 
                 if (currentPlayer.getTokens().get(g) > 0) {
                     currentPlayer.removeToken(g, 1);
-                    bank.put(g, bank.get(g) + 1);
+                    bank.replace(g, bank.get(g) + 1);
                     totalTokens--;
                 } else {
                     System.out.println("You don't have that token.");
@@ -365,10 +446,66 @@ public class Game {
         }
     }
 
+
+    /**
+     * Admin Permissions
+     * Allows user to set token, set production, set points
+     * @param p the current player
+     */
+    public static Player adminPerms(Player p) {
+        boolean finishAction = false;
+        while (!finishAction) {
+            if (p instanceof Admin a) {
+                System.out.println("1. Set Token");
+                System.out.println("2. Set Production");
+                System.out.println("3. Set Points");
+                System.out.println("0. Quit this page");
+
+                int choice = Utility.askForNum(sc, 0, 3, "Enter your choice: ");
+
+                Gem g = null;
+                int amt = 0;
+                switch (choice) {
+                    case 0:
+                        finishAction = true;
+                        break;
+                    case 1:
+                        g = Utility.askForGem(sc, "Enter Gem type. Must be spelt: ");
+                        amt = Utility.askForNum(sc, 0, Integer.MAX_VALUE, "Enter amount: ");
+                        a.setToken(g, amt);
+                        break;
+                    case 2:
+                        g = Utility.askForGem(sc, "Enter Gem type. Must be spelt: ");
+                        amt = Utility.askForNum(sc, 0, Integer.MAX_VALUE, "Enter amount: ");
+                        a.setProduction(g, amt);
+                        break;
+                    case 3:
+                        amt = Utility.askForNum(sc, 0, Integer.MAX_VALUE, "Enter amount: ");
+                        a.setPoints(amt);
+                        break;
+                }
+                System.out.println(a);
+
+            } else {
+                System.out.println("1. Make player into admin");
+                System.out.println("0. Quit this page");
+                int choice = Utility.askForNum(sc, 0, 1, "Enter your choice: ");
+                if (choice == 0) {
+                    break;
+                }
+
+                p = new Admin(p);
+                System.out.println("Player is now admin");
+            }
+        }
+        return p;
+    }
+
     public static void turnOptionDisplay() {
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
-        System.out.println("3. buy a card");
+        System.out.println("3. Buy a card");
+        System.out.println("5. admin perms");
         System.out.println();
         System.out.print("Please enter your choice:");
     }
@@ -383,6 +520,8 @@ public class Game {
         System.out.printf(bank.get(Gem.Onyx) + "O , ");
         System.out.printf(bank.get(Gem.Gold) + "G\n");
 
+        System.out.println("Example Card");
+        System.out.println("[Gem Produced | Prestige | Card Cost]");
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {

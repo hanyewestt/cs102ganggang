@@ -1,6 +1,7 @@
 package item;
 
 import java.util.*;
+import util.*;
 
 public class Card {
 
@@ -34,11 +35,25 @@ public class Card {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Card{");
-        sb.append("tokens=").append(tokens);
-        sb.append(", GEMTYPE=").append(GEMTYPE);
-        sb.append(", POINTS=").append(POINTS);
-        sb.append('}');
+        sb.append("[ ").append(GEMTYPE).append(" | ");
+        sb.append(POINTS).append(" | ");
+
+        Iterator tokenIterator = tokens.entrySet().iterator();
+        boolean first = true;
+        while (tokenIterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) tokenIterator.next();
+
+            if ((int) entry.getValue() > 0) {
+                if (first) {
+                    sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem) entry.getKey()));
+                    first = false;
+                } else {
+                    sb.append(", ").append(entry.getValue()).append(Utility.fromGemToChar((Gem) entry.getKey()));
+                }
+            }
+        }
+        sb.append(" ]");
+
         return sb.toString();
     }
 }

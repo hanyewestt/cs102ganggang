@@ -69,8 +69,12 @@ public class Player implements Comparable<Player> {
         tokens.put(g, tokens.get(g) - amt);
     }
 
+    public void addProduction(Gem g, int amt) {
+        production.put(g, production.get(g) + amt);
+    }
+
     public void addProduction(Gem g) {
-        production.put(g, production.get(g) + 1);
+        this.addProduction(g, 1);
     }
 
     public void addPoints(int p) {
@@ -83,13 +87,8 @@ public class Player implements Comparable<Player> {
         addProduction(c.getGEMTYPE());
     }
 
-    public boolean reserveCard(Card c) {
-        if (getReserveHandSize() == MAX_RESERVE_HAND_SIZE) {
-            return false;
-        }
+    public void reserveCard(Card c) {
         reserveCards.add(c);
-
-        return true;
     }
 
     public boolean buyCard(Card c, Scanner keyboard) {
@@ -144,7 +143,7 @@ public class Player implements Comparable<Player> {
                 } else {
                     int goldToSpend = Math.min(tokensLeft.get(Gem.Gold), Utility.getTotalGems(discountCardCost));
                     String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
-                    int spentGold = Utility.askForNum(keyboard, goldToSpend, goldPrompt);
+                    int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
 
                     if (spentGold == Utility.getTotalGems(discountCardCost)) {
                         removeToken(Gem.Gold, spentGold);
@@ -200,7 +199,7 @@ public class Player implements Comparable<Player> {
             }
 
             String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
-            int spentGold = Utility.askForNum(keyboard, goldToSpend, goldPrompt);
+            int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
 
             if (spentGold + necessaryGold == Utility.getTotalGems(discountCardCost)) {
                 removeToken(Gem.Gold, spentGold + necessaryGold);
@@ -256,6 +255,19 @@ public class Player implements Comparable<Player> {
 
     @Override
     public String toString() {
+        System.out.println("------------------------------------------------------------------");
+        System.out.printf("Player Name: %s\n", name);
+        System.out.printf("Player Number: %d\n", 0);
+        System.out.printf("Gems: ");
+        displayTokens();
+        System.out.println("Reserved: ");
+        System.out.printf("* to add");
+        // displayReserved();
+        System.out.print("Produces: ");
+        displayProduction();
+        System.out.printf("Prestige: %d\n", points);
+        System.out.printf("------------------------------------------------------------------\n\n");
+
         String output = "{ Player [" + name + "]\n";
         output += "   Points     : " + points + "\n";
         output += "   Production : " + displayProduction();
