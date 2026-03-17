@@ -99,15 +99,16 @@ public class Utility {
     }
 
     /**
-     * Will prompt the user for an positive integer with a max number
+     * Will prompt the user for an positive integer with a min and max number
      * limitation. Keeps prompting until a valid input is given.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
+     * @param min The minimum integer allowed (includive).
      * @param max The maximum integer allowed (inclusive).
      * @param message The message to prompt for user input.
      * @return The integer that the user inputs.
      */
-    public static int askForNum(Scanner keyboard, int max, String message) {
+    public static int askForNum(Scanner keyboard, int min, int max, String message) {
         boolean isValid;
 
         do {
@@ -116,11 +117,11 @@ public class Utility {
             try {
                 int num = keyboard.nextInt();
 
-                if (num > 0 && num <= max) {
+                if (num >= min && num <= max) {
                     keyboard.nextLine();
                     return num;
                 } else {
-                    System.out.println("Out of bounds! Enter a number between 1 and " + max);
+                    System.out.println("Out of bounds! Enter a number between " + min + " and " + max);
                 }
             } catch (Exception e) {
                 System.out.println("Invalid format for a number! Try again!");
@@ -140,8 +141,8 @@ public class Utility {
 
         String rowMessage = "Enter row number of your chosen card (row.col)";
         String colMessage = "Enter col number of your chosen card (row.col)";
-        int row = askForNum(sc, 3, rowMessage);
-        int col = askForNum(sc, 4, colMessage);
+        int row = askForNum(sc, 1, 3, rowMessage);
+        int col = askForNum(sc, 1, 4, colMessage);
 
         int[] result = new int[2];
         result[0] = row;
@@ -152,9 +153,8 @@ public class Utility {
     }
 
     /**
-     * Converts a Gem to a char
-     * Returns X if Gem is invalid. 
-     * 
+     * Converts a Gem to a char Returns X if Gem is invalid.
+     *
      * @param Gem The Gem to be read.
      * @return The char representing that Gem.
      */
@@ -178,13 +178,12 @@ public class Utility {
     }
 
     /**
-     * Converts a char to a Gem.
-     * Returns null if char is invalid.
-     * 
+     * Converts a char to a Gem. Returns null if char is invalid.
+     *
      * @param character The char to be read.
      * @return The Gem represented by that char.
      */
-    private static Gem fromCharToGem(char character) {
+    public static Gem fromCharToGem(char character) {
         switch (character) {
             case 'D':
                 return Gem.Diamond;
@@ -200,4 +199,5 @@ public class Utility {
                 return null;
         }
     }
+
 }
