@@ -289,28 +289,7 @@ public class Game {
                     fromMarket = true;
                     break;
                 case 2:
-                    List<Card> reserve = p.getReserveHand();
-
-                    if (reserve.size() < 1) {
-                        System.out.println("No cards in reserve\n");
-                        continue;
-                    } else if (reserve.size() == 1) {
-                        String message = "Do you want to buy this card " + reserve.get(0) + " (Y/N): ";
-                        boolean isBuying = Utility.willProceed(sc, message);
-                        if (isBuying) {
-                            card = reserve.get(0);
-                        } else {
-                            continue;
-                        }
-                        
-                    } else {
-                        for (int i = 0; i < reserve.size(); i++) {
-                            Card c = reserve.get(i);
-                            System.out.println((i + 1) + ": " + c);
-                        }
-                        card = reserve.get(Utility.askForNum(sc, 1, reserve.size(), "Enter card to buy: ") - 1);
-                    }
-                    break;
+                    // buy from reserve
             }
 
             pBefore = p.getTokens();
@@ -334,7 +313,7 @@ public class Game {
             // remove from market
             market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
         } else {
-            p.removeReserveCard(card);
+            // remove from reserve
         }
         
         return true;
