@@ -1,7 +1,6 @@
 package app;
 
 import java.util.*;
-import java.lang.*;
 import item.*;
 import util.*;
 import config.*;
@@ -12,15 +11,13 @@ public class Game {
     private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
     private static ArrayList<Deck<Card>> decks = new ArrayList<>();
-    private static Card[][] market = new Card[3][4];
+    private static Card[][] market = new Card[3][4]; 
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
     private static long seed;
 
     public static void main(String[] args) {
-
-        System.out.print("Enter number of players (between 2 and 4): ");
-        int playerNumber = enterNumber(2, 4);
+        int playerNumber = Utility.askForNum(sc, 2, 4, "Enter number of players (between 2 and 4): ");
 
         Game game = new Game(playerNumber);
 
@@ -32,7 +29,9 @@ public class Game {
                 System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
                 System.out.println(players.get(i));
                 doPlayerTurn(players.get(i));
-                lastRound = hitWinCondition(players.get(i));
+                if (!lastRound) {
+                    lastRound = hitWinCondition(players.get(i));
+                }
             }
             roundNumber++;
             // clear terminal
@@ -96,35 +95,21 @@ public class Game {
         }
     }
 
-    public static int enterNumber(int min, int max) {
-        boolean valid = false;
-        int n = -1; // can anyhow initialise??
-        while (!valid) {
-            try {
-                n = sc.nextInt();
-                if (n < min || n > max) {
-                    System.out.print("Please enter a number between " + min + " and " + max + ": ");
-                    continue;
-                }
-                valid = true;
-            } catch (InputMismatchException e) {
-                System.out.print("Please enter a number between " + min + " and " + max + ": ");
-            } finally {
-                sc.nextLine();
-            }
-        }
-        return n;
-    }
-
     public static void doPlayerTurn(Player player) {
 
         boolean turnDone = false;
         while (!turnDone) {
             // show board every turn? might affect the choice they make
             printBoard();
-            turnOptionDisplay();
 
-            switch (enterNumber(1, 5)) {
+            System.out.println("1. Draw tokens");
+            System.out.println("2. Reserve a card");
+            System.out.println("3. Buy a card");
+            System.out.println("4. skip");
+            System.out.println("5. admin perms");
+            System.out.println();
+
+            switch (Utility.askForNum(sc, 1, 5, "Enter your choice:")) {
                 case 1:
                     turnDone = drawToken(player);
                     break;
@@ -135,10 +120,12 @@ public class Game {
                     turnDone = buyCard(player);
                     List<NobleTile> visitingNobles = visitingNobles(player);
                     if (visitingNobles.size() > 1) {
-                        System.out.print("Please select a noble: ");
-                        int choice = enterNumber(1, visitingNobles.size());
                         // display choices
-                        System.out.println("todo: display visiting nobles");
+                        for (int i = 0; i < visitingNobles.size(); i++) {
+                            NobleTile t = visitingNobles.get(i);
+                            System.out.println((i + 1) + ": " + t);
+                        }
+                        int choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
                         NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
                         player.addNobleTile(noble);
                         nobles.remove(noble);
@@ -147,14 +134,15 @@ public class Game {
                         nobles.remove(visitingNobles.get(0));
                     }
                     break;
+                case 4:
+                    //skip turn????
+                    turnDone = true;
+                    break;
                 case 5:
                     int idx = players.indexOf(player);
                     player = adminPerms(player);
                     players.set(idx, player);
                     break;
-                case 4:
-
-                //skip turn????
             }
         }
     }
@@ -187,13 +175,13 @@ public class Game {
 
     public static List<NobleTile> visitingNobles(Player p) {
         List<NobleTile> result = new ArrayList<>();
-        HashMap<Gem, Integer> playerTokens = p.getTokens();
+        HashMap<Gem, Integer> playerProduction = p.getProduction();
 
         for (NobleTile n : nobles) {
             boolean qualify = true;
             HashMap< Gem, Integer> nobleTokens = n.getTokens();
             for (Map.Entry<Gem, Integer> entry : nobleTokens.entrySet()) {
-                if (playerTokens.get(entry.getKey()) < entry.getValue()) {
+                if (playerProduction.get(entry.getKey()) < entry.getValue()) {
                     qualify = false;
                     break;
                 }
@@ -221,7 +209,7 @@ public class Game {
             System.out.println("2. Reserve from deck");
             System.out.println("0. Cancel");
 
-            int choice = enterNumber(0, 2);
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
 
             if (choice == 0) {
                 return false;
@@ -240,16 +228,20 @@ public class Game {
                 // remove from market
                 market[choice2[0] - 1][choice2[1] - 1] = decks.get(choice2[0] - 1).draw();
 
+                // add to hand
+                p.reserveCard(card);
+
             }
 
             if (choice == 2) {
-                System.out.print("Enter deck no. (1, 2, 3): ");
-                int choice2 = enterNumber(1, 3);
+                int choice2 = Utility.askForNum(sc, 1, 3, "Enter deck no. (1, 2, 3): ");
                 Card card = decks.get(choice2 - 1).draw();
                 if (card == null) {
                     System.out.println("Deck is empty");
                     continue;
                 }
+                // add to hand
+                p.reserveCard(card);
 
             }
             // add to player
@@ -267,36 +259,84 @@ public class Game {
     }
 
     public static boolean buyCard(Player p) {
+        int[] choice = null;
+        Card card = null;
+        Map<Gem, Integer> pBefore;
+        Map<Gem, Integer> pAfter;
+        boolean fromMarket = false;
 
-        System.out.println("todo: buy from reserve");
+        while (true) {
+            System.out.println("Choose option: ");
+            System.out.println("1. Buy from market");
+            System.out.println("2. Buy from reserve");
+            System.out.println("0. Cancel");
+            System.out.println();
 
-        int[] choice = Utility.getPositionOnBoard(sc);
-        // convert choice to corresponding card
-        Card card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
+            switch (Utility.askForNum(sc, 0, 2, "Enter your choice: ")) {
+                case 0:
+                    return false;
+                case 1:
+                    choice = Utility.getPositionOnBoard(sc);
+                    // convert choice to corresponding card
+                    card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
+        
+                    // I assume that if the card is not in market, value at that pos is null.
+                    if (card == null) {
+                        System.out.println("error: card does not exist in market\n");
+                        continue;
+                    }
 
-        // I assume that if the card is not in market, value at that pos is null.
-        if (card == null) {
-            System.out.println("error: card does not exist in market");
-            return false;
+                    fromMarket = true;
+                    break;
+                case 2:
+                    List<Card> reserve = p.getReserveHand();
+
+                    if (reserve.size() < 1) {
+                        System.out.println("No cards in reserve\n");
+                        continue;
+                    } else if (reserve.size() == 1) {
+                        String message = "Do you want to buy this card " + reserve.get(0) + " (Y/N): ";
+                        boolean isBuying = Utility.willProceed(sc, message);
+                        if (isBuying) {
+                            card = reserve.get(0);
+                        } else {
+                            continue;
+                        }
+                        
+                    } else {
+                        for (int i = 0; i < reserve.size(); i++) {
+                            Card c = reserve.get(i);
+                            System.out.println((i + 1) + ": " + c);
+                        }
+                        card = reserve.get(Utility.askForNum(sc, 1, reserve.size(), "Enter card to buy: ") - 1);
+                    }
+                    break;
+            }
+
+            pBefore = p.getTokens();
+
+            boolean success = p.buyCard(card, sc);
+            if (!success) {
+                System.out.println("error: unable to buy card\n");
+                continue;
+            }
+            pAfter = p.getTokens();
+
+            break;
         }
-
-        Map<Gem, Integer> pBefore = p.getTokens();
-
-        boolean success = p.buyCard(card, sc);
-        if (!success) {
-            System.out.println("error: unable to buy card");
-            return false;
-        }
-        Map<Gem, Integer> pAfter = p.getTokens();
 
         for (Gem g : Gem.values()) {
             int diff = pBefore.get(g) - pAfter.get(g);
             bank.replace(g, diff + bank.get(g));
         }
 
-        // remove from market
-        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
-
+        if (fromMarket) {
+            // remove from market
+            market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
+        } else {
+            p.removeReserveCard(card);
+        }
+        
         return true;
     }
 
@@ -306,12 +346,12 @@ public class Game {
         boolean validAction = false;
 
         while (!validAction) {
-            System.out.println("Choose token option: ");
+            System.out.println("Token options: ");
             System.out.println("1. Take 3 different tokens");
             System.out.println("2. Take 2 same tokens");
             System.out.println("0. Cancel");
 
-            int choice = enterNumber(0, 2);
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
 
             if (choice == 0) {
                 return false;
@@ -499,15 +539,6 @@ public class Game {
             }
         }
         return p;
-    }
-
-    public static void turnOptionDisplay() {
-        System.out.println("1. Draw tokens");
-        System.out.println("2. Reserve a card");
-        System.out.println("3. Buy a card");
-        System.out.println("5. admin perms");
-        System.out.println();
-        System.out.print("Please enter your choice:");
     }
 
     public static void printBoard() {
