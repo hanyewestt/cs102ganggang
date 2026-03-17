@@ -60,9 +60,10 @@ public class Game {
         for (Gem gem : Gem.values()) {
             bank.put(gem, startingGems);
         }
-
+    
         for (int i = 0; i < 3; i++) {
-            decks.add(new Deck(Configuration.getDeck(i + 1)));
+            Deck<Card> deck = new Deck<>(Configuration.getDeck(i + 1));
+            decks.add(deck);
             decks.get(i).shuffleDeck(seed);
         }
 
