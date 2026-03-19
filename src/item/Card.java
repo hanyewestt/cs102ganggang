@@ -37,7 +37,7 @@ public class Card {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ").append(GEMTYPE).append(" | ");
         sb.append(POINTS).append(" | ");
-
+        
         Iterator tokenIterator = tokens.entrySet().iterator();
         boolean first = true;
         while (tokenIterator.hasNext()) {
@@ -45,10 +45,10 @@ public class Card {
 
             if ((int) entry.getValue() > 0) {
                 if (first) {
-                    sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem) entry.getKey()));
+                    sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
                     first = false;
                 } else {
-                    sb.append(", ").append(entry.getValue()).append(Utility.fromGemToChar((Gem) entry.getKey()));
+                    sb.append(", ").append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
                 }
             }
         }

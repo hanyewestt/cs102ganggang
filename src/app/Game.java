@@ -60,9 +60,10 @@ public class Game {
         for (Gem gem : Gem.values()) {
             bank.put(gem, startingGems);
         }
-
+    
         for (int i = 0; i < 3; i++) {
-            decks.add(new Deck(Configuration.getDeck(i + 1)));
+            Deck<Card> deck = new Deck<>(Configuration.getDeck(i + 1));
+            decks.add(deck);
             decks.get(i).shuffleDeck(seed);
         }
 
@@ -510,6 +511,10 @@ public class Game {
         System.out.print("Please enter your choice:");
     }
 
+    /**
+     * Displays the current board
+     * Includes: Avaliable cards, Bank, Nobile Tiles
+     */
     public static void printBoard() {
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf("Bank: ");
