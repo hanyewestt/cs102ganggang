@@ -228,36 +228,82 @@ public class Game {
 
     public static boolean buyCard(Player p) {
 
-        System.out.println("todo: buy from reserve");
+        while (true){
+            System.out.println();
+            System.out.println("1. Buy from market"); 
+            System.out.println("2. Buy from reserve"); 
+            System.out.println("0. Cancel"); 
+            System.out.println();
+        
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: "); 
 
-        int[] choice = Utility.getPositionOnBoard(sc);
-        // convert choice to corresponding card
-        Card card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
+            if (choice == 0){
+                return false; 
+            }
 
-        // I assume that if the card is not in market, value at that pos is null.
-        if (card == null) {
-            System.out.println("error: card does not exist in market");
-            return false;
+            if (choice == 1){
+                // buy from market 
+                int[] pos = Utility.getPositionOnBoard(sc); 
+                Card card = market[pos[0] - 1][pos[1] - 1]; 
+
+                if (card == null){
+                    System.out.println("No card at that position"); 
+                    continue; 
+                }
+
+                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens()); 
+                boolean success = p.buyCard(card, sc); 
+                if (!success){
+                    System.out.println("Unable to buy that card.");
+                    continue;  
+                }
+
+                Map <Gem, Integer> pAfter = p.getTokens(); 
+
+                for (Gem g : Gem.values()) {
+                    int diff =  pBefore.get(g) - pAfter.get(g);
+                    bank.replace(g, diff + bank.get(g));
+                }
+
+                // remove from market
+                market[pos[0] - 1][pos[1] - 1] = decks.get(pos[0] - 1).draw();
+                return true;
+            }
+
+            if (choice == 2){
+                // buy from reserve 
+                List<Card> hand = p.getReserveHand(); 
+                if (hand.isEmpty()){
+                    System.out.println("You have no reserved cards.");
+                    continue; 
+                }
+
+                System.out.println("Your reserved cards:");
+                for (int i = 0; i < hand.size(); i++) {
+                    System.out.println((i + 1) + ". " + hand.get(i));
+                }
+
+                int idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
+                Card card = hand.get(idx);
+
+                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
+                boolean success = p.buyCard(card, sc);
+                if (!success) {
+                    System.out.println("Unable to buy that card.");
+                    continue;
+                }
+
+                Map<Gem, Integer> pAfter = p.getTokens();
+
+                for (Gem g : Gem.values()) {
+                    int diff = pBefore.get(g) - pAfter.get(g);
+                    bank.replace(g, diff + bank.get(g));
+                }
+
+                p.removeReserveCard(idx);
+                return true;
+            }
         }
-
-        Map<Gem, Integer> pBefore = p.getTokens();
-
-        boolean success = p.buyCard(card, sc);
-        if (!success) {
-            System.out.println("error: unable to buy card");
-            return false;
-        }
-        Map<Gem, Integer> pAfter = p.getTokens();
-
-        for (Gem g : Gem.values()) {
-            int diff =  pBefore.get(g) - pAfter.get(g);
-            bank.replace(g, diff + bank.get(g));
-        }
-
-        // remove from market
-        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
-
-        return true;
     }
 
     // drawToken function 
@@ -266,12 +312,15 @@ public class Game {
         boolean validAction = false;
 
         while (!validAction) {
+            System.out.println(); 
             System.out.println("Choose token option: ");
+            System.out.println(); 
             System.out.println("1. Take 3 different tokens");
             System.out.println("2. Take 2 same tokens");
             System.out.println("0. Cancel");
 
-            int choice = enterNumber(0, 2);
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+            // int choice = enterNumber(0, 2);
 
             if (choice == 0) {
                 return false;
@@ -317,22 +366,32 @@ public class Game {
         while (totalTokens > 10) {
 
             currentPlayer.displayTokens();
-            System.out.println("You have more than 10 tokens. Return 1 token:");
-            String input = sc.nextLine();
+            System.out.print("You have more than 10 tokens. Return 1 token:");
+            String input = sc.nextLine().trim();
 
-            try {
-                Gem g = Gem.valueOf(input);
+            if (input.length() != 1){
+                System.out.println("Invalid gem."); 
+                continue; 
+            }
 
-                if (currentPlayer.getTokens().get(g) > 0) {
-                    currentPlayer.removeToken(g, 1);
-                    bank.replace(g, bank.get(g) + 1);
-                    totalTokens--;
-                } else {
-                    System.out.println("You don't have that token.");
-                }
+            char c = Character.toUpperCase(input.charAt(0));
+            Gem g = Utility.fromCharToGem(c);
 
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid gem.");
+            if (g == null && c == 'G'){
+                g = Gem.Gold; 
+            }
+
+            if (g == null){
+                System.out.println("Invalid gem."); 
+                continue; 
+            }
+
+            if (currentPlayer.getTokens().get(g) > 0) {
+                currentPlayer.removeToken(g, 1);
+                bank.replace(g, bank.get(g) + 1);
+                totalTokens--;
+            } else {
+                System.out.println("You don't have that token.");
             }
         }
 
@@ -343,73 +402,96 @@ public class Game {
         Set<Gem> chosen = new HashSet<>();
 
         while (chosen.size() < 3) {
-            try {
-                System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx) or 'cancel': ");
-                String gemInput = sc.nextLine();
+            
+            System.out.print("Enter gem (D/R/S/E/O) or 'cancel': ");
+            String gemInput = sc.nextLine().trim();
 
-                if (gemInput.equalsIgnoreCase("cancel")) {
-                    return new HashSet<>(); // return empty set 
-                }
-
-                Gem g = Gem.valueOf(gemInput);
-
-                if (g == Gem.Gold) {
-                    System.out.println("Unable to take gold this way.");
-                    continue;
-                }
-
-                if (bank.get(g) <= 0) {
-                    System.out.println("Bank does not have this gem.");
-                    continue;
-                }
-
-                if (chosen.contains(g)) {
-                    System.out.println("Already chosen.");
-                    continue;
-                }
-
-                chosen.add(g);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid gem.");
+            if (gemInput.isEmpty()) {
+                continue;
             }
-        }
+
+            if (gemInput.equalsIgnoreCase("cancel")) {
+                return new HashSet<>(); // return empty set 
+            }
+
+            if (gemInput.length() != 1){
+                System.out.println("Invalid gem."); 
+                continue; 
+            }
+
+            char c = Character.toUpperCase(gemInput.charAt(0));
+            Gem g = Utility.fromCharToGem(c);
+
+            if (g == null) {                          
+                System.out.println("Invalid gem.");
+                continue;
+            }
+
+            if (g == Gem.Gold) {
+                System.out.println("Unable to take gold this way.");
+                continue;
+            }
+
+            if (bank.get(g) <= 0) {
+                System.out.println("Bank does not have this gem.");
+                continue;
+            }
+
+            if (chosen.contains(g)) {
+                System.out.println("Already chosen.");
+                continue;
+            }
+
+            chosen.add(g);
+        } 
 
         return chosen;
     }
 
     private static Gem pickTwoSameGem() {
         while (true) {
-            System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx) or 'cancel':");
-            String gemInput = sc.nextLine();
+            System.out.print("Enter gem (D/R/S/E/O) or 'cancel':");
+            String gemInput = sc.nextLine().trim();
+
+            if (gemInput.isEmpty()) {
+            continue;
+            }
 
             if (gemInput.equalsIgnoreCase("cancel")) {
                 return null;  // handled in drawToken
             }
 
-            try {
-                Gem g = Gem.valueOf(gemInput);
-
-                if (g == Gem.Gold) {
-                    System.out.println("Unable to take gold this way.");
-                    continue;
-                }
-                if (bank.get(g) < 4) {
-                    System.out.println("Need at least 4 in bank to take 2.");
-                    continue;
-                }
-
-                return g;  // valid gem found
-
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid gem.");
+            if (gemInput.length() != 1){
+                System.out.println("Invalid gem."); 
+                continue; 
             }
+            
+            char c = Character.toUpperCase(gemInput.charAt(0));
+            Gem g = Utility.fromCharToGem(c);
+
+            if (g == null) {
+                System.out.println("Invalid gem.");
+                continue;
+            }
+
+            if (g == Gem.Gold) {                      
+                System.out.println("Unable to take gold this way.");
+                continue;
+            }
+
+            if (bank.get(g) < 4) {
+                System.out.println("Need at least 4 in bank to take 2.");
+                continue;
+            }
+
+            return g;  // valid gem found
         }
     }
 
     public static void turnOptionDisplay() {
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
-        System.out.println("3. buy a card");
+        System.out.println("3. Buy a card");
         System.out.println();
         System.out.print("Please enter your choice:");
     }
