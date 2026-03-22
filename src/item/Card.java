@@ -5,10 +5,10 @@ import util.*;
 
 public class Card {
 
-    HashMap<Gem, Integer> tokens = new HashMap<>(6);
+    private HashMap<Gem, Integer> tokens = Utility.generateEmptyHashmap();
     private final Gem GEMTYPE;
     private final int POINTS;
-
+    
     public Card(Gem GEMTYPE, int POINTS, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
         this.GEMTYPE = GEMTYPE;
         this.POINTS = POINTS;
