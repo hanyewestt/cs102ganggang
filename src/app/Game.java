@@ -1,10 +1,10 @@
 package app;
 
-import java.util.*;
-import java.lang.*;
-import item.*;
-import util.*;
 import config.*;
+import item.*;
+import java.lang.*;
+import java.util.*;
+import util.*;
 
 public class Game {
 
@@ -16,6 +16,7 @@ public class Game {
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
     private static long seed;
+    private static int roundNumber;
 
     public static void main(String[] args) {
 
@@ -25,12 +26,12 @@ public class Game {
         Game game = new Game(playerNumber);
 
         boolean lastRound = false;
-        int roundNumber = 1;
+        roundNumber = 1;
         while (!lastRound) {
-            System.out.println("\n---------- Round " + roundNumber + " ----------");
             for (int i = 0; i < playerNumber; i++) {
+                clearScreen();
+                System.out.println("\n---------- Round " + roundNumber + " ----------");
                 System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
-                System.out.println(players.get(i));
                 doPlayerTurn(players.get(i));
                 lastRound = hitWinCondition(players.get(i));
             }
@@ -92,7 +93,7 @@ public class Game {
         for (int i = 0; i < playerNumber; i++) {
             System.out.print("Enter player " + (i + 1) + " name: ");
             String name = sc.nextLine();
-            Player player = new Player(name);
+            Player player = new Player(name, i+1);
             players.add(player);
         }
     }
@@ -118,14 +119,35 @@ public class Game {
     }
 
     public static void doPlayerTurn(Player player) {
-
+        boolean first = true;
         boolean turnDone = false;
+        boolean printReserved = false;
+        boolean printPlayer = false;
+        int printPlayerNo = -1;
+
         while (!turnDone) {
+            if (!first) {
+                System.out.println("\n---------- Round " + roundNumber + " ----------");
+                System.out.println("\n=== " + player.getName() + "'s turn ===");
+            }
             // show board every turn? might affect the choice they make
             printBoard();
+
+            if (printReserved) {
+                player.printReserved();
+                printReserved = false;
+            } else if (printPlayer) {
+                System.out.println(players.get(printPlayerNo - 1).toString());
+                printPlayer = false;
+            }
+
+            if (first) {
+                System.out.println(player);
+                first = false;
+            }
             turnOptionDisplay();
 
-            switch (enterNumber(1, 5)) {
+            switch (enterNumber(1, 6)) {
                 case 1:
                     turnDone = drawToken(player);
                     break;
@@ -148,14 +170,22 @@ public class Game {
                         nobles.remove(visitingNobles.get(0));
                     }
                     break;
+                case 4:
+                    clearScreen();
+                    printReserved = true;
+                    break;
                 case 5:
+                    clearScreen();
+                    printPlayerNo = printPlayer();
+                    if (printPlayerNo != 0) {
+                        printPlayer = true;
+                    }
+                    break;
+                case 6:
                     int idx = players.indexOf(player);
                     player = adminPerms(player);
                     players.set(idx, player);
                     break;
-                case 4:
-
-                //skip turn????
             }
         }
     }
@@ -506,7 +536,9 @@ public class Game {
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
         System.out.println("3. Buy a card");
-        System.out.println("5. admin perms");
+        System.out.println("4. Show reserved cards");
+        System.out.println("5. Display player");
+        System.out.println("6. admin perms");
         System.out.println();
         System.out.print("Please enter your choice:");
     }
@@ -519,7 +551,7 @@ public class Game {
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf("Bank: ");
         System.out.printf(bank.get(Gem.Diamond) + "D , ");
-        System.out.printf(bank.get(Gem.Ruby) + "R , ");
+        System.out.printf(bank.get(Gem.Ruby) + "R , "); 
         System.out.printf(bank.get(Gem.Sapphire) + "S , ");
         System.out.printf(bank.get(Gem.Emerald) + "E , ");
         System.out.printf(bank.get(Gem.Onyx) + "O , ");
@@ -530,7 +562,16 @@ public class Game {
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
-                System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
+                if (market[i-1][j-1] == null) {
+                    System.out.printf("%d.%d Empty\n", i, j);
+
+                } else {
+                    System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
+                }
+            }
+
+            if (i != 3) {
+                System.out.println();
             }
         }
         System.out.printf("------------------------------------------------------------------\n");
@@ -548,22 +589,15 @@ public class Game {
         }
     }
 
-    // Overloaded printPlayer method 1
-    public static void printPlayer(String name) {
-        // incomplete
+    public static int printPlayer() {
+        System.out.println("Enter player number: ");
+        System.out.println("0. Cancel");
+
+        int choice = enterNumber(0, players.size());
+        return choice;
     }
 
-    // Overloaded printPlayer method 2
-    public static void printPlayer(int no) {
-
+    public static void clearScreen() {
+        System.out.print("\033c");
     }
-
-    public static void printAllPlayers() {
-
-    }
-
-    public static void printCommandList() {
-
-    }
-
 }
