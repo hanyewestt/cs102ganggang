@@ -28,12 +28,26 @@ public class NobleTile {
     }
 
     public String toString() {
-        String output = "{ Noble []\n";
-        output += "    Cost: " + tokens + "\n";
-        output += "    Pts : " + POINTS + "\n";
-        output += "}\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ").append(POINTS).append(" | ");
+        
+        Iterator tokenIterator = tokens.entrySet().iterator();
+        boolean first = true;
+        while (tokenIterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) tokenIterator.next();
 
-        return output;
+            if ((int) entry.getValue() > 0) {
+                if (first) {
+                    sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
+                    first = false;
+                } else {
+                    sb.append(", ").append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
+                }
+            }
+        }
+        sb.append(" ]");
+
+        return sb.toString();
     }
 
 }

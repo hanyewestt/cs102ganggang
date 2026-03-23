@@ -8,3 +8,4 @@ public enum Gem {
     Onyx,
     Gold
 }
+

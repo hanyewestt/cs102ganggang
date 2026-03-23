@@ -1,13 +1,14 @@
 package item;
 
-import java.util.*;
 import java.lang.*;
+import java.util.*;
 import util.*;
 // Gem, Card, NobleTile
 
 public class Player implements Comparable<Player> {
 
     private String name;
+    private int order;
 
     private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
 
@@ -28,9 +29,10 @@ public class Player implements Comparable<Player> {
 
     }
 
-    public Player(String name) {
+    public Player(String name, int order) {
         this();
         this.name = name;
+        this.order = order;
     }
 
     public int getPoints() {
@@ -69,8 +71,12 @@ public class Player implements Comparable<Player> {
         tokens.put(g, tokens.get(g) - amt);
     }
 
+    public void addProduction(Gem g, int amt) {
+        production.put(g, production.get(g) + amt);
+    }
+
     public void addProduction(Gem g) {
-        production.put(g, production.get(g) + 1);
+        this.addProduction(g, 1);
     }
 
     public void addPoints(int p) {
@@ -83,13 +89,8 @@ public class Player implements Comparable<Player> {
         addProduction(c.getGEMTYPE());
     }
 
-    public boolean reserveCard(Card c) {
-        if (getReserveHandSize() == MAX_RESERVE_HAND_SIZE) {
-            return false;
-        }
+    public void reserveCard(Card c) {
         reserveCards.add(c);
-
-        return true;
     }
 
     public boolean buyCard(Card c, Scanner keyboard) {
@@ -233,6 +234,10 @@ public class Player implements Comparable<Player> {
         reserveCards.remove(pos);
     }
 
+    public void removeReserveCard(Card card) {
+        reserveCards.remove(card);
+    }
+
     public void addNobleTile(NobleTile noble) {
         ownedNobles.add(noble);
         addPoints(noble.getPoints());
@@ -256,23 +261,40 @@ public class Player implements Comparable<Player> {
 
     @Override
     public String toString() {
-        String output = "{ Player [" + name + "]\n";
-        output += "   Points     : " + points + "\n";
-        output += "   Production : " + displayProduction();
-        // output += "   NumberCards: " + getNumberOfCards() + "\n";
-        output += "   Nobles     : " + displayNobles() + "\n";
-        output += "   Tokens     : " + displayTokens();
-        output += " }";
-        return output;
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("Player No. ").append(order).append("\n");
+        sb.append("Player Name: ").append(name).append("\n");
+        sb.append("Gems: ").append(displayTokens());
+        sb.append("Produces: ").append(displayProduction());
+        sb.append("Reserved: ").append(reserveCards.size()).append("\n");
+        sb.append("Prestige: ").append(points).append("\n");
+
+        return sb.toString();
     }
 
     public String displayProduction() {
+        StringBuilder sb = new StringBuilder("[");
+        boolean first = true;
 
-        String output = "\n";
         for (Gem g : Gem.values()) {
-            output += "     " + g + " = " + production.get(g) + "\n";
+            if (production.get(g) != 0) {
+                if (first) {
+                sb.append(production.get(g)).append(Utility.fromGemToChar(g));
+                first = false;
+
+            } else {
+                sb.append(", ").append(production.get(g)).append(Utility.fromGemToChar(g));
+            }
+            }
         }
-        return output;
+
+        if (first) {
+            sb.append("N/A");
+        }
+        sb.append("]\n");
+
+        return sb.toString();
     }
 
     public String displayNobles() {
@@ -297,11 +319,35 @@ public class Player implements Comparable<Player> {
     }
 
     public String displayTokens() {
-        String output = "\n";
+        StringBuilder sb = new StringBuilder("[");
+        boolean first = true;
+
         for (Gem g : Gem.values()) {
-            output += "     " + g + " = " + tokens.get(g) + "\n";
+            if (first) {
+                sb.append(tokens.get(g)).append(Utility.fromGemToChar(g));
+                first = false;
+            } else {
+                sb.append(", ").append(tokens.get(g)).append(Utility.fromGemToChar(g));
+            }
         }
-        return output;
+        sb.append("]\n");
+
+        return sb.toString();
     }
 
+    public void printReserved() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Reserved cards: ");
+
+        if (reserveCards.isEmpty()) {
+            sb.append("[N/A]\n");
+        } else {
+            for (int i = 0; i < reserveCards.size(); i++) {
+                sb.append("1.").append(i).append(" ");
+                sb.append(reserveCards.get(i).toString()).append("\n");
+            }
+        }
+
+        System.out.println(sb.toString());
+    }
 }
