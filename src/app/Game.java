@@ -166,11 +166,11 @@ public class Game {
                     printReserved = true;
                     break;
                 case 5:
-                    clearScreen();
                     printPlayerNo = printPlayer();
                     if (printPlayerNo != 0) {
                         printPlayer = true;
                     }
+                    clearScreen();
                     break;
                 case 6:
                     int idx = players.indexOf(player);
@@ -688,7 +688,7 @@ public class Game {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
                 if (market[i - 1][j - 1] == null) {
-                    System.out.printf("%d.%d Empty\n", i, j);
+                    System.out.printf("%d.%d [ Empty ]\n", i, j);
 
                 } else {
                     System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
@@ -718,7 +718,7 @@ public class Game {
     }
 
     public static int printPlayer() {
-        System.out.println("Enter player number:");
+        System.out.printf("Enter player number (1 - %d):\n", players.size());
         System.out.println("0. Cancel");
 
         int choice = Utility.askForNum(sc, 0, players.size(), "");
