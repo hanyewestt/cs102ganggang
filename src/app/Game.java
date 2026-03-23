@@ -721,14 +721,28 @@ public class Game {
     }
 
     public static int printPlayer() {
-        System.out.println("Enter player number: ");
+        System.out.println("Enter player number:");
         System.out.println("0. Cancel");
 
         int choice = Utility.askForNum(sc, 0, players.size(), "");
         return choice;
     }
 
+    public static void printWinner(List<Player> winningPlayers) {
+        clearScreen();
+
+        System.out.printf("------------------------------------------------------------------\n");
+        System.out.printf(" ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNERS ARE  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖\n");
+        for (Player p : winningPlayers) {
+            System.out.printf(" > ");
+            System.out.println(p.getName());
+        }
+        System.out.printf("------------------------------------------------------------------\n");
+    }
+
     public static void clearScreen() {
         System.out.print("\033c");
     }
 }
+
+

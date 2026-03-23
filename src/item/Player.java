@@ -337,13 +337,13 @@ public class Player implements Comparable<Player> {
 
     public void printReserved() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Reserved cards: ");
+        sb.append("Reserved cards: \n");
 
         if (reserveCards.isEmpty()) {
             sb.append("[N/A]\n");
         } else {
             for (int i = 0; i < reserveCards.size(); i++) {
-                sb.append("1.").append(i).append(" ");
+                sb.append("1.").append(i+1).append(" ");
                 sb.append(reserveCards.get(i).toString()).append("\n");
             }
         }
