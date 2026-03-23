@@ -1,7 +1,7 @@
 package item;
 
-import java.util.*;
 import java.lang.*;
+import java.util.*;
 import util.*;
 // Gem, Card, NobleTile
 
@@ -230,6 +230,10 @@ public class Player implements Comparable<Player> {
 
     public void removeReserveCard(int pos) {
         reserveCards.remove(pos);
+    }
+
+    public void removeReserveCard(Card card) {
+        reserveCards.remove(card);
     }
 
     public void addNobleTile(NobleTile noble) {

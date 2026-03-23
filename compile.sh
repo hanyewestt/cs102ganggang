@@ -1,1 +1,1 @@
-javac -d classes -cp "src" src/app/Game.java
+javac -d classes -cp "src:src/data/*" src/Game.java
