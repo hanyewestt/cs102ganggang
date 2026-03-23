@@ -10,7 +10,7 @@ public class Deck<T> {
      * Constructor that makes an empty deck.
      */
     public Deck() {
-        deck = new ArrayList<T>();
+        deck = new ArrayList<>();
     }
 
     /**

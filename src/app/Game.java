@@ -45,6 +45,18 @@ public class Game {
 
     }
 
+    public static HashMap<Gem, Integer> getBank() {
+        return bank;
+    }
+
+    public static Card[][] getMarket() {
+        return market;
+    }
+
+    public static ArrayList<NobleTile> getNobles() {
+        return nobles;
+    }
+
     public Game(int playerNumber) {
         this(playerNumber, (new Random()).nextLong());
     }
@@ -86,6 +98,8 @@ public class Game {
     public long getSeed() {
         return seed;
     }
+
+    
 
     public static void setPlayerArray(int playerNumber) {
         System.out.println("\nThe first player is the youngest.");
