@@ -232,6 +232,10 @@ public class Player implements Comparable<Player> {
         reserveCards.remove(pos);
     }
 
+    public void removeReserveCard(Card card) {
+        reserveCards.remove(card);
+    }
+
     public void addNobleTile(NobleTile noble) {
         ownedNobles.add(noble);
         addPoints(noble.getPoints());
