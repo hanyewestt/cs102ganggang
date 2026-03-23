@@ -35,7 +35,29 @@ public class Card {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[ ").append(GEMTYPE).append(" | ");
+        sb.append("[ ");
+
+        switch (Utility.fromGemToChar(GEMTYPE)) {
+            case 'D':
+                sb.append(" Diamond");
+                break;
+            case 'R':
+                sb.append("  Ruby  ");
+                break;
+            case 'S':
+                sb.append("Sapphire");
+                break;
+            case 'E':
+                sb.append(" Emerald");
+                break;
+            case 'O':
+                sb.append("  Onyx  ");
+                break;
+            default:
+                break;
+        }
+        
+        sb.append(" | ");
         sb.append(POINTS).append(" | ");
         
         Iterator tokenIterator = tokens.entrySet().iterator();
@@ -45,11 +67,12 @@ public class Card {
 
             if ((int) entry.getValue() > 0) {
                 if (first) {
-                    sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
                     first = false;
                 } else {
-                    sb.append(", ").append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
+                    sb.append(", ");
                 }
+
+                sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
             }
         }
         sb.append(" ]");
