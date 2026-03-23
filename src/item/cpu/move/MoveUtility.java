@@ -7,8 +7,9 @@ import java.util.*;
 
 public class MoveUtility {
 
-    public static int calculateExpectedValue(Game splendor, CPUPlayer cpu) {
+    public static int calculateExpectedValue(CPUPlayer cpu) {
         int sum = 0;
+        Game splendor = cpu.getGameState();
         ArrayList<NobleTile> nobles = splendor.getNobles();
 
         for (int i = 0; i < 3; i++) {

@@ -338,64 +338,83 @@ public class Game {
      * @return true if the action was successfully performed, false otherwise
      */
     public static boolean buyCard(Player p) {
-        int[] choice = null;
-        Card card = null;
-        Map<Gem, Integer> pBefore;
-        Map<Gem, Integer> pAfter;
-        boolean fromMarket = false;
 
-        while (true) {
-            System.out.println("Choose option: ");
-            System.out.println("1. Buy from market");
-            System.out.println("2. Buy from reserve");
-            System.out.println("0. Cancel");
+        while (true){
             System.out.println();
+            System.out.println("1. Buy from market"); 
+            System.out.println("2. Buy from reserve"); 
+            System.out.println("0. Cancel"); 
+            System.out.println();
+        
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: "); 
 
-            switch (Utility.askForNum(sc, 0, 2, "Enter your choice: ")) {
-                case 0:
-                    return false;
-                case 1:
-                    choice = Utility.getPositionOnBoard(sc);
-                    // convert choice to corresponding card
-                    card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
-
-                    // I assume that if the card is not in market, value at that pos is null.
-                    if (card == null) {
-                        System.out.println("error: card does not exist in market\n");
-                        continue;
-                    }
-
-                    fromMarket = true;
-                    break;
-                case 2:
-                // buy from reserve
+            if (choice == 0){
+                return false; 
             }
 
-            pBefore = p.getTokens();
+            if (choice == 1){
+                // buy from market 
+                int[] pos = Utility.getPositionOnBoard(sc); 
+                Card card = market[pos[0] - 1][pos[1] - 1]; 
 
-            boolean success = p.buyCard(card, sc);
-            if (!success) {
-                System.out.println("error: unable to buy card\n");
-                continue;
+                if (card == null){
+                    System.out.println("No card at that position"); 
+                    continue; 
+                }
+
+                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens()); 
+                boolean success = p.buyCard(card, sc); 
+                if (!success){
+                    System.out.println("Unable to buy that card.");
+                    continue;  
+                }
+
+                Map <Gem, Integer> pAfter = p.getTokens(); 
+
+                for (Gem g : Gem.values()) {
+                    int diff =  pBefore.get(g) - pAfter.get(g);
+                    bank.replace(g, diff + bank.get(g));
+                }
+
+                // remove from market
+                market[pos[0] - 1][pos[1] - 1] = decks.get(pos[0] - 1).draw();
+                return true;
             }
-            pAfter = p.getTokens();
 
-            break;
+            if (choice == 2){
+                // buy from reserve 
+                List<Card> hand = p.getReserveHand(); 
+                if (hand.isEmpty()){
+                    System.out.println("You have no reserved cards.");
+                    continue; 
+                }
+
+                System.out.println("Your reserved cards:");
+                for (int i = 0; i < hand.size(); i++) {
+                    System.out.println((i + 1) + ". " + hand.get(i));
+                }
+
+                int idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
+                Card card = hand.get(idx);
+
+                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
+                boolean success = p.buyCard(card, sc);
+                if (!success) {
+                    System.out.println("Unable to buy that card.");
+                    continue;
+                }
+
+                Map<Gem, Integer> pAfter = p.getTokens();
+
+                for (Gem g : Gem.values()) {
+                    int diff = pBefore.get(g) - pAfter.get(g);
+                    bank.replace(g, diff + bank.get(g));
+                }
+
+                p.removeReserveCard(idx);
+                return true;
+            }
         }
-
-        for (Gem g : Gem.values()) {
-            int diff = pBefore.get(g) - pAfter.get(g);
-            bank.replace(g, diff + bank.get(g));
-        }
-
-        if (fromMarket) {
-            // remove from market
-            market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
-        } else {
-            // remove from reserve
-        }
-
-        return true;
     }
 
     /**
@@ -717,14 +736,28 @@ public class Game {
     }
 
     public static int printPlayer() {
-        System.out.println("Enter player number: ");
+        System.out.println("Enter player number:");
         System.out.println("0. Cancel");
 
         int choice = Utility.askForNum(sc, 0, players.size(), "");
         return choice;
     }
 
+    public static void printWinner(List<Player> winningPlayers) {
+        clearScreen();
+
+        System.out.printf("------------------------------------------------------------------\n");
+        System.out.printf(" ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNERS ARE  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖\n");
+        for (Player p : winningPlayers) {
+            System.out.printf(" > ");
+            System.out.println(p.getName());
+        }
+        System.out.printf("------------------------------------------------------------------\n");
+    }
+
     public static void clearScreen() {
         System.out.print("\033c");
     }
 }
+
+

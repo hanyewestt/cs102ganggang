@@ -9,8 +9,9 @@ public abstract class Move {
     private int expectedValue;
     private int pointsGain;
     private boolean winning;
+    private int nobleIdx;
 
-    public abstract void doMove(Game splendor, CPUPlayer cpu);
+    public abstract void doMove(CPUPlayer cpu);
 
     public int getExpectedValue() {
         return expectedValue;
@@ -22,6 +23,10 @@ public abstract class Move {
 
     public boolean getWinning() {
         return winning;
+    }
+
+    public int getNobleIdx() {
+
     }
 
     public void setExpectedValue(int expectedValue) {
