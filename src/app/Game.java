@@ -211,7 +211,7 @@ public class Game {
      * @return true if the player has reached the win condition, false otherwise
      */
     public static boolean hitWinCondition(Player p) {
-        return p.getPoints() == 15;
+        return p.getPoints() >= 15;
     }
 
     public static List<Player> getWinner() {
