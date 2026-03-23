@@ -1,9 +1,10 @@
 package app;
 
-import java.util.*;
-import item.*;
-import util.*;
 import config.*;
+import item.*;
+import java.lang.*;
+import java.util.*;
+import util.*;
 
 public class Game {
 
@@ -15,19 +16,29 @@ public class Game {
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
     private static long seed;
+    private static int roundNumber;
 
+    /**
+     * Entry point of the game program. 
+     * Prompts the user to enter the number of players, creates a new Game instance,
+     * and conducts rounds until win condition is reached. 
+     * Once the game ends, it retrieves the winners using {@link getWinner()}
+     * and prints out the winning players.
+     *
+     * @param args 
+     */
     public static void main(String[] args) {
         int playerNumber = Utility.askForNum(sc, 2, 4, "Enter number of players (between 2 and 4): ");
 
         Game game = new Game(playerNumber);
 
         boolean lastRound = false;
-        int roundNumber = 1;
+        roundNumber = 1;
         while (!lastRound) {
-            System.out.println("\n---------- Round " + roundNumber + " ----------");
             for (int i = 0; i < playerNumber; i++) {
+                clearScreen();
+                System.out.println("\n---------- Round " + roundNumber + " ----------");
                 System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
-                System.out.println(players.get(i));
                 doPlayerTurn(players.get(i));
                 if (!lastRound) {
                     lastRound = hitWinCondition(players.get(i));
@@ -44,6 +55,12 @@ public class Game {
 
     }
 
+    /**
+     * Initializes the game board with the specified number of players and cards.
+     * Sets up the bank, noble tiles, and player objects.
+     *
+     * @param playerNumber the number of players in the game
+     */
     public Game(int playerNumber) {
         this(playerNumber, (new Random()).nextLong());
     }
@@ -59,9 +76,10 @@ public class Game {
         for (Gem gem : Gem.values()) {
             bank.put(gem, startingGems);
         }
-
+    
         for (int i = 0; i < 3; i++) {
-            decks.add(new Deck(Configuration.getDeck(i + 1)));
+            Deck<Card> deck = new Deck<>(Configuration.getDeck(i + 1));
+            decks.add(deck);
             decks.get(i).shuffleDeck(seed);
         }
 
@@ -85,31 +103,61 @@ public class Game {
         return seed;
     }
 
+    /**
+     * Initializes the player array by prompting each player to enter their name
+     * and creating a corresponding {@link Player} for each entry.
+     *
+     * @param playerNumber the total number of players participating in the game
+     */
     public static void setPlayerArray(int playerNumber) {
         System.out.println("\nThe first player is the youngest.");
         for (int i = 0; i < playerNumber; i++) {
             System.out.print("Enter player " + (i + 1) + " name: ");
             String name = sc.nextLine();
-            Player player = new Player(name);
+            Player player = new Player(name, i+1);
             players.add(player);
         }
     }
 
-    public static void doPlayerTurn(Player player) {
+    /**
+     * Executes a player's turn by presenting three available options, 
+     * Draw tokens, Reserve a card and Buy a card
+     * The player is repeatedly prompted to enter a choice until a valid
+     * action is performed.
+     *
+     * @param player the {@link Player} whose turn is being executed
+     */
 
+    public static void doPlayerTurn(Player player) {
+        boolean first = true;
         boolean turnDone = false;
+        boolean printReserved = false;
+        boolean printPlayer = false;
+        int printPlayerNo = -1;
+
         while (!turnDone) {
+            if (!first) {
+                System.out.println("\n---------- Round " + roundNumber + " ----------");
+                System.out.println("\n=== " + player.getName() + "'s turn ===");
+            }
             // show board every turn? might affect the choice they make
             printBoard();
 
-            System.out.println("1. Draw tokens");
-            System.out.println("2. Reserve a card");
-            System.out.println("3. Buy a card");
-            System.out.println("4. skip");
-            System.out.println("5. admin perms");
-            System.out.println();
+            if (printReserved) {
+                player.printReserved();
+                printReserved = false;
+            } else if (printPlayer) {
+                System.out.println(players.get(printPlayerNo - 1).toString());
+                printPlayer = false;
+            }
 
-            switch (Utility.askForNum(sc, 1, 5, "Enter your choice:")) {
+            if (first) {
+                System.out.println(player);
+                first = false;
+            }
+            turnOptionDisplay();
+
+            switch (enterNumber(1, 6)) {
                 case 1:
                     turnDone = drawToken(player);
                     break;
@@ -120,10 +168,17 @@ public class Game {
                     turnDone = buyCard(player);
                     break;
                 case 4:
-                    //skip turn????
-                    turnDone = true;
+                    clearScreen();
+                    printReserved = true;
                     break;
                 case 5:
+                    clearScreen();
+                    printPlayerNo = printPlayer();
+                    if (printPlayerNo != 0) {
+                        printPlayer = true;
+                    }
+                    break;
+                case 6:
                     int idx = players.indexOf(player);
                     player = adminPerms(player);
                     players.set(idx, player);
@@ -151,6 +206,13 @@ public class Game {
         }
     }
 
+    /**
+     * Checks whether the player has met the win condition.
+     * The win condition is reached when the player's points total is 15.
+     *
+     * @param p the {@link Player} being checked
+     * @return true if the player has reached the win condition, false otherwise
+     */
     public static boolean hitWinCondition(Player p) {
         return p.getPoints() == 15;
     }
@@ -177,6 +239,12 @@ public class Game {
 
     }
 
+    /**
+     * Determines which {@link NobleTile} are visiting the specified player.
+     * 
+     * @param p the {@link Player} being checked
+     * @return a list of {@link NobleTile} that are visiting the player
+     */
     public static List<NobleTile> visitingNobles(Player p) {
         List<NobleTile> result = new ArrayList<>();
         HashMap<Gem, Integer> playerProduction = p.getProduction();
@@ -198,6 +266,13 @@ public class Game {
         return result;
     }
 
+    /**
+     * Performs the reserve card action. The {@link Player} selects a card to reserve,
+     * and receives 1 gold if the bank has gold available.
+     * 
+     * @param p the {@link Player} performing the action
+     * @return true if the action was successfully performed, false otherwise
+     */
     public static boolean reserveCard(Player p) {
 
         if (p.getReserveHandSize() == 3) {
@@ -262,6 +337,13 @@ public class Game {
 
     }
 
+    /**
+     * Performs the buy card action. The {@link Player} selects a card to buy,
+     * and the player's tokens and the bank are updated accordingly.
+     * 
+     * @param p the {@link Player} performing the action
+     * @return true if the action was successfully performed, false otherwise
+     */
     public static boolean buyCard(Player p) {
         int[] choice = null;
         Card card = null;
@@ -323,7 +405,14 @@ public class Game {
         return true;
     }
 
-    // drawToken function 
+    /**
+     * Performs the draw token action. The {@link Player} may choose to take 2 tokens of the same type, 3 tokens of different types, or cancel action.
+     * If the {@link Player} has more than 10 tokens, prompts the user to return excess
+     * The {@link Player}'s tokens and the bank are updated accordingly.
+     * 
+     * @param p the {@link Player} performing the action
+     * @return true if the action was successfully performed, false otherwise
+     */
     public static boolean drawToken(Player currentPlayer) {
 
         boolean validAction = false;
@@ -333,8 +422,9 @@ public class Game {
             System.out.println("1. Take 3 different tokens");
             System.out.println("2. Take 2 same tokens");
             System.out.println("0. Cancel");
+            System.out.println();
 
-            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+            int choice = Utility.askForNum(sc, 0, 2, "Please enter your choice: ");
 
             if (choice == 0) {
                 return false;
@@ -402,6 +492,12 @@ public class Game {
         return true;
     }
 
+    /**
+     * Prompts the player to select three tokens of different types,
+     * ensuring that the selected tokens are available in the bank.
+     *
+     * @return a set of {@link Gem} selected by the player
+    */
     private static Set<Gem> pickThreeDifferentGems() {
         Set<Gem> chosen = new HashSet<>();
 
@@ -440,6 +536,13 @@ public class Game {
         return chosen;
     }
 
+    /**
+     * Prompts the player to select a token or cancel the action.
+     * Ensures that the selected token type is available in the bank
+     * (at least four tokens must be present).
+     *
+     * @return the {@link Gem} selected by the player
+    */
     private static Gem pickTwoSameGem() {
         while (true) {
             System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx) or 'cancel':");
@@ -468,7 +571,6 @@ public class Game {
             }
         }
     }
-
 
     /**
      * Admin Permissions
@@ -524,11 +626,26 @@ public class Game {
         return p;
     }
 
+    public static void turnOptionDisplay() {
+        System.out.println("1. Draw tokens");
+        System.out.println("2. Reserve a card");
+        System.out.println("3. Buy a card");
+        System.out.println("4. Show reserved cards");
+        System.out.println("5. Display player");
+        System.out.println("6. admin perms");
+        System.out.println();
+        System.out.print("Please enter your choice:");
+    }
+
+    /**
+     * Prints the current state of the board, including all cards and noble tiles.
+     * Includes: Avaliable cards, Bank, Nobile Tiles
+     */
     public static void printBoard() {
         System.out.printf("------------------------------------------------------------------\n");
         System.out.printf("Bank: ");
         System.out.printf(bank.get(Gem.Diamond) + "D , ");
-        System.out.printf(bank.get(Gem.Ruby) + "R , ");
+        System.out.printf(bank.get(Gem.Ruby) + "R , "); 
         System.out.printf(bank.get(Gem.Sapphire) + "S , ");
         System.out.printf(bank.get(Gem.Emerald) + "E , ");
         System.out.printf(bank.get(Gem.Onyx) + "O , ");
@@ -539,7 +656,16 @@ public class Game {
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
-                System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
+                if (market[i-1][j-1] == null) {
+                    System.out.printf("%d.%d Empty\n", i, j);
+
+                } else {
+                    System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
+                }
+            }
+
+            if (i != 3) {
+                System.out.println();
             }
         }
         System.out.printf("------------------------------------------------------------------\n");
@@ -549,6 +675,9 @@ public class Game {
         System.out.printf("------------------------------------------------------------------\n\n");
     }
 
+    /**
+     * Prints {@link NobleTile}s on the board.
+     */
     public static void printNobles() {
 
         System.out.printf("<NOBLE TILES>\n");
@@ -557,22 +686,15 @@ public class Game {
         }
     }
 
-    // Overloaded printPlayer method 1
-    public static void printPlayer(String name) {
-        // incomplete
+    public static int printPlayer() {
+        System.out.println("Enter player number: ");
+        System.out.println("0. Cancel");
+
+        int choice = enterNumber(0, players.size());
+        return choice;
     }
 
-    // Overloaded printPlayer method 2
-    public static void printPlayer(int no) {
-
+    public static void clearScreen() {
+        System.out.print("\033c");
     }
-
-    public static void printAllPlayers() {
-
-    }
-
-    public static void printCommandList() {
-
-    }
-
 }
