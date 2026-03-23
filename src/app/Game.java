@@ -47,11 +47,8 @@ public class Game {
             // clear terminal
         }
         List<Player> winningPlayers = getWinner();
-        for (int i = 0; i < winningPlayers.size(); i++) {
-            System.out.println(winningPlayers.get(i).getName());
-        }
+        printWinner(winningPlayers);
         sc.close();
-
     }
 
     /**
@@ -372,7 +369,7 @@ public class Game {
                     fromMarket = true;
                     break;
                 case 2:
-                // buy from reserve
+                    // ignore this 
             }
 
             pBefore = p.getTokens();
