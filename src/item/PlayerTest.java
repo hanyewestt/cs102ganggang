@@ -30,9 +30,9 @@ public class PlayerTest {
     }
 
     public PlayerTest() {
-        Player p1 = new Player("A");
-        Player p2 = new Player("B");
-        Player p3 = new Player("C");
+        Player p1 = new Player("A",1);
+        Player p2 = new Player("B",2);
+        Player p3 = new Player("C",3);
 
         p1.addPoints(15);
         p2.addPoints(15);
