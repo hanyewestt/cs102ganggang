@@ -166,21 +166,6 @@ public class Game {
                     break;
                 case 3:
                     turnDone = buyCard(player);
-                    List<NobleTile> visitingNobles = visitingNobles(player);
-                    if (visitingNobles.size() > 1) {
-                        int choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
-                        // display choices
-                        for (int i = 0; i < visitingNobles.size(); i++) {
-                            NobleTile t = visitingNobles.get(i);
-                            System.out.println((i + 1) + ": " + t);
-                        }
-                        NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
-                        player.addNobleTile(noble);
-                        nobles.remove(noble);
-                    } else if (visitingNobles.size() == 1) {
-                        player.addNobleTile(visitingNobles.get(0));
-                        nobles.remove(visitingNobles.get(0));
-                    }
                     break;
                 case 4:
                     clearScreen();
@@ -199,6 +184,25 @@ public class Game {
                     players.set(idx, player);
                     break;
             }
+        }
+        nobleSelection(player);
+    }
+
+    public static void nobleSelection(Player p) {
+        List<NobleTile> visitingNobles = visitingNobles(p);
+        if (visitingNobles.size() > 1) {
+            // display choices
+            for (int i = 0; i < visitingNobles.size(); i++) {
+                NobleTile t = visitingNobles.get(i);
+                System.out.println((i + 1) + ": " + t);
+            }
+            int choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
+            NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
+            p.addNobleTile(noble);
+            nobles.remove(noble);
+        } else if (visitingNobles.size() == 1) {
+            p.addNobleTile(visitingNobles.get(0));
+            nobles.remove(visitingNobles.get(0));
         }
     }
 
