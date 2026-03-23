@@ -475,156 +475,104 @@ public class Game {
     }
 
     /**
-     * Performs the draw token action. The {@link Player} may choose to take 2
-     * tokens of the same type, 3 tokens of different types, or cancel action.
-     * If the {@link Player} has more than 10 tokens, prompts the user to return
-     * excess The {@link Player}'s tokens and the bank are updated accordingly.
+     * Performs the draw token action. Handles the overall logical flow of the draw token action,
+     * including CPU actions and player actions. 
+     * Updates player and bank based on the hashmaps returned.
      *
      * @param p the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
     public static boolean drawToken(Player currentPlayer) {
 
-        boolean validAction = false;
+        HashMap<Gem, Integer> chosen;
 
-        while (!validAction) {
-            System.out.println();
-            System.out.println("Token options: ");
-            System.out.println();
-            System.out.println("1. Take 3 different tokens");
-            System.out.println("2. Take 2 same tokens");
-            System.out.println("0. Cancel");
-            System.out.println();
-
-            int choice = Utility.askForNum(sc, 0, 2, "Please enter your choice: ");
-
-            if (choice == 0) {
+        if (currentPlayer instanceof CPUPlayer cpu) {
+            DrawToken move = cpu.getMove();
+            // todo
+            chosen = move.getTokens();
+        } else {
+            chosen = drawTokenFromPlayer(currentPlayer);
+            if (chosen == null) {
+                // player has chosen not to continue
                 return false;
             }
-
-            // add token - option 1: 3 different tokens 
-            if (choice == 1) {
-
-                Set<Gem> chosen = pickThreeDifferentGems();
-
-                if (chosen.isEmpty()) {
-                    continue; // user cancelled 
-                }
-
-                for (Gem g : chosen) {
-                    bank.replace(g, bank.get(g) - 1);
-                    currentPlayer.addToken(g, 1);
-                }
-
-                validAction = true;
-
-            } else if (choice == 2) {
-                Gem g = pickTwoSameGem();
-
-                if (g == null) {
-                    continue; // user cancelled 
-                }
-
-                bank.replace(g, bank.get(g) - 2);
-                currentPlayer.addToken(g, 2);
-
-                validAction = true;
-            }
         }
 
-        // checksize
-        // if exceed, prompt user to return tokens 
-        int totalTokens = 0;
-        for (Gem g : Gem.values()) {
-            totalTokens += currentPlayer.getTokens().get(g);
+        for (Gem g : chosen.keySet()) {
+            bank.replace(g, bank.get(g) - chosen.get(g));
+            currentPlayer.addToken(g, chosen.get(g));
         }
 
-        while (totalTokens > 10) {
+        if (currentPlayer.getTokenAmount() <= 10) {
+            return true;
+        }
 
-            currentPlayer.displayTokens();
-            System.out.print("You have more than 10 tokens. Return 1 token:");
-            String input = sc.nextLine().trim();
+        // player's amount of token exceeds 10.
+        HashMap<Gem, Integer> returnAmt;
+        if (currentPlayer instanceof CPUPlayer cpu) {
+            DrawToken move = cpu.getMove();
+            // todo
+            returnAmt = move.getReturnAmt();
+        } else {
+            returnAmt = getReturnAmtFromPlayer(currentPlayer);
+        }
 
-            if (input.length() != 1) {
-                System.out.println("Invalid gem.");
-                continue;
-            }
-
-            char c = Character.toUpperCase(input.charAt(0));
-            Gem g = Utility.fromCharToGem(c);
-
-            if (g == null && c == 'G') {
-                g = Gem.Gold;
-            }
-
-            if (g == null) {
-                System.out.println("Invalid gem.");
-                continue;
-            }
-
-            if (currentPlayer.getTokens().get(g) > 0) {
-                currentPlayer.removeToken(g, 1);
-                bank.replace(g, bank.get(g) + 1);
-                totalTokens--;
-            } else {
-                System.out.println("You don't have that token.");
-            }
+        for (Gem g : returnAmt.keySet()) {
+            bank.replace(g, bank.get(g) + returnAmt.get(g));
+            currentPlayer.removeToken(g, returnAmt.get(g));
         }
 
         return true;
     }
 
     /**
+     * Handles the choice to draw 3 or draw 2 tokens. Should only be accessed if player is not a cpu.
+     * @param p The Player
+     * @return a hashmap of the tokens to draw. null if player cancels.
+     */
+    public static HashMap<Gem, Integer> drawTokenFromPlayer(Player p) {
+        System.out.println();
+        System.out.println("Token options: ");
+        System.out.println();
+        System.out.println("1. Take 3 different tokens");
+        System.out.println("2. Take 2 same tokens");
+        System.out.println("0. Cancel");
+        System.out.println();
+
+        int choice = Utility.askForNum(sc, 0, 2, "Please enter your choice: ");
+
+        switch (choice) {
+            case 1:
+                return pickThreeDifferentGems(p);
+            case 2:
+                return pickTwoSameGem(p);
+            default:
+                return null;
+        }
+    }
+
+    /**
      * Prompts the player to select three tokens of different types, ensuring
      * that the selected tokens are available in the bank.
      *
-     * @return a set of {@link Gem} selected by the player
+     * @return a hashmap of the tokens to draw
      */
-    private static Set<Gem> pickThreeDifferentGems() {
-        Set<Gem> chosen = new HashSet<>();
-
+    private static HashMap<Gem, Integer> pickThreeDifferentGems(Player p) {
+        HashMap<Gem, Integer> chosen = new HashMap<>();
         while (chosen.size() < 3) {
-
-            System.out.print("Enter gem (D/R/S/E/O) or 'cancel': ");
-            String gemInput = sc.nextLine().trim();
-
-            if (gemInput.isEmpty()) {
-                continue;
-            }
-
-            if (gemInput.equalsIgnoreCase("cancel")) {
-                return new HashSet<>(); // return empty set 
-            }
-
-            if (gemInput.length() != 1) {
-                System.out.println("Invalid gem.");
-                continue;
-            }
-
-            char c = Character.toUpperCase(gemInput.charAt(0));
-            Gem g = Utility.fromCharToGem(c);
-
-            if (g == null) {
-                System.out.println("Invalid gem.");
-                continue;
-            }
-
-            if (g == Gem.Gold) {
-                System.out.println("Unable to take gold this way.");
-                continue;
-            }
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx)");
 
             if (bank.get(g) <= 0) {
                 System.out.println("Bank does not have this gem.");
                 continue;
             }
 
-            if (chosen.contains(g)) {
+            if (chosen.containsKey(g)) {
                 System.out.println("Already chosen.");
                 continue;
             }
 
-            chosen.add(g);
+            chosen.put(g, 1);
         }
 
         return chosen;
@@ -635,47 +583,53 @@ public class Game {
      * the selected token type is available in the bank (at least four tokens
      * must be present).
      *
-     * @return the {@link Gem} selected by the player
+     * @return a hashmap of the tokens to draw
      */
-    private static Gem pickTwoSameGem() {
-        while (true) {
-            System.out.print("Enter gem (D/R/S/E/O) or 'cancel':");
-            String gemInput = sc.nextLine().trim();
-
-            if (gemInput.isEmpty()) {
-                continue;
-            }
-
-            if (gemInput.equalsIgnoreCase("cancel")) {
-                return null;  // handled in drawToken
-            }
-
-            if (gemInput.length() != 1) {
-                System.out.println("Invalid gem.");
-                continue;
-            }
-
-            char c = Character.toUpperCase(gemInput.charAt(0));
-            Gem g = Utility.fromCharToGem(c);
-
-            if (g == null) {
-                System.out.println("Invalid gem.");
-                continue;
-            }
-
-            if (g == Gem.Gold) {
-                System.out.println("Unable to take gold this way.");
-                continue;
-            }
+    private static HashMap<Gem, Integer> pickTwoSameGem(Player p) {
+        HashMap<Gem, Integer> chosen = new HashMap<>();
+        while (chosen.size() < 1) {
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx)");
 
             if (bank.get(g) < 4) {
                 System.out.println("Need at least 4 in bank to take 2.");
                 continue;
             }
 
-            return g;  // valid gem found
+            chosen.put(g, 2);
         }
 
+        return chosen;
+    }
+
+    /**
+     * Prompts the user to select gems to return, if the number of tokens in their hand exceeds 10.
+     * @param p the player.
+     * @return a hashmap of the tokens to return.
+     */
+    public static HashMap<Gem, Integer> getReturnAmtFromPlayer(Player p) {
+        HashMap<Gem, Integer> returnAmt = new HashMap<>();
+        HashMap<Gem, Integer> pTokens = p.getTokens();
+        int total = p.getTokenAmount();
+        while (total > 10) {
+            p.displayTokens();
+            // this doesnt include gold tho
+            Gem g = Utility.askForGem(sc, "You have more than 10 tokens. Return 1 token:");
+            // Gem g = Utility.askForGem(sc, "You have more than 10 tokens. Return 1 token:", true);
+            Integer amtPerGem = returnAmt.get(g);
+            if (amtPerGem == null) {
+                amtPerGem = 0;
+            }
+
+            // check that player has at least the amt they want to return
+            if (pTokens.get(g) >= ++amtPerGem) {
+                returnAmt.put(g, amtPerGem);
+                total--;
+            } else {
+                System.out.println("You don't have that token.");
+            }
+        }
+
+        return returnAmt;
     }
 
     /**
