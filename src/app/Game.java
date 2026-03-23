@@ -184,6 +184,10 @@ public class Game {
         }
         nobleSelection(player);
     }
+    /**
+     * Prompts the {@link Player} to choose a noble if more than 1 visits and adds the noble to the {@link Player} 
+     * @param player the {@link Player} whose turn is being executed
+     */
 
     public static void nobleSelection(Player p) {
         List<NobleTile> visitingNobles = visitingNobles(p);
@@ -214,6 +218,14 @@ public class Game {
         return p.getPoints() >= 15;
     }
 
+    /**
+     * Checks if the player’s points are equal to or more than 15.
+     * @param p the {@link Player} being checked.
+     * @return true if the player has reached the win condition, false otherwise
+
+     * 
+     * 
+     */
     public static List<Player> getWinner() {
         Collections.sort(players);
         List<Player> winningPlayers = new ArrayList<>();
@@ -679,6 +691,9 @@ public class Game {
         return p;
     }
 
+    /**
+     * Displays options that player can perform.
+     */
     public static void turnOptionDisplay() {
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
@@ -691,8 +706,8 @@ public class Game {
     }
 
     /**
-     * Prints the current state of the board, including all cards and noble
-     * tiles. Includes: Avaliable cards, Bank, Nobile Tiles
+     * Prints the current state of the board, including all cards and noble tiles. 
+     * Includes: Avaliable Cards, Bank, NobleTiles
      */
     public static void printBoard() {
         System.out.printf("------------------------------------------------------------------\n");
@@ -739,6 +754,11 @@ public class Game {
         }
     }
 
+    /**
+     * Prompts user to enter a player to display by entering their number
+     *
+     * @return the selected player’s order number
+     */
     public static int printPlayer() {
         System.out.println("Enter player number:");
         System.out.println("0. Cancel");
@@ -747,6 +767,9 @@ public class Game {
         return choice;
     }
 
+    /**
+     * Prints the winner of the game
+     */
     public static void printWinner(List<Player> winningPlayers) {
         clearScreen();
 
@@ -759,6 +782,9 @@ public class Game {
         System.out.printf("------------------------------------------------------------------\n");
     }
 
+    /**
+     * Clears terminal
+     */
     public static void clearScreen() {
         System.out.print("\033c");
     }

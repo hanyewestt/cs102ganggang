@@ -9,6 +9,17 @@ public class Card {
     private final Gem GEMTYPE;
     private final int POINTS;
     
+    /**
+     * Constructor for Card that initialises the Gem Hashmap
+     * 
+     * @param GEMTYPE Gem enum
+     * @param POINTS points of Card
+     * @param Diamond no. of Diamonds needed to purchase Card
+     * @param Ruby no. of Ruby needed to purchase Card
+     * @param Sapphire no. of Sapphire needed to purchase Card
+     * @param Emerald no. of Emerald needed to purchase Card
+     * @param Onyx no. of Onyx needed to purchase Card
+     */
     public Card(Gem GEMTYPE, int POINTS, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
         this.GEMTYPE = GEMTYPE;
         this.POINTS = POINTS;
@@ -20,18 +31,30 @@ public class Card {
         tokens.put(Gem.Gold, 0);
     }
 
+    /**
+     * @return Cost of Card as HashMap
+     */
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
     }
 
-    public Gem getGEMTYPE() {
+    /**
+     * @return Gem production type of Card
+     */
+    public Gem getGemType() {
         return GEMTYPE;
     }
 
-    public int getPOINTS() {
+    /**
+     * @return Prestige points of Card
+     */
+    public int getPoints() {
         return POINTS;
     }
 
+    /**
+     * @return Card info to be displayed on console
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
