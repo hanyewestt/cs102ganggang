@@ -132,6 +132,11 @@ public class Game {
         boolean printPlayer = false;
         int printPlayerNo = -1;
 
+        if (player instanceof CPUPlayer cpu) {
+            cpu.getMove().doMove();
+            return;
+        }
+
         while (!turnDone) {
             if (!first) {
                 System.out.println("\n---------- Round " + roundNumber + " ----------");
@@ -193,7 +198,15 @@ public class Game {
                 NobleTile t = visitingNobles.get(i);
                 System.out.println((i + 1) + ": " + t);
             }
-            int choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
+
+            int choice;
+            if (p instanceof CPUPlayer cpu) {
+                NobleSelection move = (NobleSelection) cpu.getMove();
+                choice = move.getNobleIdx();
+            } else {
+                choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
+            }
+
             NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
             p.addNobleTile(noble);
             nobles.remove(noble);
@@ -285,14 +298,27 @@ public class Game {
             System.out.println("2. Reserve from deck");
             System.out.println("0. Cancel");
 
-            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+            int choice;
+            if (p instanceof CPUPlayer cpu) {
+                ReserveCard move = (ReserveCard) cpu.getMove();
+                choice = move.getReserveLocation();
+            } else {
+                choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+            }
 
             if (choice == 0) {
                 return false;
             }
 
             if (choice == 1) {
-                int[] choice2 = Utility.getPositionOnBoard(sc);
+                int[] choice2;
+                if (p instanceof CPUPlayer cpu) {
+                    ReserveCard move = (ReserveCard) cpu.getMove();
+                    // todo
+                    choice2 = move.getType();
+                } else {
+                    choice2 = Utility.getPositionOnBoard(sc);
+                }
                 // convert choice to corresponding card
                 Card card = market[choice2[0] - 1][choice2[1] - 1];
 
@@ -307,7 +333,14 @@ public class Game {
             }
 
             if (choice == 2) {
-                int choice2 = Utility.askForNum(sc, 1, 3, "Enter deck no. (1, 2, 3): ");
+                int choice2;
+                if (p instanceof CPUPlayer cpu) {
+                    ReserveCard move = (ReserveCard) cpu.getMove();
+                    // todo
+                    choice2 = move.getType();
+                } else {
+                    choice2 = Utility.askForNum(sc, 1, 3, "Enter deck no. (1, 2, 3): ");
+                }
                 Card card = decks.get(choice2 - 1).draw();
                 if (card == null) {
                     System.out.println("Deck is empty");
@@ -340,40 +373,55 @@ public class Game {
      */
     public static boolean buyCard(Player p) {
 
-        while (true){
+        while (true) {
             System.out.println();
-            System.out.println("1. Buy from market"); 
-            System.out.println("2. Buy from reserve"); 
-            System.out.println("0. Cancel"); 
+            System.out.println("1. Buy from market");
+            System.out.println("2. Buy from reserve");
+            System.out.println("0. Cancel");
             System.out.println();
-        
-            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: "); 
 
-            if (choice == 0){
-                return false; 
+            int choice;
+            if (p instanceof CPUPlayer cpu) {
+                BuyCard move = (BuyCard) cpu.getMove();
+                choice = move.getBuyLocation();
+            } else {
+                choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
             }
 
-            if (choice == 1){
-                // buy from market 
-                int[] pos = Utility.getPositionOnBoard(sc); 
-                Card card = market[pos[0] - 1][pos[1] - 1]; 
+            if (choice == 0) {
+                return false;
+            }
 
-                if (card == null){
-                    System.out.println("No card at that position"); 
-                    continue; 
+            if (choice == 1) {
+                // get card position
+                int[] pos;
+                if (p instanceof CPUPlayer cpu) {
+                    BuyCard move = (BuyCard) cpu.getMove();
+                    // todo
+                    pos = move.getType();
+                } else {
+                    pos = Utility.getPositionOnBoard(sc);
+                }
+                Card card = market[pos[0] - 1][pos[1] - 1];
+
+                if (card == null) {
+                    System.out.println("No card at that position");
+                    continue;
                 }
 
-                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens()); 
-                boolean success = p.buyCard(card, sc); 
-                if (!success){
+                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
+
+                boolean success = p.buyCard(card, sc);
+                if (!success) {
                     System.out.println("Unable to buy that card.");
-                    continue;  
+                    continue;
                 }
 
-                Map <Gem, Integer> pAfter = p.getTokens(); 
+                Map<Gem, Integer> pAfter = p.getTokens();
 
+                // update bank
                 for (Gem g : Gem.values()) {
-                    int diff =  pBefore.get(g) - pAfter.get(g);
+                    int diff = pBefore.get(g) - pAfter.get(g);
                     bank.replace(g, diff + bank.get(g));
                 }
 
@@ -382,20 +430,28 @@ public class Game {
                 return true;
             }
 
-            if (choice == 2){
+            if (choice == 2) {
                 // buy from reserve 
-                List<Card> hand = p.getReserveHand(); 
-                if (hand.isEmpty()){
+                List<Card> hand = p.getReserveHand();
+                if (hand.isEmpty()) {
                     System.out.println("You have no reserved cards.");
-                    continue; 
+                    continue;
                 }
 
-                System.out.println("Your reserved cards:");
-                for (int i = 0; i < hand.size(); i++) {
-                    System.out.println((i + 1) + ". " + hand.get(i));
+                int idx;
+                if (p instanceof CPUPlayer cpu) {
+                    BuyCard move = (BuyCard) cpu.getMove();
+                    // todo
+                    idx = move.getType();
+                } else {
+                    System.out.println("Your reserved cards:");
+                    for (int i = 0; i < hand.size(); i++) {
+                        System.out.println((i + 1) + ". " + hand.get(i));
+                    }
+
+                    idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
                 }
 
-                int idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
                 Card card = hand.get(idx);
 
                 Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
@@ -760,5 +816,3 @@ public class Game {
         System.out.print("\033c");
     }
 }
-
-
