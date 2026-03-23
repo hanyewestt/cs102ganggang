@@ -245,5 +245,4 @@ public class Configuration {
             sc.close();
         }
     }
-
 }
