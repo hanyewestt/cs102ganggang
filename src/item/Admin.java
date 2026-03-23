@@ -11,7 +11,7 @@ public class Admin extends Player {
      * @param adminNo identifier for Admin
      */
     public Admin(int adminNo) {
-        super("admin");
+        super("admin", 0);
         this.adminNo = adminNo;
 
         // by default, give admin 999 tokens
@@ -32,7 +32,7 @@ public class Admin extends Player {
      */
     public Admin(String name, HashMap<Gem, Integer> tokens, List<Card> reserveCards, HashMap<Gem, Integer> production, List<NobleTile> nobles, int points) {
 
-        super(name);
+        super(name, 0);
         for (Gem g : Gem.values()) {
             setToken(g, tokens.get(g));
             setProduction(g, production.get(g));
