@@ -12,16 +12,23 @@ public class Game {
     private static List<Player> players;
     private static HashMap<Gem, Integer> bank = new HashMap<Gem, Integer>(Gem.values().length);
     private static ArrayList<Deck<Card>> decks = new ArrayList<>();
-    private static Card[][] market = new Card[3][4];
+    private static Card[][] market = new Card[3][4]; 
     private static ArrayList<NobleTile> nobles;
     private static Scanner sc = new Scanner(System.in); // can like that??
     private static long seed;
     private static int roundNumber;
 
+    /**
+     * Entry point of the game program. 
+     * Prompts the user to enter the number of players, creates a new Game instance,
+     * and conducts rounds until win condition is reached. 
+     * Once the game ends, it retrieves the winners using {@link getWinner()}
+     * and prints out the winning players.
+     *
+     * @param args 
+     */
     public static void main(String[] args) {
-
-        System.out.print("Enter number of players (between 2 and 4): ");
-        int playerNumber = enterNumber(2, 4);
+        int playerNumber = Utility.askForNum(sc, 2, 4, "Enter number of players (between 2 and 4): ");
 
         Game game = new Game(playerNumber);
 
@@ -33,7 +40,9 @@ public class Game {
                 System.out.println("\n---------- Round " + roundNumber + " ----------");
                 System.out.println("\n=== " + players.get(i).getName() + "'s turn ===");
                 doPlayerTurn(players.get(i));
-                lastRound = hitWinCondition(players.get(i));
+                if (!lastRound) {
+                    lastRound = hitWinCondition(players.get(i));
+                }
             }
             roundNumber++;
             // clear terminal
@@ -46,6 +55,12 @@ public class Game {
 
     }
 
+    /**
+     * Initializes the game board with the specified number of players and cards.
+     * Sets up the bank, noble tiles, and player objects.
+     *
+     * @param playerNumber the number of players in the game
+     */
     public Game(int playerNumber) {
         this(playerNumber, (new Random()).nextLong());
     }
@@ -88,6 +103,12 @@ public class Game {
         return seed;
     }
 
+    /**
+     * Initializes the player array by prompting each player to enter their name
+     * and creating a corresponding {@link Player} for each entry.
+     *
+     * @param playerNumber the total number of players participating in the game
+     */
     public static void setPlayerArray(int playerNumber) {
         System.out.println("\nThe first player is the youngest.");
         for (int i = 0; i < playerNumber; i++) {
@@ -98,25 +119,14 @@ public class Game {
         }
     }
 
-    public static int enterNumber(int min, int max) {
-        boolean valid = false;
-        int n = -1; // can anyhow initialise??
-        while (!valid) {
-            try {
-                n = sc.nextInt();
-                if (n < min || n > max) {
-                    System.out.print("Please enter a number between " + min + " and " + max + ": ");
-                    continue;
-                }
-                valid = true;
-            } catch (InputMismatchException e) {
-                System.out.print("Please enter a number between " + min + " and " + max + ": ");
-            } finally {
-                sc.nextLine();
-            }
-        }
-        return n;
-    }
+    /**
+     * Executes a player's turn by presenting three available options, 
+     * Draw tokens, Reserve a card and Buy a card
+     * The player is repeatedly prompted to enter a choice until a valid
+     * action is performed.
+     *
+     * @param player the {@link Player} whose turn is being executed
+     */
 
     public static void doPlayerTurn(Player player) {
         boolean first = true;
@@ -156,19 +166,6 @@ public class Game {
                     break;
                 case 3:
                     turnDone = buyCard(player);
-                    List<NobleTile> visitingNobles = visitingNobles(player);
-                    if (visitingNobles.size() > 1) {
-                        System.out.print("Please select a noble: ");
-                        int choice = enterNumber(1, visitingNobles.size());
-                        // display choices
-                        System.out.println("todo: display visiting nobles");
-                        NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
-                        player.addNobleTile(noble);
-                        nobles.remove(noble);
-                    } else if (visitingNobles.size() == 1) {
-                        player.addNobleTile(visitingNobles.get(0));
-                        nobles.remove(visitingNobles.get(0));
-                    }
                     break;
                 case 4:
                     clearScreen();
@@ -188,8 +185,34 @@ public class Game {
                     break;
             }
         }
+        nobleSelection(player);
     }
 
+    public static void nobleSelection(Player p) {
+        List<NobleTile> visitingNobles = visitingNobles(p);
+        if (visitingNobles.size() > 1) {
+            // display choices
+            for (int i = 0; i < visitingNobles.size(); i++) {
+                NobleTile t = visitingNobles.get(i);
+                System.out.println((i + 1) + ": " + t);
+            }
+            int choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
+            NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
+            p.addNobleTile(noble);
+            nobles.remove(noble);
+        } else if (visitingNobles.size() == 1) {
+            p.addNobleTile(visitingNobles.get(0));
+            nobles.remove(visitingNobles.get(0));
+        }
+    }
+
+    /**
+     * Checks whether the player has met the win condition.
+     * The win condition is reached when the player's points total is 15.
+     *
+     * @param p the {@link Player} being checked
+     * @return true if the player has reached the win condition, false otherwise
+     */
     public static boolean hitWinCondition(Player p) {
         return p.getPoints() == 15;
     }
@@ -216,15 +239,21 @@ public class Game {
 
     }
 
+    /**
+     * Determines which {@link NobleTile} are visiting the specified player.
+     * 
+     * @param p the {@link Player} being checked
+     * @return a list of {@link NobleTile} that are visiting the player
+     */
     public static List<NobleTile> visitingNobles(Player p) {
         List<NobleTile> result = new ArrayList<>();
-        HashMap<Gem, Integer> playerTokens = p.getTokens();
+        HashMap<Gem, Integer> playerProduction = p.getProduction();
 
         for (NobleTile n : nobles) {
             boolean qualify = true;
             HashMap< Gem, Integer> nobleTokens = n.getTokens();
             for (Map.Entry<Gem, Integer> entry : nobleTokens.entrySet()) {
-                if (playerTokens.get(entry.getKey()) < entry.getValue()) {
+                if (playerProduction.get(entry.getKey()) < entry.getValue()) {
                     qualify = false;
                     break;
                 }
@@ -237,6 +266,13 @@ public class Game {
         return result;
     }
 
+    /**
+     * Performs the reserve card action. The {@link Player} selects a card to reserve,
+     * and receives 1 gold if the bank has gold available.
+     * 
+     * @param p the {@link Player} performing the action
+     * @return true if the action was successfully performed, false otherwise
+     */
     public static boolean reserveCard(Player p) {
 
         if (p.getReserveHandSize() == 3) {
@@ -252,7 +288,7 @@ public class Game {
             System.out.println("2. Reserve from deck");
             System.out.println("0. Cancel");
 
-            int choice = enterNumber(0, 2);
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
 
             if (choice == 0) {
                 return false;
@@ -271,16 +307,20 @@ public class Game {
                 // remove from market
                 market[choice2[0] - 1][choice2[1] - 1] = decks.get(choice2[0] - 1).draw();
 
+                // add to hand
+                p.reserveCard(card);
+
             }
 
             if (choice == 2) {
-                System.out.print("Enter deck no. (1, 2, 3): ");
-                int choice2 = enterNumber(1, 3);
+                int choice2 = Utility.askForNum(sc, 1, 3, "Enter deck no. (1, 2, 3): ");
                 Card card = decks.get(choice2 - 1).draw();
                 if (card == null) {
                     System.out.println("Deck is empty");
                     continue;
                 }
+                // add to hand
+                p.reserveCard(card);
 
             }
             // add to player
@@ -297,52 +337,94 @@ public class Game {
 
     }
 
+    /**
+     * Performs the buy card action. The {@link Player} selects a card to buy,
+     * and the player's tokens and the bank are updated accordingly.
+     * 
+     * @param p the {@link Player} performing the action
+     * @return true if the action was successfully performed, false otherwise
+     */
     public static boolean buyCard(Player p) {
+        int[] choice = null;
+        Card card = null;
+        Map<Gem, Integer> pBefore;
+        Map<Gem, Integer> pAfter;
+        boolean fromMarket = false;
 
-        System.out.println("todo: buy from reserve");
+        while (true) {
+            System.out.println("Choose option: ");
+            System.out.println("1. Buy from market");
+            System.out.println("2. Buy from reserve");
+            System.out.println("0. Cancel");
+            System.out.println();
 
-        int[] choice = Utility.getPositionOnBoard(sc);
-        // convert choice to corresponding card
-        Card card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
+            switch (Utility.askForNum(sc, 0, 2, "Enter your choice: ")) {
+                case 0:
+                    return false;
+                case 1:
+                    choice = Utility.getPositionOnBoard(sc);
+                    // convert choice to corresponding card
+                    card = market[choice[0] - 1][choice[1] - 1];// p.buyCard(card, sc);
+        
+                    // I assume that if the card is not in market, value at that pos is null.
+                    if (card == null) {
+                        System.out.println("error: card does not exist in market\n");
+                        continue;
+                    }
 
-        // I assume that if the card is not in market, value at that pos is null.
-        if (card == null) {
-            System.out.println("error: card does not exist in market");
-            return false;
+                    fromMarket = true;
+                    break;
+                case 2:
+                    // buy from reserve
+            }
+
+            pBefore = p.getTokens();
+
+            boolean success = p.buyCard(card, sc);
+            if (!success) {
+                System.out.println("error: unable to buy card\n");
+                continue;
+            }
+            pAfter = p.getTokens();
+
+            break;
         }
-
-        Map<Gem, Integer> pBefore = p.getTokens();
-
-        boolean success = p.buyCard(card, sc);
-        if (!success) {
-            System.out.println("error: unable to buy card");
-            return false;
-        }
-        Map<Gem, Integer> pAfter = p.getTokens();
 
         for (Gem g : Gem.values()) {
             int diff = pBefore.get(g) - pAfter.get(g);
             bank.replace(g, diff + bank.get(g));
         }
 
-        // remove from market
-        market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
-
+        if (fromMarket) {
+            // remove from market
+            market[choice[0] - 1][choice[1] - 1] = decks.get(choice[0] - 1).draw();
+        } else {
+            // remove from reserve
+        }
+        
         return true;
     }
 
-    // drawToken function 
+    /**
+     * Performs the draw token action. The {@link Player} may choose to take 2 tokens of the same type, 3 tokens of different types, or cancel action.
+     * If the {@link Player} has more than 10 tokens, prompts the user to return excess
+     * The {@link Player}'s tokens and the bank are updated accordingly.
+     * 
+     * @param p the {@link Player} performing the action
+     * @return true if the action was successfully performed, false otherwise
+     */
     public static boolean drawToken(Player currentPlayer) {
 
         boolean validAction = false;
 
         while (!validAction) {
-            System.out.println("Choose token option: ");
+            System.out.println("Token options: ");
             System.out.println("1. Take 3 different tokens");
             System.out.println("2. Take 2 same tokens");
             System.out.println("0. Cancel");
+            System.out.println();
 
-            int choice = enterNumber(0, 2);
+            int choice = Utility.askForNum(sc, 0, 2, "Please enter your choice: ");
 
             if (choice == 0) {
                 return false;
@@ -410,6 +492,12 @@ public class Game {
         return true;
     }
 
+    /**
+     * Prompts the player to select three tokens of different types,
+     * ensuring that the selected tokens are available in the bank.
+     *
+     * @return a set of {@link Gem} selected by the player
+    */
     private static Set<Gem> pickThreeDifferentGems() {
         Set<Gem> chosen = new HashSet<>();
 
@@ -448,6 +536,13 @@ public class Game {
         return chosen;
     }
 
+    /**
+     * Prompts the player to select a token or cancel the action.
+     * Ensures that the selected token type is available in the bank
+     * (at least four tokens must be present).
+     *
+     * @return the {@link Gem} selected by the player
+    */
     private static Gem pickTwoSameGem() {
         while (true) {
             System.out.println("Enter gem (Diamond, Ruby, Sapphire, Emerald, Onyx) or 'cancel':");
@@ -476,7 +571,6 @@ public class Game {
             }
         }
     }
-
 
     /**
      * Admin Permissions
@@ -544,7 +638,7 @@ public class Game {
     }
 
     /**
-     * Displays the current board
+     * Prints the current state of the board, including all cards and noble tiles.
      * Includes: Avaliable cards, Bank, Nobile Tiles
      */
     public static void printBoard() {
@@ -581,6 +675,9 @@ public class Game {
         System.out.printf("------------------------------------------------------------------\n\n");
     }
 
+    /**
+     * Prints {@link NobleTile}s on the board.
+     */
     public static void printNobles() {
 
         System.out.printf("<NOBLE TILES>\n");
