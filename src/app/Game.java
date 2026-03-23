@@ -150,7 +150,7 @@ public class Game {
             }
             turnOptionDisplay();
 
-            switch (enterNumber(1, 6)) {
+            switch (Utility.askForNum(sc, 1, 6, "")) {
                 case 1:
                     turnDone = drawToken(player);
                     break;
@@ -207,7 +207,7 @@ public class Game {
      * @return true if the player has reached the win condition, false otherwise
      */
     public static boolean hitWinCondition(Player p) {
-        return p.getPoints() == 15;
+        return p.getPoints() >= 15;
     }
 
     public static List<Player> getWinner() {
@@ -720,7 +720,7 @@ public class Game {
         System.out.println("Enter player number: ");
         System.out.println("0. Cancel");
 
-        int choice = enterNumber(0, players.size());
+        int choice = Utility.askForNum(sc, 0, players.size(), "");
         return choice;
     }
 
