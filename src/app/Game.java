@@ -46,10 +46,7 @@ public class Game {
             roundNumber++;
             // clear terminal
         }
-        List<Player> winningPlayers = getWinner();
-        for (int i = 0; i < winningPlayers.size(); i++) {
-            System.out.println(winningPlayers.get(i).getName());
-        }
+        printWinner(getWinner());
         sc.close();
 
     }
