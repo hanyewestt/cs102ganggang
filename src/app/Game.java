@@ -472,9 +472,9 @@ public class Game {
     }
 
     /**
-     * Performs the draw token action. Handles the overall logical flow of the draw token action,
-     * including CPU actions and player actions. 
-     * Updates player and bank based on the hashmaps returned.
+     * Performs the draw token action. Handles the overall logical flow of the
+     * draw token action, including CPU actions and player actions. Updates
+     * player and bank based on the hashmaps returned.
      *
      * @param p the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
@@ -523,7 +523,9 @@ public class Game {
     }
 
     /**
-     * Handles the choice to draw 3 or draw 2 tokens. Should only be accessed if player is not a cpu.
+     * Handles the choice to draw 3 or draw 2 tokens. Should only be accessed if
+     * player is not a cpu.
+     *
      * @param p The Player
      * @return a hashmap of the tokens to draw. null if player cancels.
      */
@@ -557,7 +559,7 @@ public class Game {
     private static HashMap<Gem, Integer> pickThreeDifferentGems(Player p) {
         HashMap<Gem, Integer> chosen = new HashMap<>();
         while (chosen.size() < 3) {
-            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx)");
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel");
 
             if (bank.get(g) <= 0) {
                 System.out.println("Bank does not have this gem.");
@@ -585,7 +587,7 @@ public class Game {
     private static HashMap<Gem, Integer> pickTwoSameGem(Player p) {
         HashMap<Gem, Integer> chosen = new HashMap<>();
         while (chosen.size() < 1) {
-            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx)");
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel");
 
             if (bank.get(g) < 4) {
                 System.out.println("Need at least 4 in bank to take 2.");
@@ -599,7 +601,9 @@ public class Game {
     }
 
     /**
-     * Prompts the user to select gems to return, if the number of tokens in their hand exceeds 10.
+     * Prompts the user to select gems to return, if the number of tokens in
+     * their hand exceeds 10.
+     *
      * @param p the player.
      * @return a hashmap of the tokens to return.
      */
@@ -609,9 +613,8 @@ public class Game {
         int total = p.getTokenAmount();
         while (total > 10) {
             p.displayTokens();
-            // this doesnt include gold tho
-            Gem g = Utility.askForGem(sc, "You have more than 10 tokens. Return 1 token:");
-            // Gem g = Utility.askForGem(sc, "You have more than 10 tokens. Return 1 token:", true);
+            System.out.println("You have more than 10 tokens. ");
+            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx) or cancel:", true);
             Integer amtPerGem = returnAmt.get(g);
             if (amtPerGem == null) {
                 amtPerGem = 0;
