@@ -1,6 +1,7 @@
 package util;
 
 import item.*;
+import java.lang.classfile.instruction.ThrowInstruction;
 import java.util.*;
 
 public class Utility {
@@ -62,6 +63,10 @@ public class Utility {
         return false;
     }
 
+    public static Gem askForGem(Scanner keyboard, String message) {
+        askForGem(keyboard, message, false);
+    }
+
     /**
      * Will prompt the user for a string representing a Gem. Keeps prompting
      * until a valid input is given.
@@ -70,7 +75,7 @@ public class Utility {
      * @param message The message to prompt for user input.
      * @return The Gem that the user inputs.
      */
-    public static Gem askForGem(Scanner keyboard, String message) {
+    public static Gem askForGem(Scanner keyboard, String message, boolean takesGold) {
         boolean isValid;
         do {
             System.out.print(message);
@@ -89,6 +94,12 @@ public class Utility {
                     return Gem.Emerald;
                 case "onyx":
                     return Gem.Onyx;
+                case "gold":
+                    if (takesGold) {
+                        return Gem.Gold;
+                    }
+                case "cancel":
+                    return null;
                 default:
                     System.out.println("Invalid input! Try again!");
                     isValid = false;
