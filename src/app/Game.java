@@ -363,7 +363,7 @@ public class Game {
                     continue; 
                 }
 
-                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens()); 
+                Map<Gem, Integer> pBefore = p.getTokens(); 
                 boolean success = p.buyCard(card, sc); 
                 if (!success){
                     System.out.println("Unable to buy that card.");
