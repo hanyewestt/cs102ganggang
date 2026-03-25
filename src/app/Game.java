@@ -352,6 +352,9 @@ public class Game {
                 p.addToken(Gem.Gold, 1);
                 bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
             }
+
+            returnExcessTokens(p);
+
             validAction = true;
 
         }
@@ -405,9 +408,9 @@ public class Game {
                     continue;
                 }
 
-                Map<Gem, Integer> pBefore = p.getTokens(); 
-                boolean success = p.buyCard(card, sc); 
-                if (!success){
+                Map<Gem, Integer> pBefore = p.getTokens();
+                boolean success = p.buyCard(card, sc);
+                if (!success) {
                     System.out.println("Unable to buy that card.");
                     continue;
                 }
@@ -466,6 +469,8 @@ public class Game {
                 p.removeReserveCard(idx);
                 return true;
             }
+
+            
         }
     }
 
@@ -498,26 +503,31 @@ public class Game {
             currentPlayer.addToken(g, chosen.get(g));
         }
 
-        if (currentPlayer.getTokenAmount() <= 10) {
-            return true;
-        }
+        returnExcessTokens(currentPlayer);
+        
 
+        return true;
+    }
+
+    public static void returnExcessTokens(Player p) {
+
+        if (p.getTokenAmount() <= 10) {
+            return;
+        }
         // player's amount of token exceeds 10.
         HashMap<Gem, Integer> returnAmt;
-        if (currentPlayer instanceof CPUPlayer cpu) {
+        if (p instanceof CPUPlayer cpu) {
             DrawToken move = cpu.getMove();
             // todo
             returnAmt = move.getReturnAmt();
         } else {
-            returnAmt = getReturnAmtFromPlayer(currentPlayer);
+            returnAmt = getReturnAmtFromPlayer(p);
         }
 
         for (Gem g : returnAmt.keySet()) {
             bank.replace(g, bank.get(g) + returnAmt.get(g));
-            currentPlayer.removeToken(g, returnAmt.get(g));
+            p.removeToken(g, returnAmt.get(g));
         }
-
-        return true;
     }
 
     /**
