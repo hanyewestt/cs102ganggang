@@ -261,7 +261,7 @@ public class Player implements Comparable<Player> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append("Player No. ").append(order).append("\n");
         sb.append("Player Name: ").append(name).append("\n");
         sb.append("Gems: ").append(displayTokens());
@@ -279,12 +279,12 @@ public class Player implements Comparable<Player> {
         for (Gem g : Gem.values()) {
             if (production.get(g) != 0) {
                 if (first) {
-                sb.append(production.get(g)).append(Utility.fromGemToChar(g));
-                first = false;
+                    sb.append(production.get(g)).append(Utility.fromGemToChar(g));
+                    first = false;
 
-            } else {
-                sb.append(", ").append(production.get(g)).append(Utility.fromGemToChar(g));
-            }
+                } else {
+                    sb.append(", ").append(production.get(g)).append(Utility.fromGemToChar(g));
+                }
             }
         }
 
@@ -342,11 +342,23 @@ public class Player implements Comparable<Player> {
             sb.append("[N/A]\n");
         } else {
             for (int i = 0; i < reserveCards.size(); i++) {
-                sb.append("1.").append(i+1).append(" ");
+                sb.append(i+1).append(". ");
                 sb.append(reserveCards.get(i).toString()).append("\n");
             }
         }
 
         System.out.println(sb.toString());
+    }
+
+    /**
+     * Gets the total number of tokens the player has in their hand.
+     * @return int The number of tokens the player has.
+     */
+    public int getTokenAmount() {
+        int total = 0;
+        for (Integer i : tokens.values()) {
+            total += i;
+        }
+        return total;
     }
 }

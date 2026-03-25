@@ -26,7 +26,7 @@ public abstract class Move {
     }
 
     public int getNobleIdx() {
-
+        return nobleIdx;
     }
 
     public void setExpectedValue(int expectedValue) {
@@ -39,6 +39,10 @@ public abstract class Move {
 
     public void setWinning(boolean winning) {
         this.winning = winning;
+    }
+
+    public void setNobleIdx(int nobleIdx) {
+        this.nobleIdx = nobleIdx;
     }
 
     public boolean isBetterMove(Move other) {
