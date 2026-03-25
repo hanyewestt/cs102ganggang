@@ -343,7 +343,7 @@ public class Player implements Comparable<Player> {
             sb.append("[N/A]\n");
         } else {
             for (int i = 0; i < reserveCards.size(); i++) {
-                sb.append("1.").append(i + 1).append(" ");
+                sb.append(i+1).append(". ");
                 sb.append(reserveCards.get(i).toString()).append("\n");
             }
         }
