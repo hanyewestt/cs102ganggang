@@ -47,11 +47,8 @@ public class Game {
             // clear terminal
         }
         List<Player> winningPlayers = getWinner();
-        for (int i = 0; i < winningPlayers.size(); i++) {
-            System.out.println(winningPlayers.get(i).getName());
-        }
+        printWinner(winningPlayers);
         sc.close();
-
     }
 
     /**
@@ -169,11 +166,11 @@ public class Game {
                     printReserved = true;
                     break;
                 case 5:
-                    clearScreen();
                     printPlayerNo = printPlayer();
                     if (printPlayerNo != 0) {
                         printPlayer = true;
                     }
+                    clearScreen();
                     break;
                 case 6:
                     int idx = players.indexOf(player);
@@ -366,7 +363,7 @@ public class Game {
                     continue; 
                 }
 
-                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens()); 
+                Map<Gem, Integer> pBefore = p.getTokens(); 
                 boolean success = p.buyCard(card, sc); 
                 if (!success){
                     System.out.println("Unable to buy that card.");
@@ -401,7 +398,7 @@ public class Game {
                 int idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
                 Card card = hand.get(idx);
 
-                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
+                Map<Gem, Integer> pBefore = p.getTokens();
                 boolean success = p.buyCard(card, sc);
                 if (!success) {
                     System.out.println("Unable to buy that card.");
@@ -710,7 +707,7 @@ public class Game {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
                 if (market[i - 1][j - 1] == null) {
-                    System.out.printf("%d.%d Empty\n", i, j);
+                    System.out.printf("%d.%d [ Empty ]\n", i, j);
 
                 } else {
                     System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
@@ -740,7 +737,7 @@ public class Game {
     }
 
     public static int printPlayer() {
-        System.out.println("Enter player number:");
+        System.out.printf("Enter player number (1 - %d):\n", players.size());
         System.out.println("0. Cancel");
 
         int choice = Utility.askForNum(sc, 0, players.size(), "");
