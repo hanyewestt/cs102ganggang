@@ -343,7 +343,7 @@ public class Player implements Comparable<Player> {
             sb.append("[N/A]\n");
         } else {
             for (int i = 0; i < reserveCards.size(); i++) {
-                sb.append(i+1).append(". ");
+                sb.append(i + 1).append(". ");
                 sb.append(reserveCards.get(i).toString()).append("\n");
             }
         }
@@ -353,6 +353,7 @@ public class Player implements Comparable<Player> {
 
     /**
      * Gets the total number of tokens the player has in their hand.
+     *
      * @return int The number of tokens the player has.
      */
     public int getTokenAmount() {
