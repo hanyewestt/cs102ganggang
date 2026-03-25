@@ -64,7 +64,7 @@ public class Utility {
     }
 
     public static Gem askForGem(Scanner keyboard, String message) {
-        askForGem(keyboard, message, false);
+        return askForGem(keyboard, message, false);
     }
 
     /**
