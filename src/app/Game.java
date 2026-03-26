@@ -1,12 +1,12 @@
 package app;
 
-import config.*;
-import display.*;
-import item.*;
 import java.lang.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import config.*;
+import display.*;
+import item.*;
 import util.*;
 
 public class Game {
@@ -18,9 +18,10 @@ public class Game {
     private static ArrayList<Deck<Card>> decks = new ArrayList<>();
     private static Card[][] market = new Card[3][4];
     private static ArrayList<NobleTile> nobles;
-    private static Scanner sc = new Scanner(System.in); // can like that??
+    private static Scanner sc = new Scanner(System.in);
     private static long seed;
     private static int roundNumber;
+    private static int pointsToWin;
 
     /**
      * Entry point of the game program. Prompts the user to enter the number of
@@ -69,6 +70,7 @@ public class Game {
         this.playerNumber = playerNumber;
         this.cpuNumber = cpuNumber;
         this.seed = seed;
+        this.pointsToWin = Configuration.getPointsToWin();
         players = new ArrayList<>(playerNumber);
 
         int startingGems = Configuration.getStartingGems(playerNumber);
@@ -119,10 +121,10 @@ public class Game {
         }
         // int cpuIdx = 1;
         // for (; i <= playerNumber; i++) {
-        //     String name = "CPU" + cpuIdx;
-        //     CPUPlayer player = new CPUPlayer(game, name, i + 1);
-        //     players.add(player);
-        //     cpuIdx++;
+        // String name = "CPU" + cpuIdx;
+        // CPUPlayer player = new CPUPlayer(game, name, i + 1);
+        // players.add(player);
+        // cpuIdx++;
         // }
     }
 
@@ -142,8 +144,8 @@ public class Game {
         int printPlayerNo = players.indexOf(player);
 
         // if (player instanceof CPUPlayer cpu) {
-        //     cpu.getMove().doMove();
-        //     return;
+        // cpu.getMove().doMove();
+        // return;
         // }
         while (!turnDone) {
             Display.clearScreen();
@@ -179,7 +181,13 @@ public class Game {
                     printReserved = !printReserved;
                     break;
                 case 5:
-                    playersToPrint = choosePlayersToPrint(player);
+                    playersToPrint = Display.choosePlayersToPrint(sc, players, player);
+
+                    // Display.clearScreen();
+                    // int newPrintPlayerNo = Display.printPlayerNo(sc, players.size());
+                    // if (newPrintPlayerNo != -1) {
+                    // printPlayerNo = newPrintPlayerNo;
+                    // }
                     break;
                 case 6:
                     int idx = players.indexOf(player);
@@ -189,47 +197,73 @@ public class Game {
             }
         }
         nobleSelection(player);
+
+        try {
+            System.out.println("\nYour turn has ended, continuing to next player...");
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            return;
+        }
+
     }
 
-    public static void nobleSelection(Player p) {
-        List<NobleTile> visitingNobles = visitingNobles(p);
+    /**
+     * Prompts the {@link Player} to choose a {@link NobleTile} if more than one
+     * visits the player. Adds the chosen {@link NobleTile} to the
+     * {@link Player}
+     *
+     * @param player the {@link Player} whose turn is being executed
+     */
+    public static void nobleSelection(Player player) {
+        List<NobleTile> visitingNobles = visitingNobles(player);
+
+        if (visitingNobles.size() == 0) {
+            return;
+        }
+
+        NobleTile noble = null;
+
         if (visitingNobles.size() > 1) {
-            // display choices
-            for (int i = 0; i < visitingNobles.size(); i++) {
-                NobleTile t = visitingNobles.get(i);
-                System.out.println((i + 1) + ": " + t);
-            }
+            System.out.println("\nOne or more nobles have visited you!\n");
+
+            Display.printNobles(visitingNobles);
 
             int choice;
             // if (p instanceof CPUPlayer cpu) {
-            //     NobleSelection move = (NobleSelection) cpu.getMove();
-            //     choice = move.getNobleIdx();
+            // NobleSelection move = (NobleSelection) cpu.getMove();
+            // choice = move.getNobleIdx();
             // } else {
-            choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
+            choice = Utility.askForNum(sc, 1, visitingNobles.size(), "\nPlease select a noble: ");
             // }
-
-            NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
-            p.addNobleTile(noble);
-            nobles.remove(noble);
-        } else if (visitingNobles.size() == 1) {
-            p.addNobleTile(visitingNobles.get(0));
-            nobles.remove(visitingNobles.get(0));
+            noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
+        } else {
+            noble = visitingNobles.get(0);
         }
+        System.out.println("\nA noble has visited you!");
+        player.addNobleTile(noble);
+        nobles.remove(noble);
+
     }
 
     /**
      * Checks whether the player has met the win condition. The win condition is
      * reached when the player's points total is 15.
      *
-     * @param p the {@link Player} being checked
-     * @return true if the player has reached the win condition, false otherwise
+     * @param player the {@link Player} being checked
+     * @return true if the {@link Player} has reached the win condition, false
+     *         otherwise
      */
-    public static boolean hitWinCondition(Player p) {
+    public static boolean hitWinCondition(Player player) {
 
-        // todo
-        return p.getPoints() >= 15;
+        return player.getPoints() >= pointsToWin;
     }
 
+    /**
+     * Checks if the player’s points are equal to or more than 15.
+     *
+     * @param p the {@link Player} being checked.
+     * @return a list of {@link Player} objects that have hit the win condition.
+     */
     public static List<Player> getWinner() {
         Collections.sort(players);
         List<Player> winningPlayers = new ArrayList<>();
@@ -253,18 +287,19 @@ public class Game {
     }
 
     /**
-     * Determines which {@link NobleTile} are visiting the specified player.
+     * Determines which {@link NobleTile}s are visiting the specified player.
+     * One or more {@link NobileTile}s may visit a player.
      *
      * @param p the {@link Player} being checked
      * @return a list of {@link NobleTile} that are visiting the player
      */
-    public static List<NobleTile> visitingNobles(Player p) {
+    public static List<NobleTile> visitingNobles(Player player) {
         List<NobleTile> result = new ArrayList<>();
-        HashMap<Gem, Integer> playerProduction = p.getProduction();
+        HashMap<Gem, Integer> playerProduction = player.getProduction();
 
         for (NobleTile n : nobles) {
             boolean qualify = true;
-            HashMap< Gem, Integer> nobleTokens = n.getTokens();
+            HashMap<Gem, Integer> nobleTokens = n.getTokens();
             for (Map.Entry<Gem, Integer> entry : nobleTokens.entrySet()) {
                 if (playerProduction.get(entry.getKey()) < entry.getValue()) {
                     qualify = false;
@@ -290,7 +325,7 @@ public class Game {
 
         if (player.getReserveHandSize() == 3) {
             try {
-                System.out.println("‼️ Your hand size is full. ‼️");
+                System.out.println("\n‼️ Your hand size is full. ‼️");
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
                 return false;
@@ -304,8 +339,8 @@ public class Game {
             Display.reserveCardDisplay();
             int choice;
             // if (p instanceof CPUPlayer cpu) {
-            //     ReserveCard move = (ReserveCard) cpu.getMove();
-            //     choice = move.getReserveLocation();
+            // ReserveCard move = (ReserveCard) cpu.getMove();
+            // choice = move.getReserveLocation();
             // } else {
             choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
             System.out.println();
@@ -341,14 +376,14 @@ public class Game {
      * Performs the reserve from market option.
      *
      * @param player the {@link Player} performing the action
-     * @return returns if the action is succesful
+     * @return returns true if the action is succesful, false otherwise
      */
     public static boolean reserveFromMarket(Player player) {
         int[] choice2;
         // if (p instanceof CPUPlayer cpu) {
-        //     ReserveCard move = (ReserveCard) cpu.getMove();
-        //     // todo
-        //     choice2 = move.getType();
+        // ReserveCard move = (ReserveCard) cpu.getMove();
+        // // todo
+        // choice2 = move.getType();
         // } else {
         choice2 = Utility.getPositionOnBoard(sc);
         // }
@@ -375,14 +410,14 @@ public class Game {
      * Performs the reserve from deck option.
      *
      * @param player the {@link Player} performing the action
-     * @return returns if the action is succesful
+     * @return returns true if the action is successful, false otherwise
      */
     public static boolean reserveFromDeck(Player player) {
         int choice2;
         // if (p instanceof CPUPlayer cpu) {
-        //     ReserveCard move = (ReserveCard) cpu.getMove();
-        //     // todo
-        //     choice2 = move.getType();
+        // ReserveCard move = (ReserveCard) cpu.getMove();
+        // // todo
+        // choice2 = move.getType();
         // } else {
         choice2 = Utility.askForNum(sc, 0, 3, "Enter deck no. (1, 2, 3), 0 to cancel: ");
         if (choice2 == 0) {
@@ -396,35 +431,18 @@ public class Game {
         }
         // add to hand
         player.reserveCard(card);
+
+        System.out.println("\nYou reserved this card:");
+        System.out.println("🃏" + card);
+
         return true;
-    }
-
-    public static void returnExcessTokens(Player player) {
-
-        if (player.getTokenAmount() <= 10) {
-            return;
-        }
-        // player's amount of token exceeds 10.
-        HashMap<Gem, Integer> returnAmt;
-        // if (currentPlayer instanceof CPUPlayer cpu) {
-        //     DrawToken move = cpu.getMove();
-        //     // todo
-        //     returnAmt = move.getReturnAmt();
-        // } else {
-        returnAmt = getReturnAmtFromPlayer(player);
-        // }
-
-        for (Gem g : returnAmt.keySet()) {
-            bank.replace(g, bank.get(g) + returnAmt.get(g));
-            player.removeToken(g, returnAmt.get(g));
-        }
     }
 
     /**
      * Performs the buy card action. The {@link Player} selects a card to buy,
      * and the player's tokens and the bank are updated accordingly.
      *
-     * @param p the {@link Player} performing the action
+     * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
     public static boolean buyCard(Player player) {
@@ -432,8 +450,8 @@ public class Game {
         while (true) {
             int choice;
             // if (player instanceof CPUPlayer cpu) {
-            //     BuyCard move = (BuyCard) cpu.getMove();
-            //     choice = move.getBuyLocation();
+            // BuyCard move = (BuyCard) cpu.getMove();
+            // choice = move.getBuyLocation();
             // } else {
             Display.buyCardDisplay();
             choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
@@ -448,9 +466,9 @@ public class Game {
                 // get card position
                 int[] pos;
                 // if (player instanceof CPUPlayer cpu) {
-                //     BuyCard move = (BuyCard) cpu.getMove();
-                //     // todo
-                //     pos = move.getType();
+                // BuyCard move = (BuyCard) cpu.getMove();
+                // // todo
+                // pos = move.getType();
                 // } else {
                 pos = Utility.getPositionOnBoard(sc);
                 if (pos == null) {
@@ -486,7 +504,7 @@ public class Game {
             }
 
             if (choice == 2) {
-                // buy from reserve 
+                // buy from reserve
                 List<Card> hand = player.getReserveHand();
                 if (hand.isEmpty()) {
                     System.out.println("‼️ You have no reserved cards. ‼️");
@@ -495,9 +513,9 @@ public class Game {
 
                 int idx;
                 // if (p instanceof CPUPlayer cpu) {
-                //     BuyCard move = (BuyCard) cpu.getMove();
-                //     // todo
-                //     idx = move.getType();
+                // BuyCard move = (BuyCard) cpu.getMove();
+                // // todo
+                // idx = move.getType();
                 // } else {
                 System.out.println("Your reserved cards:");
                 for (int i = 0; i < hand.size(); i++) {
@@ -535,19 +553,19 @@ public class Game {
      * draw token action, including CPU actions and player actions. Updates
      * player and bank based on the hashmaps returned.
      *
-     * @param p the {@link Player} performing the action
+     * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
-    public static boolean drawToken(Player currentPlayer) {
+    public static boolean drawToken(Player player) {
 
         HashMap<Gem, Integer> chosen;
 
-        // if (currentPlayer instanceof CPUPlayer cpu) {
-        //     DrawToken move = cpu.getMove();
-        //     // todo
-        //     chosen = move.getTokens();
+        // if (player instanceof CPUPlayer cpu) {
+        // DrawToken move = cpu.getMove();
+        // // todo
+        // chosen = move.getTokens();
         // } else {
-        chosen = drawTokenFromPlayer(currentPlayer);
+        chosen = drawTokenFromPlayer();
         if (chosen == null) {
             // player has chosen not to continue
             return false;
@@ -556,10 +574,10 @@ public class Game {
 
         for (Gem g : chosen.keySet()) {
             bank.replace(g, bank.get(g) - chosen.get(g));
-            currentPlayer.addToken(g, chosen.get(g));
+            player.addToken(g, chosen.get(g));
         }
 
-        returnExcessTokens(currentPlayer);
+        returnExcessTokens(player);
 
         return true;
     }
@@ -568,10 +586,10 @@ public class Game {
      * Handles the choice to draw 3 or draw 2 tokens. Should only be accessed if
      * player is not a cpu.
      *
-     * @param p The Player
-     * @return a hashmap of the tokens to draw. null if player cancels.
+     * @return a hashmap of the tokens to draw. returns null if {@link Player}
+     *         cancels.
      */
-    public static HashMap<Gem, Integer> drawTokenFromPlayer(Player p) {
+    public static HashMap<Gem, Integer> drawTokenFromPlayer() {
         while (true) {
             Display.drawTokenDisplay();
 
@@ -580,9 +598,9 @@ public class Game {
 
             switch (choice) {
                 case 1:
-                    return pickThreeDifferentGems(p);
+                    return pickThreeDifferentGems();
                 case 2:
-                    return pickTwoSameGem(p);
+                    return pickTwoSameGem();
                 default:
                     return null;
             }
@@ -590,12 +608,45 @@ public class Game {
     }
 
     /**
+     * Returns excess tokens from the player, if tokens in player's hand exceed
+     * 10.
+     *
+     * @param player the {@link Player} performing the action
+     */
+    public static void returnExcessTokens(Player player) {
+
+        if (player.getTokenAmount() <= 10) {
+            return;
+        }
+        // player's amount of token exceeds 10.
+        HashMap<Gem, Integer> returnAmt = new HashMap<>();
+        // if (currentPlayer instanceof CPUPlayer cpu) {
+        // DrawToken move = cpu.getMove();
+        // // todo
+        // returnAmt = move.getReturnAmt();
+        // } else {
+        boolean confirmReturn = false;
+        while (!confirmReturn) {
+            returnAmt = getReturnAmtFromPlayer(player);
+            System.out.println("Returning : " + returnAmt);
+            confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? (Y/N): ");
+        }
+        // }
+
+        for (Gem g : returnAmt.keySet()) {
+            bank.replace(g, bank.get(g) + returnAmt.get(g));
+            player.removeToken(g, returnAmt.get(g));
+        }
+    }
+
+    /**
      * Prompts the player to select three tokens of different types, ensuring
      * that the selected tokens are available in the bank.
      *
-     * @return a hashmap of the tokens to draw
+     * @return a hashmap of the tokens to draw. returns null if {@link Player}
+     *         cancels.
      */
-    private static HashMap<Gem, Integer> pickThreeDifferentGems(Player p) {
+    private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = new HashMap<>();
         while (chosen.size() < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel: ");
@@ -621,13 +672,13 @@ public class Game {
     }
 
     /**
-     * Prompts the player to select a token or cancel the action. Ensures that
-     * the selected token type is available in the bank (at least four tokens
-     * must be present).
+     * Prompts the {@link Player} to select a token or cancel the action.
+     * Ensures that the selected token type is available in the bank (at least
+     * four tokens must be present).
      *
      * @return a hashmap of the tokens to draw
      */
-    private static HashMap<Gem, Integer> pickTwoSameGem(Player p) {
+    private static HashMap<Gem, Integer> pickTwoSameGem() {
         HashMap<Gem, Integer> chosen = new HashMap<>();
         while (chosen.size() < 1) {
             Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel: ");
@@ -647,22 +698,26 @@ public class Game {
     }
 
     /**
-     * Prompts the user to select gems to return, if the number of tokens in
-     * their hand exceeds 10.
+     * Prompts the {@link Player} to select gems to return, if the number of
+     * tokens in their hand exceeds 10.
      *
-     * @param p the player.
+     * @param player the {@link Player} performing the action
      * @return a hashmap of the tokens to return to bank.
      */
-    public static HashMap<Gem, Integer> getReturnAmtFromPlayer(Player p) {
+    public static HashMap<Gem, Integer> getReturnAmtFromPlayer(Player player) {
         HashMap<Gem, Integer> returnAmt = new HashMap<>();
-        HashMap<Gem, Integer> pTokens = p.getTokens();
-        int total = p.getTokenAmount();
+        HashMap<Gem, Integer> pTokens = player.getTokens();
+        int total = player.getTokenAmount();
+        System.out.println("\nGems: " + player.displayTokens());
         while (total > 10) {
-            p.displayTokens();
             System.out.println("‼️ You have more than 10 tokens. ‼️");
-            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold):", true);
+            System.out.println("You have to return " + (total - 10) + " tokens. ");
+            Gem g = Utility.askForGem(sc,
+                    "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or 'cancel' to reset: ", true);
             if (g == null) {
-                System.out.println("‼️ Invalid input! Try again. ‼️");
+                System.out.println("Reseting return amounts.\n");
+                total = player.getTokenAmount();
+                returnAmt.clear();
                 continue;
             }
 
@@ -674,9 +729,10 @@ public class Game {
             // check that player has at least the amt they want to return
             if (pTokens.get(g) >= ++amtPerGem) {
                 returnAmt.put(g, amtPerGem);
+                System.out.println("");
                 total--;
             } else {
-                System.out.println("‼️ You don't have enough tokens for that. ‼️");
+                System.out.println("‼️ You don't have enough tokens for that. ‼️\n");
             }
         }
 
@@ -737,28 +793,4 @@ public class Game {
         return p;
     }
 
-    /**
-     * Prompts the current player to select which players' hands they wish to view
-     * and returns a map of the chosen {@link Player}s.
-     *
-     * @param sc the Scanner used to read input from the keyboard
-     * @return a set of player numbers selected by the current player
-     */
-    public static Map<Integer, Player> choosePlayersToPrint(Player player) {
-        String display = String.format("Enter player number (1 - %d), 0 to quit: ", players.size());
-
-        int choice;
-        Map<Integer, Player> playersChosen = new TreeMap<>();
-        while (true) {
-            choice = Utility.askForNum(sc, 0, players.size(), display);
-            if (choice == 0) {
-                break;
-            }
-            if (!players.get(choice - 1).getName().equals(player.getName())) {
-                playersChosen.put(choice, players.get(choice - 1));
-            }
-        }
-
-        return playersChosen;
-    }
 }

@@ -8,6 +8,7 @@ public class Admin extends Player {
 
     /**
      * Creates an Admin object. All default Admin objects have 999 tokens
+     * 
      * @param adminNo identifier for Admin
      */
     public Admin(int adminNo) {
@@ -23,6 +24,7 @@ public class Admin extends Player {
 
     /**
      * Takes in relevant params to create admin object that inherits data
+     * 
      * @param name name of player
      * @param tokens player's existing tokens in hand
      * @param reserveCards player's existing reserve cards
@@ -48,6 +50,7 @@ public class Admin extends Player {
 
     /**
      * Takes in a player object and turns it into admin object
+     * 
      * @param p player object
      */
     public Admin(Player p) {
