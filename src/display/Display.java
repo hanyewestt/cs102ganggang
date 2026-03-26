@@ -11,12 +11,12 @@ public class Display {
      */
     public static void turnOptionDisplay() {
         System.out.println();
-        System.out.println("---------------------------- Moves 🎮 ----------------------------");
+        System.out.println("----------------- Moves 🎮 -----------------\n");
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
         System.out.println("3. Buy a card");
         System.out.println("4. Show reserved cards");
-        System.out.println("5. Display player");
+        System.out.println("5. Display other players");
         System.out.println("6. admin perms");
         System.out.println();
     }
@@ -65,25 +65,26 @@ public class Display {
      * @param market the market
      */
     public static void printBoard(Player player, int roundNumber, HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
-        System.out.println("\n---------- Round " + roundNumber + " ⚔️ ----------");
+        String roundDisplay = roundNumber <= 10 ? "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦" : "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦";
+        System.out.println(roundDisplay);
         System.out.println("\n=== " + player.getName() + "'s turn ===\n");
 
-        System.out.println("----------------------------- Bank 🏦 -----------------------------\n");
+        System.out.println("------------------ Bank 🏦 ------------------\n");
         
         printBank(bank);
         System.out.println();
 
-        System.out.println("---------------------------- Market 🏬 ----------------------------\n");
+        System.out.println("----------------- Market 🏬 -----------------\n");
 
         printMarket(market);
         System.out.println();
         
-        System.out.println("---------------------------- Nobles 👑 ----------------------------\n");
+        System.out.println("----------------- Nobles 👑 -----------------\n");
 
         Display.printNobles(nobles);
         System.out.println();
 
-        System.out.println("--------------------------- Your Hand 👤 --------------------------\n");
+        System.out.println("---------------- Your Hand 👤 ---------------\n");
 
         System.out.println(player);
     }
@@ -94,8 +95,7 @@ public class Display {
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
-        System.out.println("Example Card");
-        System.out.println("    [ Bonuses  | Prestige | Card Costs 💰           ]\n");
+        System.out.println("    [ Bonuses  | Prestige | Card Costs 💰  ]\n");
 
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
@@ -134,10 +134,9 @@ public class Display {
      * @param nobles a list of {@link NobleTile} to print
      */
     public static void printNobles(List<NobleTile> nobles) {
-        System.out.println("Example Noble Tile");
-        System.out.println("    [ Prestige | Card Costs ]");
+        System.out.println("     [ Prestige | Bonus Req. ]\n");
         for (int i = 0; i < nobles.size(); i++) {
-            System.out.printf("%d   %s\n", i+1, nobles.get(i));
+            System.out.printf("%d.   %s\n", i+1, nobles.get(i));
         }
     }
 
@@ -184,6 +183,8 @@ public class Display {
      * and returns a map of the chosen {@link Player}s.
      *
      * @param sc the Scanner used to read input from the keyboard
+     * @param players the list of {@link Player}s
+     * @param player the current {@link Player}
      * @return a set of player numbers selected by the current player
      */
     public static Map<Integer, Player> choosePlayersToPrint(Scanner sc, List<Player> players, Player player) {
@@ -202,6 +203,28 @@ public class Display {
         }
 
         return playersChosen;
+    }
+
+    /**
+     * Prints other {@link Player}s' hand.
+     * @param playersToPrint
+     */
+    public static void printOtherPlayers(Map<Integer, Player> playersToPrint) {
+
+        if (!playersToPrint.isEmpty()) {
+            System.out.println("------------- Other players 👥 -------------\n");
+
+            for (Player p : playersToPrint.values()) {
+                System.out.println(p);
+            }
+        }
+    }
+
+    public static void printReserved(boolean toPrintReserved, Player player) {
+        if (toPrintReserved) {
+            System.out.println("---------------- Reserved 🎒 ----------------\n");
+            player.printReserved();
+        }
     }
 
 

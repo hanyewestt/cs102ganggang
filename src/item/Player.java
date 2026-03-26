@@ -362,7 +362,7 @@ public class Player implements Comparable<Player> {
         sb.append("Player No. ").append(order).append("\n");
         sb.append("Player Name: ").append(name).append("\n");
         sb.append("Gems: ").append(displayTokens());
-        sb.append("Produces: ").append(displayProduction());
+        sb.append("Bonuses: ").append(displayProduction());
         sb.append("Reserved: ").append(reserveCards.size()).append("\n");
         sb.append("Prestige: ").append(points).append("\n");
 

@@ -137,7 +137,7 @@ public class Game {
      */
     public static void doPlayerTurn(Player player) {
         boolean turnDone = false;
-        boolean printReserved = false;
+        boolean toPrintReserved = false;
 
         Map<Integer, Player> playersToPrint = new TreeMap<>();
 
@@ -152,18 +152,9 @@ public class Game {
 
             Display.printBoard(player, roundNumber, bank, nobles, market);
 
-            if (!playersToPrint.isEmpty()) {
-                System.out.println("------------------------ Other players 👥 ------------------------\n");
+            Display.printOtherPlayers(playersToPrint);
 
-                for (Player p : playersToPrint.values()) {
-                    System.out.println(p);
-                }
-            }
-
-            if (printReserved) {
-                System.out.println("--------------------------- Reserved 🎒 ---------------------------\n");
-                player.printReserved();
-            }
+            Display.printReserved(toPrintReserved, player);
 
             Display.turnOptionDisplay();
 
@@ -178,7 +169,7 @@ public class Game {
                     turnDone = buyCard(player);
                     break;
                 case 4:
-                    printReserved = !printReserved;
+                    toPrintReserved = !toPrintReserved;
                     break;
                 case 5:
                     playersToPrint = Display.choosePlayersToPrint(sc, players, player);
