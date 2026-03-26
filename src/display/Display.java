@@ -65,7 +65,7 @@ public class Display {
      * @param market the market
      */
     public static void printBoard(Player player, int roundNumber, HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
-        String roundDisplay = roundNumber <= 10 ? "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦" : "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦";
+        String roundDisplay = roundNumber < 10 ? "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦" : "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦";
         System.out.println(roundDisplay);
         System.out.println("\n=== " + player.getName() + "'s turn ===\n");
 
