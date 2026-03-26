@@ -5,7 +5,6 @@ import display.*;
 import item.*;
 import java.lang.*;
 import java.util.*;
-import jdk.jshell.execution.Util;
 import util.*;
 
 public class Game {
@@ -399,7 +398,7 @@ public class Game {
         boolean confirmReturn = false;
         while (!confirmReturn) {
             returnAmt = getReturnAmtFromPlayer(player);
-            
+
             confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? {Y/N}");
         }
         // }
