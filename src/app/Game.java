@@ -5,6 +5,7 @@ import display.*;
 import item.*;
 import java.lang.*;
 import java.util.*;
+import jdk.jshell.execution.Util;
 import util.*;
 
 public class Game {
@@ -389,13 +390,18 @@ public class Game {
             return;
         }
         // player's amount of token exceeds 10.
-        HashMap<Gem, Integer> returnAmt;
+        HashMap<Gem, Integer> returnAmt = new HashMap<>();
         // if (currentPlayer instanceof CPUPlayer cpu) {
         //     DrawToken move = cpu.getMove();
         //     // todo
         //     returnAmt = move.getReturnAmt();
         // } else {
-        returnAmt = getReturnAmtFromPlayer(player);
+        boolean confirmReturn = false;
+        while (!confirmReturn) {
+            returnAmt = getReturnAmtFromPlayer(player);
+            
+            confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? {Y/N}");
+        }
         // }
 
         for (Gem g : returnAmt.keySet()) {
@@ -642,10 +648,12 @@ public class Game {
         int total = p.getTokenAmount();
         while (total > 10) {
             p.displayTokens();
-            System.out.println("You have more than 10 tokens. ");
-            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold):", true);
+            System.out.println("You have to return " + (total - 10) + " tokens. ");
+            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or cancel to reset:", true);
             if (g == null) {
-                System.out.println("Invalid input! Try again.");
+                System.out.println("Reset return amounts.");
+                total = p.getTokenAmount();
+                returnAmt.clear();
                 continue;
             }
 
@@ -657,6 +665,7 @@ public class Game {
             // check that player has at least the amt they want to return
             if (pTokens.get(g) >= ++amtPerGem) {
                 returnAmt.put(g, amtPerGem);
+                System.out.println("Returning : " + returnAmt);
                 total--;
             } else {
                 System.out.println("You don't have enough tokens for that.");
