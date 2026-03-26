@@ -170,7 +170,7 @@ public class Game {
                     break;
                 case 5:
                     Display.clearScreen();
-                    printPlayerNo = printPlayer();
+                    printPlayerNo = printPlayerNo();
                     break;
                 case 6:
                     int idx = players.indexOf(player);
@@ -748,7 +748,7 @@ public class Game {
      *
      * @return the selected player’s order number
      */
-    public static int printPlayer() {
+    public static int printPlayerNo() {
         String display = String.format("Enter player number (1 - %d), 0 to cancel: ", players.size());
 
         int choice = Utility.askForNum(sc, 0, players.size(), display);
