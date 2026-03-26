@@ -94,12 +94,12 @@ public class Utility {
                     return Gem.Emerald;
                 case "onyx":
                     return Gem.Onyx;
+                case "cancel":
+                    return null;
                 case "gold":
                     if (takesGold) {
                         return Gem.Gold;
                     }
-                case "cancel":
-                    return null;
                 default:
                     System.out.println("Invalid input! Try again!");
                     isValid = false;
@@ -150,14 +150,21 @@ public class Utility {
         final int ROW_MAX = 3;
         final int COL_MAX = 4;
 
-        String rowMessage = "Enter row number of your chosen card (row.col)";
-        String colMessage = "Enter col number of your chosen card (row.col)";
-        int row = askForNum(sc, 1, 3, rowMessage);
-        int col = askForNum(sc, 1, 4, colMessage);
+        String rowMessage = "Enter row number of your chosen card (1-3), 0 to cancel: ";
+        int row = askForNum(sc, 0, 3, rowMessage);
+        if (row == 0) {
+            return null;
+        }
+
+        String colMessage = "Enter col number of your chosen card (1-4), 0 to cancel: ";
+        int col = askForNum(sc, 0, 4, colMessage);
+        if (col == 0) {
+            return null;
+        }
 
         int[] result = new int[2];
-        result[0] = row;
-        result[1] = col;
+        result[0] = row-1;
+        result[1] = col-1;
 
         return result;
 
