@@ -64,7 +64,7 @@ public class Utility {
     }
 
     public static Gem askForGem(Scanner keyboard, String message) {
-        askForGem(keyboard, message, false);
+        return askForGem(keyboard, message, false);
     }
 
     /**
@@ -97,6 +97,10 @@ public class Utility {
                 case "gold":
                     if (takesGold) {
                         return Gem.Gold;
+                    } else {
+                        System.out.println("Cannot take gold");
+                        isValid = false;
+                        break;
                     }
                 case "cancel":
                     return null;
