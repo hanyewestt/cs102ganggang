@@ -362,4 +362,8 @@ public class Player implements Comparable<Player> {
         }
         return total;
     }
+
+    public int getOrder() {
+        return order;
+    }
 }
