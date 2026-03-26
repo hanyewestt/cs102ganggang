@@ -181,6 +181,10 @@ public class Game {
         }
         nobleSelection(player);
     }
+    /**
+     * Prompts the {@link Player} to choose a noble if more than 1 visits and adds the noble to the {@link Player} 
+     * @param player the {@link Player} whose turn is being executed
+     */
 
     public static void nobleSelection(Player p) {
         List<NobleTile> visitingNobles = visitingNobles(p);
@@ -221,6 +225,14 @@ public class Game {
         return p.getPoints() >= pointsToWin;
     }
 
+    /**
+     * Checks if the player’s points are equal to or more than 15.
+     * @param p the {@link Player} being checked.
+     * @return true if the player has reached the win condition, false otherwise
+
+     * 
+     * 
+     */
     public static List<Player> getWinner() {
         Collections.sort(players);
         List<Player> winningPlayers = new ArrayList<>();
@@ -731,6 +743,11 @@ public class Game {
         return p;
     }
 
+    /**
+     * Prompts user to enter a player to display by entering their number
+     *
+     * @return the selected player’s order number
+     */
     public static int printPlayer() {
         String display = String.format("Enter player number (1 - %d), 0 to cancel: ", players.size());
 

@@ -4,7 +4,11 @@ import java.lang.*;
 import java.util.*;
 import util.*;
 // Gem, Card, NobleTile
-
+/**
+ * Represents a player in the game. 
+ * A player has a name, tokens, reserved cards, production levels, nobles who visited them, and points.
+ *
+ */
 public class Player implements Comparable<Player> {
 
     private String name;
@@ -20,6 +24,10 @@ public class Player implements Comparable<Player> {
 
     private int points = 0;
 
+    /**
+     * No argument constructor.
+     * Player starts with 0 tokens for every Gem type.
+     */
     public Player() {
         this.name = "no name";
         for (Gem g : Gem.values()) {
@@ -29,70 +37,132 @@ public class Player implements Comparable<Player> {
 
     }
 
+    /**
+     * Player starts with 0 Gems for every type. Player has a name.
+     * 
+     * @param name Name of player
+     * @param order Player order number
+     */
     public Player(String name, int order) {
         this();
         this.name = name;
         this.order = order;
     }
 
+    /**
+     * @return player’s points.
+     */
     public int getPoints() {
         return points;
     }
 
+    /**
+     * @return player’s reserve hand size
+     */
     public int getReserveHandSize() {
         return reserveCards.size();
     }
 
+    /**
+     * @return player's reserve hand
+     */
     public List<Card> getReserveHand() {
         return reserveCards;
     }
 
-    // display reserve hand?
+    /**
+     * @return player's tokens
+     */
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
     }
 
-    // display token?
+    /**
+     * @return HashMap of Gem production
+     */
     public HashMap<Gem, Integer> getProduction() {
         return production;
     }
 
-    // display production
+    /**
+     * @return List<NobleTile> of owned NobleTiles
+     */
     public List<NobleTile> getOwnedNobleTile() {
         return ownedNobles;
     }
 
-    // display noble tile
+    /**
+     * Adds the specified number of tokens of Gem type g to player’s tokens.
+     * 
+     * @param g Gem type
+     * @param amt Amount of token to add
+     */
     public void addToken(Gem g, int amt) {
         tokens.put(g, tokens.get(g) + amt);
     }
 
+    /**
+     * Removes the specified number of tokens of Gem type g from player’s tokens.
+     * 
+     * @param g Gem type
+     * @param amt Amount of token to remove
+     */
     public void removeToken(Gem g, int amt) {
         tokens.put(g, tokens.get(g) - amt);
     }
 
+    /**
+     * Adds the specified number of tokens of Gem type g to player’s production levels.
+     * 
+     * @param g Gem type
+     * @param amt Amount of token to add
+     */
     public void addProduction(Gem g, int amt) {
         production.put(g, production.get(g) + amt);
     }
 
+    /**
+     * Adds 1 token of Gem type g to player’s production levels.
+     * 
+     * @param g Gem type
+     */
     public void addProduction(Gem g) {
         this.addProduction(g, 1);
     }
 
+    /**
+     * Adds points to player’s points.
+     * 
+     * @param p Points
+     */
     public void addPoints(int p) {
         points += p;
     }
 
+    /**
+     * Updates points, production levels, and the player’s remaining tokens after the purchase of the card.
+     * 
+     * @param c Card
+     * @param remainingGems The player’s remaining tokens
+     */
     public void addCard(Card c, HashMap<Gem, Integer> remainingGems) {
         tokens = remainingGems;
         addPoints(c.getPOINTS());
         addProduction(c.getGEMTYPE());
     }
 
+    /**
+     * Adds this card to player’s reserve hand. Does not increment gold.
+     * 
+     * @param c Card
+     */
     public void reserveCard(Card c) {
         reserveCards.add(c);
     }
 
+    /**
+     * 
+     */
     public boolean buyCard(Card c, Scanner keyboard) {
         int startingGold = tokens.get(Gem.Gold);
         int gold = startingGold;
@@ -230,19 +300,37 @@ public class Player implements Comparable<Player> {
         }
     }
 
+    /**
+     * Removes this card from player’s reserve hand.
+     * 
+     * @param pos The index of the card that is to be removed from the player’s hand.
+     */
     public void removeReserveCard(int pos) {
         reserveCards.remove(pos);
     }
-
+    
+    /**
+     * Removes this card from player’s reserve hand.
+     * 
+     * @param card Card that is to be removed from the player’s hand.
+     */
     public void removeReserveCard(Card card) {
         reserveCards.remove(card);
     }
 
+    /**
+     * Adds a NobleTile to player’s list of visiting nobles.
+     *  
+     * @param noble The NobleTile to be added
+     */
     public void addNobleTile(NobleTile noble) {
         ownedNobles.add(noble);
         addPoints(noble.getPoints());
     }
 
+    /**
+     * @return the total number of cards the player has purchased thus far.
+     */
     public int getNumberOfCards() {
         int sum = 0;
         for (Gem g : Gem.values()) {
@@ -251,6 +339,11 @@ public class Player implements Comparable<Player> {
         return sum;
     }
 
+    /**
+     * Compares 2 players in descending order of points. If points tie, return in ascending number of cards.
+     * 
+     * @param p The other player
+     */
     @Override
     public int compareTo(Player p) {
         if (this.getPoints() == p.getPoints()) {
@@ -259,6 +352,9 @@ public class Player implements Comparable<Player> {
         return p.getPoints() - this.getPoints();
     }
 
+    /**
+     * @return String of player info to be displayed on console
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -273,6 +369,9 @@ public class Player implements Comparable<Player> {
         return sb.toString();
     }
 
+    /**
+     * @return String that displays player’s production levels.
+     */
     public String displayProduction() {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
@@ -297,6 +396,9 @@ public class Player implements Comparable<Player> {
         return sb.toString();
     }
 
+    /**
+     * @return String that displays nobles that have visited the player.
+     */
     public String displayNobles() {
 
         if (ownedNobles.size() == 0) {
@@ -314,10 +416,16 @@ public class Player implements Comparable<Player> {
         return output;
     }
 
+    /**
+     * @return the name of the player.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return String that displays the tokens in the player’s hands
+     */
     public String displayTokens() {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
@@ -335,6 +443,9 @@ public class Player implements Comparable<Player> {
         return sb.toString();
     }
 
+    /**
+     * prints all reserved cards from a {@link Player}.
+     */
     public void printReserved() {
         StringBuilder sb = new StringBuilder();
         sb.append("Reserved cards: \n");
