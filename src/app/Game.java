@@ -222,7 +222,7 @@ public class Game {
     public static boolean hitWinCondition(Player p) {
 
         // todo
-        return p.getPoints() >= pointsToWin;
+        return p.getPoints() >= Configuration.getPointsToWin();
     }
 
     /**
