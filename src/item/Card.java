@@ -59,32 +59,37 @@ public class Card {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
+        int gemWidth = 12;
 
         switch (Utility.fromGemToChar(GEMTYPE)) {
             case 'D':
-                sb.append(" Diamond");
+                sb.append(String.format("%-" + gemWidth + "s", "Diamond"));
                 break;
             case 'R':
-                sb.append("  Ruby  ");
+                sb.append(String.format("%-" + gemWidth + "s", "Ruby"));
                 break;
             case 'S':
-                sb.append("Sapphire");
+                sb.append(String.format("%-" + gemWidth + "s", "Sapphire"));
                 break;
             case 'E':
-                sb.append(" Emerald");
+                sb.append(String.format("%-" + gemWidth + "s", "Emerald"));
                 break;
             case 'O':
-                sb.append("  Onyx  ");
+                sb.append(String.format("%-" + gemWidth + "s", "Onyx"));
                 break;
             default:
                 break;
         }
         
         sb.append(" | ");
-        sb.append(POINTS).append(" | ");
+        int pointWidth = 8;
+        String pointsDisplay = String.format("%-" + pointWidth + "s", POINTS);
+        sb.append(pointsDisplay).append(" | ");
         
         Iterator tokenIterator = tokens.entrySet().iterator();
         boolean first = true;
+        int costWidth = 18;
+        String costDisplay = "";
         while (tokenIterator.hasNext()) {
             Map.Entry entry = (Map.Entry) tokenIterator.next();
 
@@ -92,12 +97,14 @@ public class Card {
                 if (first) {
                     first = false;
                 } else {
-                    sb.append(", ");
+                    costDisplay += ", ";
                 }
-
-                sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
+                
+                costDisplay += "" + entry.getValue() + Utility.fromGemToChar((Gem)entry.getKey());
+                
             }
         }
+        sb.append(String.format("%-" + costWidth + "s", costDisplay));
         sb.append(" ]");
 
         return sb.toString();
