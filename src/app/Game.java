@@ -5,6 +5,8 @@ import display.*;
 import item.*;
 import java.lang.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
 import util.*;
 
 public class Game {
@@ -31,7 +33,7 @@ public class Game {
     public static void main(String[] args) {
         String msg = "Enter number of players (between 2 and 4): ";
         int playerNumber = Utility.askForNum(sc, 2, 4, msg);
-        msg = String.format("Enter number of compter players (between 0 and %d): ", playerNumber - 1);
+        msg = String.format("Enter number of computer players (between 0 and %d): ", playerNumber - 1);
         int cpuNumber = Utility.askForNum(sc, 0, playerNumber - 1, msg);
 
         Game game = new Game(playerNumber);
@@ -40,7 +42,6 @@ public class Game {
         roundNumber = 1;
         while (!lastRound) {
             for (int i = 0; i < playerNumber; i++) {
-                Display.clearScreen();
                 doPlayerTurn(players.get(i));
                 if (!lastRound) {
                     lastRound = hitWinCondition(players.get(i));
@@ -135,6 +136,9 @@ public class Game {
     public static void doPlayerTurn(Player player) {
         boolean turnDone = false;
         boolean printReserved = false;
+
+        Map<Integer, Player> playersToPrint = new TreeMap<>();
+
         int printPlayerNo = players.indexOf(player);
 
         // if (player instanceof CPUPlayer cpu) {
@@ -142,13 +146,22 @@ public class Game {
         //     return;
         // }
         while (!turnDone) {
-            Display.displayRoundAndPlayer(player.getName(), roundNumber);
-            Display.printBoard(bank, nobles, market);
+            Display.clearScreen();
+
+            Display.printBoard(player, roundNumber, bank, nobles, market);
+
+            if (!playersToPrint.isEmpty()) {
+                System.out.println("------------------------ Other players 👥 ------------------------\n");
+
+                for (Player p : playersToPrint.values()) {
+                    System.out.println(p);
+                }
+            }
 
             if (printReserved) {
+                System.out.println("--------------------------- Reserved 🎒 ---------------------------\n");
                 player.printReserved();
             }
-            System.out.println(players.get(printPlayerNo));
 
             Display.turnOptionDisplay();
 
@@ -163,12 +176,10 @@ public class Game {
                     turnDone = buyCard(player);
                     break;
                 case 4:
-                    Display.clearScreen();
                     printReserved = !printReserved;
                     break;
                 case 5:
-                    Display.clearScreen();
-                    printPlayerNo = printPlayer();
+                    playersToPrint = choosePlayersToPrint(player);
                     break;
                 case 6:
                     int idx = players.indexOf(player);
@@ -278,7 +289,12 @@ public class Game {
     public static boolean reserveCard(Player player) {
 
         if (player.getReserveHandSize() == 3) {
-            System.out.println("Your hand size is full.");
+            try {
+                System.out.println("‼️ Your hand size is full. ‼️");
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                return false;
+            }
             return false;
         }
 
@@ -344,7 +360,7 @@ public class Game {
 
         Card card = market[choice2[0]][choice2[1]];
         if (card == null) {
-            System.out.println("No card at this position.");
+            System.out.println("‼️ No card at this position. ‼️");
             return false;
         }
         // remove from market
@@ -375,7 +391,7 @@ public class Game {
         // }
         Card card = decks.get(choice2 - 1).draw();
         if (card == null) {
-            System.out.println("Deck is empty");
+            System.out.println("‼️ Deck is empty ‼️");
             return false;
         }
         // add to hand
@@ -445,14 +461,14 @@ public class Game {
                 Card card = market[pos[0]][pos[1]];
 
                 if (card == null) {
-                    System.out.println("No card at that position");
+                    System.out.println("‼️ No card at that position ‼️");
                     continue;
                 }
 
                 Map<Gem, Integer> pBefore = player.getTokens();
                 boolean success = player.buyCard(card, sc);
                 if (!success) {
-                    System.out.println("Unable to buy that card.");
+                    System.out.println("‼️ Unable to buy that card. ‼️");
                     continue;
                 }
 
@@ -473,7 +489,7 @@ public class Game {
                 // buy from reserve 
                 List<Card> hand = player.getReserveHand();
                 if (hand.isEmpty()) {
-                    System.out.println("You have no reserved cards.");
+                    System.out.println("‼️ You have no reserved cards. ‼️");
                     continue;
                 }
 
@@ -487,6 +503,7 @@ public class Game {
                 for (int i = 0; i < hand.size(); i++) {
                     System.out.println((i + 1) + ". " + hand.get(i));
                 }
+                System.out.println();
 
                 idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
                 // }
@@ -496,7 +513,7 @@ public class Game {
                 Map<Gem, Integer> pBefore = player.getTokens();
                 boolean success = player.buyCard(card, sc);
                 if (!success) {
-                    System.out.println("Unable to buy that card.");
+                    System.out.println("‼️ Unable to buy that card. ‼️");
                     continue;
                 }
 
@@ -588,12 +605,12 @@ public class Game {
             }
 
             if (bank.get(g) <= 0) {
-                System.out.println("Bank does not have this gem.");
+                System.out.println("‼️ Bank does not have this gem. ‼️");
                 continue;
             }
 
             if (chosen.containsKey(g)) {
-                System.out.println("Already chosen.");
+                System.out.println("‼️ Already chosen. ‼️");
                 continue;
             }
 
@@ -619,7 +636,7 @@ public class Game {
             }
 
             if (bank.get(g) < 4) {
-                System.out.println("Need at least 4 in bank to take 2.");
+                System.out.println("‼️ Need at least 4 in bank to take 2. ‼️");
                 continue;
             }
 
@@ -642,10 +659,10 @@ public class Game {
         int total = p.getTokenAmount();
         while (total > 10) {
             p.displayTokens();
-            System.out.println("You have more than 10 tokens. ");
+            System.out.println("‼️ You have more than 10 tokens. ‼️");
             Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold):", true);
             if (g == null) {
-                System.out.println("Invalid input! Try again.");
+                System.out.println("‼️ Invalid input! Try again. ‼️");
                 continue;
             }
 
@@ -659,7 +676,7 @@ public class Game {
                 returnAmt.put(g, amtPerGem);
                 total--;
             } else {
-                System.out.println("You don't have enough tokens for that.");
+                System.out.println("‼️ You don't have enough tokens for that. ‼️");
             }
         }
 
@@ -720,10 +737,28 @@ public class Game {
         return p;
     }
 
-    public static int printPlayer() {
-        String display = String.format("Enter player number (1 - %d), 0 to cancel: ", players.size());
+    /**
+     * Prompts the current player to select which players' hands they wish to view
+     * and returns a map of the chosen {@link Player}s.
+     *
+     * @param sc the Scanner used to read input from the keyboard
+     * @return a set of player numbers selected by the current player
+     */
+    public static Map<Integer, Player> choosePlayersToPrint(Player player) {
+        String display = String.format("Enter player number (1 - %d), 0 to quit: ", players.size());
 
-        int choice = Utility.askForNum(sc, 0, players.size(), display);
-        return choice - 1;
+        int choice;
+        Map<Integer, Player> playersChosen = new TreeMap<>();
+        while (true) {
+            choice = Utility.askForNum(sc, 0, players.size(), display);
+            if (choice == 0) {
+                break;
+            }
+            if (!players.get(choice - 1).getName().equals(player.getName())) {
+                playersChosen.put(choice, players.get(choice - 1));
+            }
+        }
+
+        return playersChosen;
     }
 }

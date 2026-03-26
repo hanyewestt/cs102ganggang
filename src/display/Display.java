@@ -2,20 +2,16 @@ package display;
 
 import java.util.*;
 import item.*;
+import util.*;
 
 public class Display {
-    /**
-     * Prints round number and player name.
-     */
-    public static void displayRoundAndPlayer(String name, int roundNumber) {
-        System.out.println("\n---------- Round " + roundNumber + " ⚔️ ----------");
-        System.out.println("\n=== " + name + "'s turn ===\n");
-    }
 
     /**
      * Prints turn options the player can take.
      */
     public static void turnOptionDisplay() {
+        System.out.println();
+        System.out.println("---------------------------- Moves 🎮 ----------------------------");
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
         System.out.println("3. Buy a card");
@@ -64,25 +60,35 @@ public class Display {
      * Prints the current state of the board, including all cards and noble
      * tiles. Includes: Avaliable cards, Bank, Nobile Tiles
      */
-    public static void printBoard(HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
-        System.out.printf("------------------------------------------------------------------\n");
+    public static void printBoard(Player player, int roundNumber, HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
+        System.out.println("\n---------- Round " + roundNumber + " ⚔️ ----------");
+        System.out.println("\n=== " + player.getName() + "'s turn ===\n");
+
+        System.out.println("----------------------------- Bank 🏦 -----------------------------\n");
         
         printBank(bank);
+        System.out.println();
+
+        System.out.println("---------------------------- Market 🏬 ----------------------------\n");
 
         printMarket(market);
+        System.out.println();
         
-        System.out.printf("------------------------------------------------------------------\n");
+        System.out.println("---------------------------- Nobles 👑 ----------------------------\n");
 
         Display.printNobles(nobles);
+        System.out.println();
 
-        System.out.printf("------------------------------------------------------------------\n\n");
+        System.out.println("--------------------------- Your Hand 👤 --------------------------\n");
+
+        System.out.println(player);
     }
 
     /**
      * Prints the cards currently out in the market.
      */
     public static void printMarket(Card[][] market) {
-        System.out.println("\nExample Card");
+        System.out.println("Example Card");
         System.out.println("    [ Gem Produced | Prestige | Card Cost          ]\n");
 
         for (int i = 1; i <= 3; i++) {
@@ -106,7 +112,6 @@ public class Display {
      * Prints bank contents.
      */
     public static void printBank(HashMap<Gem, Integer> bank) {
-        System.out.printf("Bank: ");
         System.out.printf(bank.get(Gem.Diamond) + "D , ");
         System.out.printf(bank.get(Gem.Ruby) + "R , ");
         System.out.printf(bank.get(Gem.Sapphire) + "S , ");
@@ -119,8 +124,6 @@ public class Display {
      * Prints {@link NobleTile}s on the board.
      */
     public static void printNobles(ArrayList<NobleTile> nobles) {
-
-        System.out.printf("<NOBLE TILES>\n");
         for (int i = 0; i < nobles.size(); i++) {
             System.out.printf("%s\n", nobles.get(i));
         }
@@ -132,13 +135,13 @@ public class Display {
     public static void printWinner(List<Player> winningPlayers) {
         clearScreen();
 
-        System.out.printf("------------------------------------------------------------------\n");
-        System.out.printf(" ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNERS ARE  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖\n");
+        String winTitle = winningPlayers.size() > 1 ? " ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNERS ARE  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖" : " ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNER IS  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖";
+        System.out.println(winTitle);
         for (Player p : winningPlayers) {
-            System.out.printf(" > ");
+            System.out.print(" > ");
             System.out.println(p.getName());
         }
-        System.out.printf("------------------------------------------------------------------\n");
+
     }
 
     /**
