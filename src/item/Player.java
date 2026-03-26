@@ -147,8 +147,8 @@ public class Player implements Comparable<Player> {
      */
     public void addCard(Card c, HashMap<Gem, Integer> remainingGems) {
         tokens = remainingGems;
-        addPoints(c.getPOINTS());
-        addProduction(c.getGEMTYPE());
+        addPoints(c.getPoints());
+        addProduction(c.getGemType());
     }
 
     /**
@@ -219,8 +219,8 @@ public class Player implements Comparable<Player> {
 
                     if (spentGold == Utility.getTotalGems(discountCardCost)) {
                         removeToken(Gem.Gold, spentGold);
-                        addPoints(c.getPOINTS());
-                        addProduction(c.getGEMTYPE());
+                        addPoints(c.getPoints());
+                        addProduction(c.getGemType());
                         return true;
                     }
 
@@ -275,8 +275,8 @@ public class Player implements Comparable<Player> {
 
             if (spentGold + necessaryGold == Utility.getTotalGems(discountCardCost)) {
                 removeToken(Gem.Gold, spentGold + necessaryGold);
-                addPoints(c.getPOINTS());
-                addProduction(c.getGEMTYPE());
+                addPoints(c.getPoints());
+                addProduction(c.getGemType());
                 return true;
             }
 

@@ -2,6 +2,7 @@ package item;
 
 import java.util.*;
 import util.Utility;
+import display.Display;
 
 public class NobleTile {
 
@@ -9,7 +10,7 @@ public class NobleTile {
     private static final int POINTS = 3;
 
     /**
-     * Constructor for NobelTile that initialises the Gem Hashmap
+     * Constructor for {@link NobleTile} that initialises the Gem Hashmap
      * 
      * @param gem1 GemType
      * @param gem2 GemType
@@ -22,7 +23,7 @@ public class NobleTile {
     }
 
     /**
-     * Constructor for NobelTile that initialises the Gem Hashmap
+     * Constructor for {@link NobleTile} that initialises the Gem Hashmap
      * 
      * @param gem1 GemType
      * @param gem2 GemType
@@ -33,40 +34,36 @@ public class NobleTile {
     }
 
     /**
-     * @return Cost of NobelTile as HashMap
+     * @return Cost of {@link NobleTile} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
     }
 
     /**
-     * @return Prestige points of Card
+     * @return Prestige points of {@link NobleTile}
      */
     public int getPoints() {
         return POINTS;
     }
 
     /**
-     * @return NobelTile info to be displayed on console
+     * @return {@link NobleTile} info to be displayed on console
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[ ").append(POINTS).append(" | ");
-        
-        Iterator tokenIterator = tokens.entrySet().iterator();
-        boolean first = true;
-        while (tokenIterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) tokenIterator.next();
 
-            if ((int) entry.getValue() > 0) {
-                if (first) {
-                    sb.append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
-                    first = false;
-                } else {
-                    sb.append(", ").append(entry.getValue()).append(Utility.fromGemToChar((Gem)entry.getKey()));
-                }
-            }
-        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        
+        // print pts
+        int pointWidth = 8;
+        sb.append(String.format("%-" + pointWidth + "s", POINTS));
+        sb.append(" | ");
+
+        // print tokens
+        int costWidth = 10;
+        
+        sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");
 
         return sb.toString();

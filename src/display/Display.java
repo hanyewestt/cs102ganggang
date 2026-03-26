@@ -1,7 +1,8 @@
 package display;
 
-import java.util.*;
+import java.util.*; 
 import item.*;
+import util.*;
 
 public class Display {
     /**
@@ -63,8 +64,12 @@ public class Display {
     /**
      * Prints the current state of the board, including all cards and noble
      * tiles. Includes: Avaliable cards, Bank, Nobile Tiles
+     * 
+     * @param bank the bank
+     * @param nobles the nobles
+     * @param market the market
      */
-    public static void printBoard(HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
+    public static void printBoard(HashMap<Gem, Integer> bank, List<NobleTile> nobles, Card[][] market) {
         System.out.printf("------------------------------------------------------------------\n");
         
         printBank(bank);
@@ -80,10 +85,11 @@ public class Display {
 
     /**
      * Prints the cards currently out in the market.
+     * 
+     * @param market the market
      */
     public static void printMarket(Card[][] market) {
-        System.out.println("\nExample Card");
-        System.out.println("    [ Gem Produced | Prestige | Card Cost          ]\n");
+        System.out.println("\n    [ Bonuses  | Prestige | Card Costs     ]\n");
 
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
@@ -104,6 +110,8 @@ public class Display {
 
     /**
      * Prints bank contents.
+     * 
+     * @param bank the bank
      */
     public static void printBank(HashMap<Gem, Integer> bank) {
         System.out.printf("Bank: ");
@@ -117,17 +125,22 @@ public class Display {
 
     /**
      * Prints {@link NobleTile}s on the board.
+     * 
+     * @param nobles a list of {@link NobleTile} to print
      */
-    public static void printNobles(ArrayList<NobleTile> nobles) {
+    public static void printNobles(List<NobleTile> nobles) {
 
         System.out.printf("<NOBLE TILES>\n");
+        System.out.println("    [ Prestige | Card Costs ]");
         for (int i = 0; i < nobles.size(); i++) {
-            System.out.printf("%s\n", nobles.get(i));
+            System.out.printf("%d   %s\n", i+1, nobles.get(i));
         }
     }
 
     /**
      * Prints the winners of the game.
+     * 
+     * @param winnningPlayers a list of {@link Player} that have won the game
      */
     public static void printWinner(List<Player> winningPlayers) {
         clearScreen();
@@ -146,5 +159,50 @@ public class Display {
      */
     public static void clearScreen() {
         System.out.print("\033c");
+    }
+
+    /**
+     * Prompts user to enter a player to display by entering their number
+     * 
+     * @param sc Scanner
+     * @param totalPlayers the number of total players
+     * @return the selected player’s order number
+     */
+    public static int printPlayerNo(Scanner sc, int totalPlayers) {
+        String display = String.format("Enter player number (1 - %d), 0 to cancel: ", totalPlayers);
+
+        int choice = Utility.askForNum(sc, 0, totalPlayers, display);
+        return choice - 1;
+    }
+
+
+    /**
+     * Formats a printable string for card costs
+     * 
+     * @param tokens a HashMap of the card costs to print
+     * @return String the printable string
+     */
+    public static String costDisplayString(HashMap<Gem, Integer> tokens) {
+        boolean first = true;
+        String costDisplay = "";
+        
+        Iterator tokenIterator = tokens.entrySet().iterator();
+        
+        while (tokenIterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) tokenIterator.next();
+
+            if ((int) entry.getValue() > 0) {
+                if (first) {
+                    first = false;
+                } else {
+                    costDisplay += ", ";
+                }
+                
+                costDisplay += "" + entry.getValue() + Utility.fromGemToChar((Gem)entry.getKey());
+                
+            }
+        }
+
+        return costDisplay;
     }
 }
