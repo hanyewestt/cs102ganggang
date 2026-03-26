@@ -1,6 +1,7 @@
 package util;
 
 import item.*;
+import java.lang.classfile.instruction.ThrowInstruction;
 import java.util.*;
 
 public class Utility {
@@ -62,6 +63,10 @@ public class Utility {
         return false;
     }
 
+    public static Gem askForGem(Scanner keyboard, String message) {
+        return askForGem(keyboard, message, false);
+    }
+
     /**
      * Will prompt the user for a string representing a Gem. Keeps prompting
      * until a valid input is given.
@@ -70,7 +75,7 @@ public class Utility {
      * @param message The message to prompt for user input.
      * @return The Gem that the user inputs.
      */
-    public static Gem askForGem(Scanner keyboard, String message) {
+    public static Gem askForGem(Scanner keyboard, String message, boolean takesGold) {
         boolean isValid;
         do {
             System.out.print(message);
@@ -89,6 +94,12 @@ public class Utility {
                     return Gem.Emerald;
                 case "onyx":
                     return Gem.Onyx;
+                case "cancel":
+                    return null;
+                case "gold":
+                    if (takesGold) {
+                        return Gem.Gold;
+                    }
                 default:
                     System.out.println("Invalid input! Try again!");
                     isValid = false;
@@ -139,14 +150,21 @@ public class Utility {
         final int ROW_MAX = 3;
         final int COL_MAX = 4;
 
-        String rowMessage = "Enter row number of your chosen card (row.col)";
-        String colMessage = "Enter col number of your chosen card (row.col)";
-        int row = askForNum(sc, 1, 3, rowMessage);
-        int col = askForNum(sc, 1, 4, colMessage);
+        String rowMessage = "Enter row number of your chosen card (1-3), 0 to cancel: ";
+        int row = askForNum(sc, 0, 3, rowMessage);
+        if (row == 0) {
+            return null;
+        }
+
+        String colMessage = "Enter col number of your chosen card (1-4), 0 to cancel: ";
+        int col = askForNum(sc, 0, 4, colMessage);
+        if (col == 0) {
+            return null;
+        }
 
         int[] result = new int[2];
-        result[0] = row;
-        result[1] = col;
+        result[0] = row-1;
+        result[1] = col-1;
 
         return result;
 
