@@ -147,8 +147,8 @@ public class Player implements Comparable<Player> {
      */
     public void addCard(Card c, HashMap<Gem, Integer> remainingGems) {
         tokens = remainingGems;
-        addPoints(c.getPOINTS());
-        addProduction(c.getGEMTYPE());
+        addPoints(c.getPoints());
+        addProduction(c.getGemType());
     }
 
     /**
@@ -219,8 +219,8 @@ public class Player implements Comparable<Player> {
 
                     if (spentGold == Utility.getTotalGems(discountCardCost)) {
                         removeToken(Gem.Gold, spentGold);
-                        addPoints(c.getPOINTS());
-                        addProduction(c.getGEMTYPE());
+                        addPoints(c.getPoints());
+                        addProduction(c.getGemType());
                         return true;
                     }
 
@@ -275,8 +275,8 @@ public class Player implements Comparable<Player> {
 
             if (spentGold + necessaryGold == Utility.getTotalGems(discountCardCost)) {
                 removeToken(Gem.Gold, spentGold + necessaryGold);
-                addPoints(c.getPOINTS());
-                addProduction(c.getGEMTYPE());
+                addPoints(c.getPoints());
+                addProduction(c.getGemType());
                 return true;
             }
 
@@ -454,7 +454,7 @@ public class Player implements Comparable<Player> {
             sb.append("[N/A]\n");
         } else {
             for (int i = 0; i < reserveCards.size(); i++) {
-                sb.append(i+1).append(". ");
+                sb.append(i + 1).append(". ");
                 sb.append(reserveCards.get(i).toString()).append("\n");
             }
         }
@@ -464,6 +464,7 @@ public class Player implements Comparable<Player> {
 
     /**
      * Gets the total number of tokens the player has in their hand.
+     *
      * @return int The number of tokens the player has.
      */
     public int getTokenAmount() {
