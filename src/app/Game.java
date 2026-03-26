@@ -16,9 +16,10 @@ public class Game {
     private static ArrayList<Deck<Card>> decks = new ArrayList<>();
     private static Card[][] market = new Card[3][4];
     private static ArrayList<NobleTile> nobles;
-    private static Scanner sc = new Scanner(System.in); // can like that??
+    private static Scanner sc = new Scanner(System.in);
     private static long seed;
     private static int roundNumber;
+    private static int pointsToWin;
 
     /**
      * Entry point of the game program. Prompts the user to enter the number of
@@ -68,6 +69,7 @@ public class Game {
         this.playerNumber = playerNumber;
         this.cpuNumber = cpuNumber;
         this.seed = seed;
+        this.pointsToWin = Configuration.getPointsToWin();
         players = new ArrayList<>(playerNumber);
 
         int startingGems = Configuration.getStartingGems(playerNumber);
@@ -216,7 +218,7 @@ public class Game {
     public static boolean hitWinCondition(Player p) {
 
         // todo
-        return p.getPoints() >= 15;
+        return p.getPoints() >= pointsToWin;
     }
 
     public static List<Player> getWinner() {
@@ -398,8 +400,7 @@ public class Game {
         boolean confirmReturn = false;
         while (!confirmReturn) {
             returnAmt = getReturnAmtFromPlayer(player);
-
-            confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? {Y/N}");
+            confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? {Y/N}: ");
         }
         // }
 
@@ -645,15 +646,15 @@ public class Game {
         HashMap<Gem, Integer> returnAmt = new HashMap<>();
         HashMap<Gem, Integer> pTokens = p.getTokens();
         int total = p.getTokenAmount();
+        System.out.println("\nGems: " + p.displayTokens());
         while (total > 10) {
-            p.displayTokens();
             System.out.println("You have to return " + (total - 10) + " tokens. ");
-            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or cancel to reset:", true);
+            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or cancel to reset: ", true);
             if (g == null) {
-                System.out.println("Reset return amounts.");
-                Display.clearScreen();
+                System.out.println("Reset return amounts.\n");
                 total = p.getTokenAmount();
                 returnAmt.clear();
+                Display.printBoard(bank, nobles, market);
                 continue;
             }
 
@@ -666,9 +667,10 @@ public class Game {
             if (pTokens.get(g) >= ++amtPerGem) {
                 returnAmt.put(g, amtPerGem);
                 System.out.println("Returning : " + returnAmt);
+                System.out.println("");
                 total--;
             } else {
-                System.out.println("You don't have enough tokens for that.");
+                System.out.println("You don't have enough tokens for that.\n");
             }
         }
 
