@@ -41,8 +41,6 @@ public class Game {
         while (!lastRound) {
             for (int i = 0; i < playerNumber; i++) {
                 Display.clearScreen();
-                Display.displayRoundAndPlayer(players.get(i).getName(), roundNumber);
-                
                 doPlayerTurn(players.get(i));
                 if (!lastRound) {
                     lastRound = hitWinCondition(players.get(i));
@@ -118,13 +116,13 @@ public class Game {
             Player player = new Player(name, i);
             players.add(player);
         }
-        int cpuIdx = 1;
-        for (; i <= playerNumber; i++) {
-            String name = "CPU" + cpuIdx;
-            CPUPlayer player = new CPUPlayer(game, name, i + 1);
-            players.add(player);
-            cpuIdx++;
-        }
+        // int cpuIdx = 1;
+        // for (; i <= playerNumber; i++) {
+        //     String name = "CPU" + cpuIdx;
+        //     CPUPlayer player = new CPUPlayer(game, name, i + 1);
+        //     players.add(player);
+        //     cpuIdx++;
+        // }
     }
 
     /**
@@ -135,36 +133,23 @@ public class Game {
      * @param player the {@link Player} whose turn is being executed
      */
     public static void doPlayerTurn(Player player) {
-        boolean first = true;
         boolean turnDone = false;
         boolean printReserved = false;
-        boolean printPlayer = false;
-        int printPlayerNo = -1;
+        int printPlayerNo = players.indexOf(player);
 
         // if (player instanceof CPUPlayer cpu) {
         //     cpu.getMove().doMove();
         //     return;
         // }
-
         while (!turnDone) {
-            if (!first) {
-                Display.displayRoundAndPlayer(player.getName(), roundNumber);
-            }
-            // show board every turn? might affect the choice they make
+            Display.displayRoundAndPlayer(player.getName(), roundNumber);
             Display.printBoard(bank, nobles, market);
 
             if (printReserved) {
                 player.printReserved();
-                printReserved = false;
-            } else if (printPlayer) {
-                System.out.println(players.get(printPlayerNo - 1).toString());
-                printPlayer = false;
             }
+            System.out.println(players.get(printPlayerNo));
 
-            if (first) {
-                System.out.println(player);
-                first = false;
-            }
             Display.turnOptionDisplay();
 
             switch (Utility.askForNum(sc, 1, 6, "Please enter your choice: ")) {
@@ -179,14 +164,11 @@ public class Game {
                     break;
                 case 4:
                     Display.clearScreen();
-                    printReserved = true;
+                    printReserved = !printReserved;
                     break;
                 case 5:
-                    printPlayerNo = printPlayer();
-                    if (printPlayerNo != 0) {
-                        printPlayer = true;
-                    }
                     Display.clearScreen();
+                    printPlayerNo = printPlayer();
                     break;
                 case 6:
                     int idx = players.indexOf(player);
@@ -212,7 +194,7 @@ public class Game {
             //     NobleSelection move = (NobleSelection) cpu.getMove();
             //     choice = move.getNobleIdx();
             // } else {
-                choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
+            choice = Utility.askForNum(sc, 1, visitingNobles.size(), "Please select a noble: ");
             // }
 
             NobleTile noble = visitingNobles.get(choice - 1); // choice 1 corresponds to idx 0
@@ -232,6 +214,8 @@ public class Game {
      * @return true if the player has reached the win condition, false otherwise
      */
     public static boolean hitWinCondition(Player p) {
+
+        // todo
         return p.getPoints() >= 15;
     }
 
@@ -288,12 +272,12 @@ public class Game {
      * Performs the reserve card action. The {@link Player} selects a card to
      * reserve, and receives 1 gold if the bank has gold available.
      *
-     * @param p the {@link Player} performing the action
+     * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
-    public static boolean reserveCard(Player p) {
+    public static boolean reserveCard(Player player) {
 
-        if (p.getReserveHandSize() == 3) {
+        if (player.getReserveHandSize() == 3) {
             System.out.println("Your hand size is full.");
             return false;
         }
@@ -301,72 +285,123 @@ public class Game {
         boolean validAction = false;
 
         while (!validAction) {
+            Display.reserveCardDisplay();
             int choice;
             // if (p instanceof CPUPlayer cpu) {
             //     ReserveCard move = (ReserveCard) cpu.getMove();
             //     choice = move.getReserveLocation();
             // } else {
-                Display.reserveCardDisplay();
-                choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
-                System.out.println();
+            choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+            System.out.println();
             // }
 
-            if (choice == 0) {
-                return false;
-            }
-
-            if (choice == 1) {
-                int[] choice2;
-                // if (p instanceof CPUPlayer cpu) {
-                //     ReserveCard move = (ReserveCard) cpu.getMove();
-                //     // todo
-                //     choice2 = move.getType();
-                // } else {
-                    choice2 = Utility.getPositionOnBoard(sc);
-                // }
-                // convert choice to corresponding card
-                Card card = market[choice2[0] - 1][choice2[1] - 1];
-
-                if (card == null) {
-                    System.out.println("Market is empty");
-                    continue;
-                }
-
-                // remove from market
-                market[choice2[0] - 1][choice2[1] - 1] = decks.get(choice2[0] - 1).draw();
+            switch (choice) {
+                case 0:
+                    return false;
+                case 1:
+                    validAction = reserveFromMarket(player);
+                    break;
+                case 2:
+                    validAction = reserveFromDeck(player);
+                    break;
 
             }
-
-            if (choice == 2) {
-                int choice2;
-                // if (p instanceof CPUPlayer cpu) {
-                //     ReserveCard move = (ReserveCard) cpu.getMove();
-                //     // todo
-                //     choice2 = move.getType();
-                // } else {
-                    choice2 = Utility.askForNum(sc, 1, 3, "Enter deck no. (1, 2, 3): ");
-                // }
-                Card card = decks.get(choice2 - 1).draw();
-                if (card == null) {
-                    System.out.println("Deck is empty");
-                    continue;
-                }
-                // add to hand
-                p.reserveCard(card);
-
-            }
-
-            // add gold if gold in bank
-            if (bank.get(Gem.Gold) > 0) {
-                p.addToken(Gem.Gold, 1);
-                bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
-            }
-            validAction = true;
 
         }
 
+        // add gold if gold in bank
+        if (bank.get(Gem.Gold) > 0) {
+            player.addToken(Gem.Gold, 1);
+            bank.put(Gem.Gold, bank.get(Gem.Gold) - 1);
+        }
+
+        returnExcessTokens(player);
+
         return true;
 
+    }
+
+    /**
+     * Performs the reserve from market option.
+     *
+     * @param player the {@link Player} performing the action
+     * @return returns if the action is succesful
+     */
+    public static boolean reserveFromMarket(Player player) {
+        int[] choice2;
+        // if (p instanceof CPUPlayer cpu) {
+        //     ReserveCard move = (ReserveCard) cpu.getMove();
+        //     // todo
+        //     choice2 = move.getType();
+        // } else {
+        choice2 = Utility.getPositionOnBoard(sc);
+        // }
+        // convert choice to corresponding card
+
+        if (choice2 == null) {
+            return false;
+        }
+
+        Card card = market[choice2[0]][choice2[1]];
+        if (card == null) {
+            System.out.println("No card at this position.");
+            return false;
+        }
+        // remove from market
+        market[choice2[0]][choice2[1]] = decks.get(choice2[0]).draw();
+        // add to hand
+        player.reserveCard(card);
+        return true;
+
+    }
+
+    /**
+     * Performs the reserve from deck option.
+     *
+     * @param player the {@link Player} performing the action
+     * @return returns if the action is succesful
+     */
+    public static boolean reserveFromDeck(Player player) {
+        int choice2;
+        // if (p instanceof CPUPlayer cpu) {
+        //     ReserveCard move = (ReserveCard) cpu.getMove();
+        //     // todo
+        //     choice2 = move.getType();
+        // } else {
+        choice2 = Utility.askForNum(sc, 0, 3, "Enter deck no. (1, 2, 3), 0 to cancel: ");
+        if (choice2 == 0) {
+            return false;
+        }
+        // }
+        Card card = decks.get(choice2 - 1).draw();
+        if (card == null) {
+            System.out.println("Deck is empty");
+            return false;
+        }
+        // add to hand
+        player.reserveCard(card);
+        return true;
+    }
+
+    public static void returnExcessTokens(Player player) {
+
+        if (player.getTokenAmount() <= 10) {
+            return;
+        }
+        // player's amount of token exceeds 10.
+        HashMap<Gem, Integer> returnAmt;
+        // if (currentPlayer instanceof CPUPlayer cpu) {
+        //     DrawToken move = cpu.getMove();
+        //     // todo
+        //     returnAmt = move.getReturnAmt();
+        // } else {
+        returnAmt = getReturnAmtFromPlayer(player);
+        // }
+
+        for (Gem g : returnAmt.keySet()) {
+            bank.replace(g, bank.get(g) + returnAmt.get(g));
+            player.removeToken(g, returnAmt.get(g));
+        }
     }
 
     /**
@@ -376,17 +411,17 @@ public class Game {
      * @param p the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
      */
-    public static boolean buyCard(Player p) {
+    public static boolean buyCard(Player player) {
 
         while (true) {
             int choice;
-            // if (p instanceof CPUPlayer cpu) {
-                //     BuyCard move = (BuyCard) cpu.getMove();
-                //     choice = move.getBuyLocation();
+            // if (player instanceof CPUPlayer cpu) {
+            //     BuyCard move = (BuyCard) cpu.getMove();
+            //     choice = move.getBuyLocation();
             // } else {
-                Display.buyCardDisplay();
-                choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
-                System.out.println();
+            Display.buyCardDisplay();
+            choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+            System.out.println();
             // }
 
             if (choice == 0) {
@@ -396,28 +431,32 @@ public class Game {
             if (choice == 1) {
                 // get card position
                 int[] pos;
-                // if (p instanceof CPUPlayer cpu) {
+                // if (player instanceof CPUPlayer cpu) {
                 //     BuyCard move = (BuyCard) cpu.getMove();
                 //     // todo
                 //     pos = move.getType();
                 // } else {
-                    pos = Utility.getPositionOnBoard(sc);
+                pos = Utility.getPositionOnBoard(sc);
+                if (pos == null) {
+                    return false;
+                }
+
                 // }
-                Card card = market[pos[0] - 1][pos[1] - 1];
+                Card card = market[pos[0]][pos[1]];
 
                 if (card == null) {
                     System.out.println("No card at that position");
                     continue;
                 }
 
-                Map<Gem, Integer> pBefore = p.getTokens(); 
-                boolean success = p.buyCard(card, sc); 
-                if (!success){
+                Map<Gem, Integer> pBefore = player.getTokens();
+                boolean success = player.buyCard(card, sc);
+                if (!success) {
                     System.out.println("Unable to buy that card.");
                     continue;
                 }
 
-                Map<Gem, Integer> pAfter = p.getTokens();
+                Map<Gem, Integer> pAfter = player.getTokens();
 
                 // update bank
                 for (Gem g : Gem.values()) {
@@ -426,13 +465,13 @@ public class Game {
                 }
 
                 // remove from market
-                market[pos[0] - 1][pos[1] - 1] = decks.get(pos[0] - 1).draw();
+                market[pos[0]][pos[1]] = decks.get(pos[0]).draw();
                 return true;
             }
 
             if (choice == 2) {
                 // buy from reserve 
-                List<Card> hand = p.getReserveHand();
+                List<Card> hand = player.getReserveHand();
                 if (hand.isEmpty()) {
                     System.out.println("You have no reserved cards.");
                     continue;
@@ -444,31 +483,31 @@ public class Game {
                 //     // todo
                 //     idx = move.getType();
                 // } else {
-                    System.out.println("Your reserved cards:");
-                    for (int i = 0; i < hand.size(); i++) {
-                        System.out.println((i + 1) + ". " + hand.get(i));
-                    }
+                System.out.println("Your reserved cards:");
+                for (int i = 0; i < hand.size(); i++) {
+                    System.out.println((i + 1) + ". " + hand.get(i));
+                }
 
-                    idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
+                idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
                 // }
 
                 Card card = hand.get(idx);
 
-                Map<Gem, Integer> pBefore = p.getTokens();
-                boolean success = p.buyCard(card, sc);
+                Map<Gem, Integer> pBefore = player.getTokens();
+                boolean success = player.buyCard(card, sc);
                 if (!success) {
                     System.out.println("Unable to buy that card.");
                     continue;
                 }
 
-                Map<Gem, Integer> pAfter = p.getTokens();
+                Map<Gem, Integer> pAfter = player.getTokens();
 
                 for (Gem g : Gem.values()) {
                     int diff = pBefore.get(g) - pAfter.get(g);
                     bank.replace(g, diff + bank.get(g));
                 }
 
-                p.removeReserveCard(idx);
+                player.removeReserveCard(idx);
                 return true;
             }
         }
@@ -491,11 +530,11 @@ public class Game {
         //     // todo
         //     chosen = move.getTokens();
         // } else {
-            chosen = drawTokenFromPlayer(currentPlayer);
-            if (chosen == null) {
-                // player has chosen not to continue
-                return false;
-            }
+        chosen = drawTokenFromPlayer(currentPlayer);
+        if (chosen == null) {
+            // player has chosen not to continue
+            return false;
+        }
         // }
 
         for (Gem g : chosen.keySet()) {
@@ -503,24 +542,7 @@ public class Game {
             currentPlayer.addToken(g, chosen.get(g));
         }
 
-        if (currentPlayer.getTokenAmount() <= 10) {
-            return true;
-        }
-
-        // player's amount of token exceeds 10.
-        HashMap<Gem, Integer> returnAmt;
-        // if (currentPlayer instanceof CPUPlayer cpu) {
-        //     DrawToken move = cpu.getMove();
-        //     // todo
-        //     returnAmt = move.getReturnAmt();
-        // } else {
-            returnAmt = getReturnAmtFromPlayer(currentPlayer);
-        // }
-
-        for (Gem g : returnAmt.keySet()) {
-            bank.replace(g, bank.get(g) + returnAmt.get(g));
-            currentPlayer.removeToken(g, returnAmt.get(g));
-        }
+        returnExcessTokens(currentPlayer);
 
         return true;
     }
@@ -560,7 +582,7 @@ public class Game {
         HashMap<Gem, Integer> chosen = new HashMap<>();
         while (chosen.size() < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel: ");
-            
+
             if (g == null) {
                 return null;
             }
@@ -612,7 +634,7 @@ public class Game {
      * their hand exceeds 10.
      *
      * @param p the player.
-     * @return a hashmap of the tokens to return.
+     * @return a hashmap of the tokens to return to bank.
      */
     public static HashMap<Gem, Integer> getReturnAmtFromPlayer(Player p) {
         HashMap<Gem, Integer> returnAmt = new HashMap<>();
@@ -621,7 +643,12 @@ public class Game {
         while (total > 10) {
             p.displayTokens();
             System.out.println("You have more than 10 tokens. ");
-            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx) or cancel:", true);
+            Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold):", true);
+            if (g == null) {
+                System.out.println("Invalid input! Try again.");
+                continue;
+            }
+
             Integer amtPerGem = returnAmt.get(g);
             if (amtPerGem == null) {
                 amtPerGem = 0;
@@ -632,7 +659,7 @@ public class Game {
                 returnAmt.put(g, amtPerGem);
                 total--;
             } else {
-                System.out.println("You don't have that token.");
+                System.out.println("You don't have enough tokens for that.");
             }
         }
 
@@ -694,9 +721,9 @@ public class Game {
     }
 
     public static int printPlayer() {
-        String display = String.format ("Enter player number (1 - %d), 0 to cancel: ", players.size());
+        String display = String.format("Enter player number (1 - %d), 0 to cancel: ", players.size());
 
         int choice = Utility.askForNum(sc, 0, players.size(), display);
-        return choice;
+        return choice - 1;
     }
 }
