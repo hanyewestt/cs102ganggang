@@ -651,6 +651,7 @@ public class Game {
             Gem g = Utility.askForGem(sc, "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or cancel to reset:", true);
             if (g == null) {
                 System.out.println("Reset return amounts.");
+                Display.clearScreen();
                 total = p.getTokenAmount();
                 returnAmt.clear();
                 continue;
