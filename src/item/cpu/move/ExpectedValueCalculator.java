@@ -51,9 +51,9 @@ public class ExpectedValueCalculator {
             sum += difference < 0 ? difference : 0;
         }
 
-        sum += c.getPOINTS();
+        sum += c.getPoints();
 
-        Gem produce = c.getGEMTYPE();
+        Gem produce = c.getGemType();
         for (NobleTile noble : nobles) {
             if (noble.getTokens().get(produce) > 0) {
                 sum++;
@@ -67,7 +67,7 @@ public class ExpectedValueCalculator {
             HashMap<Gem, Integer> tokens) {
         int sum = 0;
 
-        Gem type = c.getGEMTYPE();
+        Gem type = c.getGemType();
         for (NobleTile noble : nobles) {
             if (noble.getTokens().get(type) > 0) {
                 sum++;
@@ -93,7 +93,7 @@ public class ExpectedValueCalculator {
             sum += 5 - tokensNeeded;
         }
 
-        sum *= c.getPOINTS();
+        sum *= c.getPoints();
 
         return sum;
     }

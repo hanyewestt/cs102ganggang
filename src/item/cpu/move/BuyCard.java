@@ -23,8 +23,8 @@ public class BuyCard extends Move {
         this.toPay = toPay;
 
         Card[][] marketAfterBuying = Utility.generateMarketClone(cpu.getGameState().getMarket());
-        Card c = marketAfterBuying[row - 1][column - 1];
-        marketAfterBuying[row - 1][column - 1] = null;
+        Card c = marketAfterBuying[row][column];
+        marketAfterBuying[row][column] = null;
 
         HashMap<Gem, Integer> tokensAfterBuying = Utility.generateHashMapClone(cpu.getTokens());
         Utility.subtract(tokensAfterBuying, toPay);

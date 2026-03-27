@@ -20,8 +20,8 @@ public class ReserveCard extends Move {
         this.column = column;
 
         Card[][] marketAfterReserving = Utility.generateMarketClone(cpu.getGameState().getMarket());
-        Card c = marketAfterReserving[row - 1][column - 1];
-        marketAfterReserving[row - 1][column - 1] = null;
+        Card c = marketAfterReserving[row][column];
+        marketAfterReserving[row][column] = null;
 
         ArrayList<Card> handAfterReserving = new ArrayList<>();
         for (Card reserveCard : cpu.getReserveHand()) {
