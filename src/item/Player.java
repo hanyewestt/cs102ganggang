@@ -142,7 +142,7 @@ public class Player implements Comparable<Player> {
     public void discountCost(HashMap<Gem, Integer> cost) {
         for (Gem g : Gem.values()) {
             int reducedCost = cost.get(g) - production.get(g);
-            cost.replace(g, reducedCost < 0 ? reducedCost : 0);
+            cost.replace(g, reducedCost < 0 ? 0 : reducedCost);
         }
     }
 
@@ -471,4 +471,47 @@ public class Player implements Comparable<Player> {
     public int getOrder() {
         return order;
     }
+
+    /**
+     * Prompts the {@link Player} to select gems to return, if the number of
+     * tokens in their hand exceeds 10.
+     *
+     * @param player the {@link Player} performing the action
+     * @return a hashmap of the tokens to return to bank.
+     */
+    public HashMap<Gem, Integer> getReturnAmt() {
+        HashMap<Gem, Integer> returnAmt = new HashMap<>();
+        HashMap<Gem, Integer> pTokens = getTokens();
+        int total = getTokenAmount();
+        System.out.println("\nGems: " + displayTokens());
+        while (total > 10) {
+            System.out.println("‼️ You have more than 10 tokens. ‼️");
+            System.out.println("You have to return " + (total - 10) + " tokens. ");
+            Gem g = Utility.askForGem(new Scanner(System.in),
+                    "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or 'cancel' to reset: ", true);
+            if (g == null) {
+                System.out.println("Reseting return amounts.\n");
+                total = getTokenAmount();
+                returnAmt.clear();
+                continue;
+            }
+
+            Integer amtPerGem = returnAmt.get(g);
+            if (amtPerGem == null) {
+                amtPerGem = 0;
+            }
+
+            // check that player has at least the amt they want to return
+            if (pTokens.get(g) >= ++amtPerGem) {
+                returnAmt.put(g, amtPerGem);
+                System.out.println("");
+                total--;
+            } else {
+                System.out.println("‼️ You don't have enough tokens for that. ‼️\n");
+            }
+        }
+
+        return returnAmt;
+    }
 }
+

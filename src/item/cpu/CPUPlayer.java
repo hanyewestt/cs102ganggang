@@ -12,8 +12,8 @@ public class CPUPlayer extends Player {
     private Move optimalMove;
     private static Game splendor;
 
-    public CPUPlayer(Game splendor) {
-        super();
+    public CPUPlayer(Game splendor, String name, int order) {
+        super(name, order);
         this.splendor = splendor;
     }
 
@@ -104,7 +104,7 @@ public class CPUPlayer extends Player {
             optimalMove.setNobleIdx(possibleNobleIdx.get(new Random().nextInt(possibleNobleIdx.size())));
         }
 
-        if (super.getPoints() + optimalMove.getPointsGain() >= 15) {
+        if (super.getPoints() + optimalMove.getPointsGain() >= splendor.pointsToWin) {
             optimalMove.setWinning(true);
         }
     }
