@@ -164,7 +164,7 @@ public class Utility {
                 return false;
             }
 
-            System.out.println("Invalid input! Try again!");
+            System.out.println("‼️ Invalid input! Try again! ‼️");
             isValid = false;
         } while (!isValid);
 
@@ -209,7 +209,7 @@ public class Utility {
                         return Gem.Gold;
                     }
                 default:
-                    System.out.println("Invalid input! Try again!");
+                    System.out.println("‼️ Invalid input! Try again! ‼️");
                     isValid = false;
             }
         } while (!isValid);
@@ -240,10 +240,10 @@ public class Utility {
                     keyboard.nextLine();
                     return num;
                 } else {
-                    System.out.println("Out of bounds! Enter a number between " + min + " and " + max);
+                    System.out.println("‼️ Out of bounds! Enter a number between " + min + " and " + max + " ‼️");
                 }
             } catch (Exception e) {
-                System.out.println("Invalid format for a number! Try again!");
+                System.out.println("‼️ Invalid format for a number! Try again! ‼️");
             }
 
             keyboard.nextLine();
