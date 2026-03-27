@@ -149,6 +149,7 @@ public class Utility {
     /**
      * Prompts the user for the row and column position of the card on the
      * board. User can enter '0' to cancel at any time.
+     * 
      * @return returns an array of size 2 {row, col}. Returns null if users cancels.
      */
     public static int[] getPositionOnBoard(Scanner sc) {

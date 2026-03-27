@@ -64,7 +64,14 @@ public class Game {
     public Game(int playerNumber) {
         this(playerNumber, (new Random()).nextLong());
     }
-
+    
+    /**
+     * Initializes the game board with the specified number of players and
+     * cards. Sets up the bank, noble tiles, and player objects.
+     *
+     * @param playerNumber the number of players in the game
+     * @param seed to shuffle the deck
+     */
     public Game(int playerNumber, long seed) {
         Configuration.load();
 
@@ -101,6 +108,9 @@ public class Game {
         setPlayerArray(playerNumber, cpuNumber);
     }
 
+    /**
+     * @return seed
+     */
     public long getSeed() {
         return seed;
     }
