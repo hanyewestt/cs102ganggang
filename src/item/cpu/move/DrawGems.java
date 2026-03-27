@@ -45,6 +45,14 @@ public class DrawGems extends Move {
                 player.getGameState().getMarket(), availNobles, player.getReserveHand()));
     }
 
+    public HashMap<Gem, Integer> getToDraw() {
+        return toDraw;
+    }
+
+    public HashMap<Gem, Integer> getToRemove() {
+        return toRemove;
+    }
+
     public void doMove(CPUPlayer cpu) {
         // to implement
     }

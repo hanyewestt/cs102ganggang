@@ -3,6 +3,7 @@ package item.cpu.move;
 import app.*;
 import item.*;
 import item.cpu.*;
+import java.nio.channels.NonWritableChannelException;
 import util.*;
 
 import java.util.*;
@@ -46,7 +47,23 @@ public class ReserveCard extends Move {
 
     }
 
-    public void doMove(CPUPlayer cpu) {
+    public int getRow() {
+        return row;
+    }
 
+    public int getColumn() {
+        return column;
+    }
+
+    public boolean getTakingGold() {
+        return takingGold;
+    }
+
+    public Map<Gem, Integer> getToReturn() {
+        return toReturn;
+    }
+
+    public void doMove(CPUPlayer cpu) {
+        // to implement
     }
 }

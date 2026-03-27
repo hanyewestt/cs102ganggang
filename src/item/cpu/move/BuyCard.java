@@ -13,7 +13,7 @@ public class BuyCard extends Move {
     private int row; // Represents deck no, if 0 it represents reserve hand
     private int column;
     private int reserveIdx;
-    private HashMap<Gem, Integer> toPay;
+    private Map<Gem, Integer> toPay;
 
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
@@ -58,6 +58,26 @@ public class BuyCard extends Move {
         setPointsGain(PointsCalculator.calculatePoints(currProduction, c, availNobles, nobleIdx));
         setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currProduction,
                 cpu.getGameState().getMarket(), availNobles, reserveAfterBuying));
+    }
+
+    public int getBuyLocation() {
+        return buyLocation;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public int getReserveIdx() {
+        return reserveIdx;
+    }
+
+    public Map<Gem, Integer> getToPay() {
+        return toPay;
     }
 
     public void doMove(CPUPlayer cpu) {

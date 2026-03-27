@@ -88,7 +88,7 @@ public class CPUPlayer extends Player {
         }
 
         for (int i = 0; i < super.getReserveHand().size(); i++) {
-            HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
+            HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(super.getReserveHand().get(i).getTokens());
             Utility.discount(cardCost, playerProduction);
 
             HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);

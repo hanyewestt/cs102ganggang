@@ -382,7 +382,6 @@ public class Game {
             System.out.println("0. Cancel");
             System.out.println();
 
-<<<<<<< Updated upstream
             int choice;
             if (p instanceof CPUPlayer cpu) {
                 BuyCard move = (BuyCard) cpu.getMove();
@@ -406,8 +405,8 @@ public class Game {
                     pos = Utility.getPositionOnBoard(sc);
                 }
                 Card card = market[pos[0] - 1][pos[1] - 1];
+            }
 
-=======
             int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
 
             if (choice == 0) {
@@ -419,21 +418,31 @@ public class Game {
                 int[] pos = Utility.getPositionOnBoard(sc);
                 Card card = market[pos[0] - 1][pos[1] - 1];
 
->>>>>>> Stashed changes
+            int choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
+
+            if (choice == 0) {
+                return false;
+            }
+
+            if (choice == 1) {
+                // buy from market 
+                int[] pos = Utility.getPositionOnBoard(sc);
+                Card card = market[pos[0] - 1][pos[1] - 1];
+
+
                 if (card == null) {
                     System.out.println("No card at that position");
                     continue;
                 }
 
-<<<<<<< Updated upstream
-                Map<Gem, Integer> pBefore = p.getTokens(); 
-                boolean success = p.buyCard(card, sc); 
-                if (!success){
-=======
                 Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
                 boolean success = p.buyCard(card, sc);
                 if (!success) {
->>>>>>> Stashed changes
+
+                Map<Gem, Integer> pBefore = new HashMap<>(p.getTokens());
+                boolean success = p.buyCard(card, sc);
+                if (!success) {
+
                     System.out.println("Unable to buy that card.");
                     continue;
                 }
