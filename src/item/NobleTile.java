@@ -4,6 +4,10 @@ import java.util.*;
 import util.Utility;
 import display.Display;
 
+/**
+ * Represents a {@link NobleTile}.
+ * {@link NobleTile} contains HashMap of its cost and the number prestiege points awarded.
+ */
 public class NobleTile {
 
     private HashMap<Gem, Integer> tokens = Utility.generateEmptyHashmap();

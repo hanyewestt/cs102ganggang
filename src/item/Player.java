@@ -6,7 +6,7 @@ import util.*;
 // Gem, Card, NobleTile
 /**
  * Represents a {@link Player} in the game. 
- * A {@link Player} has a name, tokens, reserved cards, production levels, nobles who visited them, and points.
+ * A {@link Player} has a name, tokens, reserved {@link Card}s, production levels, nobles who visited them, and points.
  *
  */
 public class Player implements Comparable<Player> {
@@ -38,7 +38,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * {@link Player} starts with 0 Gems for every type. {@link Player} has a name.
+     * {@link Player} starts with 0 Gems for every type.
+     * {@link Player} has a name.
      * 
      * @param name Name of {@link Player}
      * @param order {@link Player} order number
@@ -85,16 +86,16 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return List<NobleTile> of owned NobleTiles
+     * @return List of owned {@link NobleTile}
      */
     public List<NobleTile> getOwnedNobleTile() {
         return ownedNobles;
     }
 
     /**
-     * Adds the specified number of tokens of Gem type g to {@link Player}’s tokens.
+     * Adds the specified number of tokens of {@link Gem} type g to {@link Player}’s tokens.
      * 
-     * @param g Gem type
+     * @param g {@link Gem} type
      * @param amt Amount of token to add
      */
     public void addToken(Gem g, int amt) {
@@ -102,9 +103,9 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Removes the specified number of tokens of Gem type g from {@link Player}’s tokens.
+     * Removes the specified number of tokens of {@link Gem} type g from {@link Player}’s tokens.
      * 
-     * @param g Gem type
+     * @param g {@link Gem} type
      * @param amt Amount of token to remove
      */
     public void removeToken(Gem g, int amt) {
@@ -112,9 +113,9 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Adds the specified number of tokens of Gem type g to {@link Player}’s production levels.
+     * Adds the specified number of tokens of {@link Gem} type g to {@link Player}’s production levels.
      * 
-     * @param g Gem type
+     * @param g {@link Gem} type
      * @param amt Amount of token to add
      */
     public void addProduction(Gem g, int amt) {
@@ -122,9 +123,9 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Adds 1 token of Gem type g to {@link Player}’s production levels.
+     * Adds 1 token of Gem {@link Gem} g to {@link Player}’s production levels.
      * 
-     * @param g Gem type
+     * @param g {@link Gem} type
      */
     public void addProduction(Gem g) {
         this.addProduction(g, 1);
@@ -133,17 +134,24 @@ public class Player implements Comparable<Player> {
     /**
      * Adds points to {@link Player}’s points.
      * 
-     * @param p Points
+     * @param p Points to be added to the {@link Player}
      */
     public void addPoints(int p) {
         points += p;
     }
 
     /**
-     * Updates points, production levels, and the {@link Player}’s remaining tokens after the purchase of the card.
-     * 
-     * @param c Card
-     * @param remainingGems The {@link Player}’s remaining tokens
+     * Calculates the cost after subtracting from production
+     */
+    public void discountCost(HashMap<Gem, Integer> cost) {
+        for (Gem g : Gem.values()) {
+            int reducedCost = cost.get(g) - production.get(g);
+            cost.replace(g, reducedCost < 0 ? reducedCost : 0);
+        }
+    }
+
+    /**
+     * Adds {@link Card} to the {@link Player} by increasing points and {@link Gem} production
      */
     public void addCard(Card c, HashMap<Gem, Integer> remainingGems) {
         tokens = remainingGems;
@@ -152,16 +160,19 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Adds this card to {@link Player}’s reserve hand. Does not increment gold.
+     * Adds this {@link Card} to {@link Player}’s reserve hand. Does not increment gold.
      * 
-     * @param c Card
+     * @param c {@link Card} to be reserved
      */
     public void reserveCard(Card c) {
         reserveCards.add(c);
     }
 
     /**
+     * Updates points, production levels, and the {@link Player}’s remaining tokens after the purchase of the {@link Card}.
      * 
+     * @param c {@link Card} to be purchased
+     * @param keyboard takes in user input for number of {@link Gem}
      */
     public boolean buyCard(Card c, Scanner keyboard) {
         int startingGold = tokens.get(Gem.Gold);
@@ -169,16 +180,8 @@ public class Player implements Comparable<Player> {
         boolean needGold = false;
 
         HashMap<Gem, Integer> discountCardCost = c.getTokens();
-        for (Gem gem : Gem.values()) {
-            int discountedCost = discountCardCost.get(gem) - production.get(gem);
-
-            if (discountedCost < 0) {
-                discountedCost = 0;
-            }
-
-            discountCardCost.replace(gem, discountedCost);
-        }
-
+        discountCost(discountCardCost);
+        
         HashMap<Gem, Integer> tokensLeft = new HashMap<>();
 
         for (Gem gem : Gem.values()) {
@@ -206,7 +209,7 @@ public class Player implements Comparable<Player> {
                 addCard(c, tokensLeft);
                 return true;
             } else {
-                String message = "Gold may be spent to pay for the cost. Do you wish to pay gold? {Y/N}:";
+                String message = "Gold may be spent to pay for the cost. Do you wish to pay gold? (Y/N): ";
                 boolean isSpendingGold = Utility.willProceed(keyboard, message);
 
                 if (!isSpendingGold) {
@@ -248,7 +251,7 @@ public class Player implements Comparable<Player> {
         } else {
             int necessaryGold = startingGold - tokensLeft.get(Gem.Gold);
 
-            String message = "You must spend " + necessaryGold + " of your gold to buy this card. Proceed? (Y/N):";
+            String message = "You must spend " + necessaryGold + " of your gold to buy this card. Proceed? (Y/N): ";
             boolean willSpendGold = Utility.willProceed(keyboard, message);
 
             if (!willSpendGold) {
@@ -301,27 +304,27 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Removes this card from {@link Player}’s reserve hand.
+     * Removes this {@link Card} from {@link Player}’s reserve hand.
      * 
-     * @param pos The index of the card that is to be removed from the {@link Player}’s hand.
+     * @param pos The index of the {@link Card} that is to be removed from the {@link Player}’s hand.
      */
     public void removeReserveCard(int pos) {
         reserveCards.remove(pos);
     }
     
     /**
-     * Removes this card from {@link Player}’s reserve hand.
+     * Removes this {@link Card} from {@link Player}’s reserve hand.
      * 
-     * @param card Card that is to be removed from the {@link Player}’s hand.
+     * @param card {@link Card} that is to be removed from the {@link Player}’s hand.
      */
     public void removeReserveCard(Card card) {
         reserveCards.remove(card);
     }
 
     /**
-     * Adds a NobleTile to {@link Player}’s list of visiting nobles.
+     * Adds a {@link NobleTile} to {@link Player}’s list of visiting nobles.
      *  
-     * @param noble The NobleTile to be added
+     * @param noble The {@link NobleTile} to be added
      */
     public void addNobleTile(NobleTile noble) {
         ownedNobles.add(noble);
@@ -329,7 +332,7 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return the total number of cards the {@link Player} has purchased thus far.
+     * @return the total number of {@link Card}s the {@link Player} has purchased thus far.
      */
     public int getNumberOfCards() {
         int sum = 0;
@@ -340,7 +343,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Compares 2 {@link Player}s in descending order of points. If points tie, return in ascending number of cards.
+     * Compares 2 {@link Player}s in descending order of points. 
+     * If points tie, return in ascending number of {@link Card}s.
      * 
      * @param p The other {@link Player}
      */
@@ -353,7 +357,7 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return String of {@link Player} info to be displayed on console
+     * @return String of {@link Player}'s info to be displayed on console
      */
     @Override
     public String toString() {
@@ -362,7 +366,7 @@ public class Player implements Comparable<Player> {
         sb.append("Player No. ").append(order).append("\n");
         sb.append("Player Name: ").append(name).append("\n");
         sb.append("Gems: ").append(displayTokens());
-        sb.append("Produces: ").append(displayProduction());
+        sb.append("Bonuses: ").append(displayProduction());
         sb.append("Reserved: ").append(reserveCards.size()).append("\n");
         sb.append("Prestige: ").append(points).append("\n");
 
@@ -444,7 +448,7 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * prints all reserved {@link Card} from a {@link Player}.
+     * Prints all reserved {@link Card}s from a {@link Player}.
      */
     public void printReserved() {
         StringBuilder sb = new StringBuilder();
@@ -466,6 +470,7 @@ public class Player implements Comparable<Player> {
      * Gets the total number of tokens the {@link Player} has in their hand.
      *
      * @return int The number of tokens the {@link Player} has.
+     *
      */
     public int getTokenAmount() {
         int total = 0;
@@ -475,6 +480,11 @@ public class Player implements Comparable<Player> {
         return total;
     }
 
+    /**
+     * Gets the {@link Player} turn order number
+     * 
+     * @return order number of {@link Player}
+     */
     public int getOrder() {
         return order;
     }

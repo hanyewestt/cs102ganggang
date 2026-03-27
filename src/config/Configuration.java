@@ -5,6 +5,10 @@ import java.io.*;
 import java.util.*;
 import util.Utility;
 
+/**
+ * This class loads information like {@link Card} and {@link NobleTile} data, number of starting {@link Gem}s in bank, and the number
+ * of points needed to win a game from the data directory.
+ */
 public class Configuration {
 
     private static int nobleTilePoints;
@@ -20,9 +24,9 @@ public class Configuration {
     private static boolean hasDataBeenLoaded = false;
 
     /**
-     * Getter to retrieve how many points a noble tile is worth.
+     * Getter to retrieve how many points a {@link NobleTile}is worth.
      *
-     * @return The amount of points a noble tile is worth.
+     * @return The amount of points a {@link NobleTile} is worth.
      */
     public static int getNobleTilePoints() {
         return nobleTilePoints;
@@ -38,19 +42,19 @@ public class Configuration {
     }
 
     /**
-     * Getter to retrieve the starting number of gems in the bank based on a
+     * Getter to retrieve the starting number of {@link Gem}s in the bank based on a
      * player no.
      *
      * @param playerNo The amount of players in the game. Guaranteed to be
      * between 2 to 4 (inclusive).
-     * @return The amount of starting gems in the bank.
+     * @return The amount of starting {@link Gem}s in the bank.
      */
     public static int getStartingGems(int playerNo) {
         return startingGems[playerNo - 2];
     }
 
     /**
-     * Getter to retrieve a deep copy of a deck of cards to be used.
+     * Getter to retrieve a deep copy of a deck of {@link Card} to be used.
      *
      * @param deckNo The deck no to be retrieved.
      * @return The deep copy of said deck.
@@ -191,9 +195,9 @@ public class Configuration {
     }
 
     /**
-     * Will fill a given deck with cards using information from a file Scanner.
+     * Will fill a given deck with {@link Card} using information from a file Scanner.
      *
-     * @param deck The deck to be filled with cards.
+     * @param deck The deck to be filled with {@link Card}.
      * @param sc The Scanner reading from a file.
      */
     private static void fillCardDeck(Deck<Card> deck, Scanner sc) {
@@ -206,10 +210,9 @@ public class Configuration {
     }
 
     /**
-     * Will fill a given deck with noble tiles using information from a file
-     * Scanner.
+     * Will fill a given deck with {@link NobleTile} using information from a file Scanner.
      *
-     * @param deck The deck to be filled with noble tiles.
+     * @param deck The deck to be filled with {@link NobleTile}.
      * @param sc The Scanner reading from a file.
      */
     private static void fillNobleTileDeck(Deck<NobleTile> nobleTiles, Scanner nobleTilesLoader) {

@@ -2,6 +2,9 @@ package item;
 
 import java.util.*;
 
+/**
+ * Class for Deck which stores all the {@link Card}s/ {@link NobleTile}s
+ */
 public class Deck<T> {
 
     private ArrayList<T> deck;
@@ -10,7 +13,7 @@ public class Deck<T> {
      * Constructor that makes an empty deck.
      */
     public Deck() {
-        deck = new ArrayList<T>();
+        deck = new ArrayList<>();
     }
 
     /**

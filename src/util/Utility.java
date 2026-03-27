@@ -4,6 +4,9 @@ import item.*;
 import java.lang.classfile.instruction.ThrowInstruction;
 import java.util.*;
 
+/**
+ * This class contains all the utility functions.
+ */
 public class Utility {
 
     /**
@@ -22,6 +25,34 @@ public class Utility {
     }
 
     /**
+     * Creates a deep copy of an existing HashMap.
+     *
+     * @param toCopy The HashMap to copy.
+     *
+     * @return The HashMap that is being returned.
+     */
+    public static HashMap<Gem, Integer> generateHashMapClone(HashMap<Gem, Integer> toCopy) {
+        HashMap<Gem, Integer> copy = new HashMap<>();
+        for (Gem g : Gem.values()) {
+            copy.put(g, toCopy.get(g));
+        }
+
+        return copy;
+    }
+
+    public static Card[][] generateMarketClone(Card[][] market) {
+        Card[][] copy = new Card[3][4];
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                copy[i][j] = market[i][j];
+            }
+        }
+
+        return copy;
+    }
+
+    /**
      * Returns the total gems within a Hashmap.
      *
      * @param tokens The HashMap to be considered.
@@ -34,6 +65,86 @@ public class Utility {
         }
 
         return sum;
+    }
+
+    /**
+     * Performs subtraction with gold on two HashMaps with Gem, Integer. Returns
+     * the amount of tokens that are subtracted, with gold as a wildcard.
+     * Returns null if insufficient amount of tokens.
+     *
+     * @param tokens HashMap representing amount of tokens held.
+     * @param cost HashMap representing cost, usually cards.
+     * @return The subtraction amount.
+     */
+    public static HashMap<Gem, Integer> findSubtractionAmount(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> cost) {
+        HashMap<Gem, Integer> result = generateEmptyHashmap();
+
+        int goldAvailable = tokens.get(Gem.Gold);
+        for (Gem g : Gem.values()) {
+            if (g == Gem.Gold) {
+                continue;
+            }
+
+            int difference = tokens.get(g) - cost.get(g);
+            if (difference < 0) {
+                difference = Math.abs(difference);
+                if (goldAvailable < difference) {
+                    return null;
+                }
+
+                goldAvailable -= difference;
+                result.replace(Gem.Gold, result.get(Gem.Gold) + difference);
+            } else {
+                result.replace(g, cost.get(g));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Subtracts the number of gems in the first HashMap by the amount of said
+     * gem in right HashMap. Use findSubtractionAmount to find the second
+     * HashMap and ensure it is not null or more than the first.
+     *
+     * @param orig The HashMap to be modified.
+     * @param subtractAmount The HashMap containing the amount of gems to
+     * subtract.
+     */
+    public static void subtract(HashMap<Gem, Integer> orig, HashMap<Gem, Integer> subtractAmount) {
+        for (Gem g : Gem.values()) {
+            orig.replace(g, orig.get(g) - subtractAmount.get(g));
+        }
+    }
+
+    /**
+     * Subtracts the number of gems in the first HashMap by the amount of said
+     * gem in right HashMap, ignoring Gold, with a minimum value of 0 left.
+     * Ensure both HashMaps are not null beforehand.
+     *
+     * @param orig The HashMap to be modified.
+     * @param discountAmount The HashMap containing the amount of gems to
+     * discount.
+     */
+    public static void discount(HashMap<Gem, Integer> orig, HashMap<Gem, Integer> discountAmount) {
+        for (Gem g : Gem.values()) {
+            if (g == Gem.Gold) {
+                continue;
+            }
+
+            int afterDiscount = orig.get(g) - discountAmount.get(g);
+            orig.replace(g, afterDiscount < 0 ? 0 : afterDiscount);
+        }
+    }
+
+    public static boolean isGreaterOrEqual(HashMap<Gem, Integer> first, HashMap<Gem, Integer> second) {
+        for (Gem g : Gem.values()) {
+            if (first.get(g) < second.get(g)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -56,7 +167,7 @@ public class Utility {
                 return false;
             }
 
-            System.out.println("Invalid input! Try again!");
+            System.out.println("‼️ Invalid input! Try again! ‼️");
             isValid = false;
         } while (!isValid);
 
@@ -101,7 +212,7 @@ public class Utility {
                         return Gem.Gold;
                     }
                 default:
-                    System.out.println("Invalid input! Try again!");
+                    System.out.println("‼️ Invalid input! Try again! ‼️");
                     isValid = false;
             }
         } while (!isValid);
@@ -132,10 +243,10 @@ public class Utility {
                     keyboard.nextLine();
                     return num;
                 } else {
-                    System.out.println("Out of bounds! Enter a number between " + min + " and " + max);
+                    System.out.println("‼️ Out of bounds! Enter a number between " + min + " and " + max + " ‼️");
                 }
             } catch (Exception e) {
-                System.out.println("Invalid format for a number! Try again!");
+                System.out.println("‼️ Invalid format for a number! Try again! ‼️");
             }
 
             keyboard.nextLine();
@@ -147,8 +258,8 @@ public class Utility {
     }
 
     /**
-     * Prompts the user for the row and column position of the card on the
-     * board. User can enter '0' to cancel at any time.
+     * Prompts the user for the row and column position of the {@link Card}s on the board.
+     * User can enter '0' to cancel at any time.
      * 
      * @return returns an array of size 2 {row, col}. Returns null if users cancels.
      */
