@@ -37,6 +37,8 @@ public class Card {
     }
 
     /**
+     * Get cost of the {@link Card}.
+     * 
      * @return Cost of {@link Card} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
@@ -44,6 +46,8 @@ public class Card {
     }
 
     /**
+     * Get type of {@link Gem} this card produces.
+     * 
      * @return {@link Gem} production type of {@link Card}
      */
     public Gem getGemType() {
@@ -51,6 +55,8 @@ public class Card {
     }
 
     /**
+     * Gets prestige points that this {@link Card} gives.
+     * 
      * @return Prestige points of {@link Card}
      */
     public int getPoints() {
@@ -58,7 +64,9 @@ public class Card {
     }
 
     /**
-     * @return {@link Card} info to be displayed on console
+     * Prints {@link Card} info to be displayed on console
+     * 
+     * @return String info to be displayed on console
      */
     @Override
     public String toString() {

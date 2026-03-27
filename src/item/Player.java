@@ -51,6 +51,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Get number of prestige points of the {@link Player}.
+     * 
      * @return {@link Player}’s points.
      */
     public int getPoints() {
@@ -58,6 +60,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Get size of {@link Player}'s reserve hand.
+     * 
      * @return {@link Player}’s reserve hand size
      */
     public int getReserveHandSize() {
@@ -65,6 +69,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Get {@link Player}'s reserve hand
+     * 
      * @return {@link Player}'s reserve hand
      */
     public List<Card> getReserveHand() {
@@ -72,6 +78,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Get tokens owned by the {@link Player}.
+     * 
      * @return {@link Player}'s tokens
      */
     public HashMap<Gem, Integer> getTokens() {
@@ -79,6 +87,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Get respective {@link Gem} production levels of the {@link Player}.
+     * 
      * @return HashMap of {@link Gem} production
      */
     public HashMap<Gem, Integer> getProduction() {
@@ -86,6 +96,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Gets {@link NobleTile}s owned by {@link Player}.
+     * 
      * @return List of owned {@link NobleTile}
      */
     public List<NobleTile> getOwnedNobleTile() {
@@ -146,7 +158,7 @@ public class Player implements Comparable<Player> {
     public void discountCost(HashMap<Gem, Integer> cost) {
         for (Gem g : Gem.values()) {
             int reducedCost = cost.get(g) - production.get(g);
-            cost.replace(g, reducedCost < 0 ? reducedCost : 0);
+            cost.replace(g, reducedCost < 0 ? 0 : reducedCost);
         }
     }
 
@@ -332,6 +344,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Get number of {@link Card}s the {@link Player} has purchased.
+     * 
      * @return the total number of {@link Card}s the {@link Player} has purchased thus far.
      */
     public int getNumberOfCards() {
@@ -357,6 +371,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Displays {@link Player}'s info on console.
+     * 
      * @return String of {@link Player}'s info to be displayed on console
      */
     @Override
@@ -374,6 +390,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Displays the respective {@link Gem} production levels of the {@link Player}.
+     * 
      * @return String that displays {@link Player}’s production levels.
      */
     public String displayProduction() {
@@ -401,6 +419,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
+     * Displays {@link NobleTile} that the {@link Player} owns. 
+     * 
      * @return String that displays {@link NobleTile} that have visited the {@link Player}.
      */
     public String displayNobles() {
@@ -421,13 +441,17 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return the name of the {@link Player}.
+     * Gets the name of the {@link Player};
+     * 
+     * @return The name of the {@link Player}.
      */
     public String getName() {
         return name;
     }
 
     /**
+     * Return String that displays all tokens that {@link Player} has.
+     * 
      * @return String that displays the tokens in the {@link Player}’s hands
      */
     public String displayTokens() {

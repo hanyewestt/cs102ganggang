@@ -38,6 +38,8 @@ public class NobleTile {
     }
 
     /**
+     * Get cost of the {@link NobleTile}.
+     * 
      * @return Cost of {@link NobleTile} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
@@ -45,6 +47,8 @@ public class NobleTile {
     }
 
     /**
+     * Gets prestige points that this {@link NobleTile} gives.
+     * 
      * @return Prestige points of {@link NobleTile}
      */
     public int getPoints() {
@@ -52,7 +56,9 @@ public class NobleTile {
     }
 
     /**
-     * @return {@link NobleTile} info to be displayed on console
+     * Prints {@link NobleTile} info to be displayed on console
+     * 
+     * @return String info to be displayed on console
      */
     public String toString() {
 

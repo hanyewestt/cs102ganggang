@@ -111,6 +111,8 @@ public class Game {
     }
 
     /**
+     * Gets seed.
+     * 
      * @return seed
      */
     public long getSeed() {
@@ -118,6 +120,8 @@ public class Game {
     }
 
     /**
+     * Gets the market in the game.
+     * 
      * @return 2-D {@link Card} array of market in the game
      */
     public Card[][] getMarket() {
@@ -125,6 +129,8 @@ public class Game {
     }
 
     /**
+     * Get {@link NobleTile}s in the game.
+     * 
      * @return List of {@link NobleTile} in the game
      */
     public List<NobleTile> getNobles() {
@@ -132,6 +138,8 @@ public class Game {
     }
 
     /**
+     * Get bank of the game.
+     * 
      * @return Map of the {@link Gem}s and their corresponding quantities in bank
      */
     public Map<Gem, Integer> getBank() {
@@ -610,7 +618,7 @@ public class Game {
      * Handles the choice to draw 3 or draw 2 tokens. Should only be accessed if
      * {@link Player} is not a cpu.
      *
-     * @return a hashmap of the tokens to draw. returns null if {@link Player}
+     * @return a HashMap of the tokens to draw. returns null if {@link Player}
      * cancels.
      */
     public static HashMap<Gem, Integer> drawTokenFromPlayer() {

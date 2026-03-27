@@ -11,7 +11,7 @@ import util.*;
 public class Display {
 
     /**
-     * Prints turn options the player can take.
+     * Prints turn options the {@link Player} can take.
      */
     public static void turnOptionDisplay() {
         System.out.println();
@@ -26,7 +26,7 @@ public class Display {
     }
 
     /**
-     * Prints options the player has to buy cards.
+     * Prints options the player has to buy {@link Card}s.
      */
     public static void buyCardDisplay() {
         System.out.println();
@@ -37,7 +37,7 @@ public class Display {
     }
 
     /**
-     * Prints options the player has to draw tokens.
+     * Prints options the {@link Player} has to draw tokens.
      */
     public static void drawTokenDisplay() {
         System.out.println();
@@ -49,7 +49,7 @@ public class Display {
     }
 
     /**
-     * Prints options the player has to reserve cards.
+     * Prints options the {@link Player} has to reserve {@link Card}s.
      */
     public static void reserveCardDisplay() {
         System.out.println();
