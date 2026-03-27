@@ -5,23 +5,18 @@ import item.*;
 import util.*;
 
 public class Display {
-    /**
-     * Prints round number and player name.
-     */
-    public static void displayRoundAndPlayer(String name, int roundNumber) {
-        System.out.println("\n---------- Round " + roundNumber + " ⚔️ ----------");
-        System.out.println("\n=== " + name + "'s turn ===\n");
-    }
 
     /**
      * Prints turn options the player can take.
      */
     public static void turnOptionDisplay() {
+        System.out.println();
+        System.out.println("----------------- Moves 🎮 -----------------\n");
         System.out.println("1. Draw tokens");
         System.out.println("2. Reserve a card");
         System.out.println("3. Buy a card");
         System.out.println("4. Show reserved cards");
-        System.out.println("5. Display player");
+        System.out.println("5. Display other players");
         System.out.println("6. admin perms");
         System.out.println();
     }
@@ -69,18 +64,29 @@ public class Display {
      * @param nobles the nobles
      * @param market the market
      */
-    public static void printBoard(HashMap<Gem, Integer> bank, List<NobleTile> nobles, Card[][] market) {
-        System.out.printf("------------------------------------------------------------------\n");
+    public static void printBoard(Player player, int roundNumber, HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
+        String roundDisplay = roundNumber < 10 ? "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦" : "\n✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦ Round " + roundNumber + " ⚔️ ✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦✦";
+        System.out.println(roundDisplay);
+        System.out.println("\n=== " + player.getName() + "'s turn ===\n");
+
+        System.out.println("------------------ Bank 🏦 ------------------\n");
         
         printBank(bank);
+        System.out.println();
+
+        System.out.println("----------------- Market 🏬 -----------------\n");
 
         printMarket(market);
+        System.out.println();
         
-        System.out.printf("------------------------------------------------------------------\n");
+        System.out.println("----------------- Nobles 👑 -----------------\n");
 
         Display.printNobles(nobles);
+        System.out.println();
 
-        System.out.printf("------------------------------------------------------------------\n\n");
+        System.out.println("---------------- Your Hand 👤 ---------------\n");
+
+        System.out.println(player);
     }
 
     /**
@@ -89,7 +95,7 @@ public class Display {
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
-        System.out.println("\n    [ Bonuses  | Prestige | Card Costs     ]\n");
+        System.out.println("    [ Bonuses  | Prestige | Card Costs 💰  ]\n");
 
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
@@ -114,7 +120,6 @@ public class Display {
      * @param bank the bank
      */
     public static void printBank(HashMap<Gem, Integer> bank) {
-        System.out.printf("Bank: ");
         System.out.printf(bank.get(Gem.Diamond) + "D , ");
         System.out.printf(bank.get(Gem.Ruby) + "R , ");
         System.out.printf(bank.get(Gem.Sapphire) + "S , ");
@@ -129,11 +134,9 @@ public class Display {
      * @param nobles a list of {@link NobleTile} to print
      */
     public static void printNobles(List<NobleTile> nobles) {
-
-        System.out.printf("<NOBLE TILES>\n");
-        System.out.println("    [ Prestige | Card Costs ]");
+        System.out.println("     [ Prestige | Bonus Req. ]\n");
         for (int i = 0; i < nobles.size(); i++) {
-            System.out.printf("%d   %s\n", i+1, nobles.get(i));
+            System.out.printf("%d.   %s\n", i+1, nobles.get(i));
         }
     }
 
@@ -145,13 +148,13 @@ public class Display {
     public static void printWinner(List<Player> winningPlayers) {
         clearScreen();
 
-        System.out.printf("------------------------------------------------------------------\n");
-        System.out.printf(" ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNERS ARE  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖\n");
+        String winTitle = winningPlayers.size() > 1 ? " ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNERS ARE  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖" : " ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖ THE WINNER IS  ˖.𖥔 ݁ ˖ ⊹ ࣪ ˖";
+        System.out.println(winTitle);
         for (Player p : winningPlayers) {
-            System.out.printf(" > ");
+            System.out.print(" > ");
             System.out.println(p.getName());
         }
-        System.out.printf("------------------------------------------------------------------\n");
+
     }
 
     /**
@@ -161,18 +164,67 @@ public class Display {
         System.out.print("\033c");
     }
 
-    /**
-     * Prompts user to enter a player to display by entering their number
-     * 
-     * @param sc Scanner
-     * @param totalPlayers the number of total players
-     * @return the selected player’s order number
-     */
-    public static int printPlayerNo(Scanner sc, int totalPlayers) {
-        String display = String.format("Enter player number (1 - %d), 0 to cancel: ", totalPlayers);
+    // /**
+    //  * Prompts user to enter a player to display by entering their number
+    //  * 
+    //  * @param sc Scanner
+    //  * @param totalPlayers the number of total players
+    //  * @return the selected player’s order number
+    //  */
+    // public static int printPlayerNo(Scanner sc, int totalPlayers) {
+    //     String display = String.format("Enter player number (1 - %d), 0 to cancel: ", totalPlayers);
 
-        int choice = Utility.askForNum(sc, 0, totalPlayers, display);
-        return choice - 1;
+    //     int choice = Utility.askForNum(sc, 0, totalPlayers, display);
+    //     return choice - 1;
+    // }
+
+    /**
+     * Prompts the current player to select which players' hands they wish to view
+     * and returns a map of the chosen {@link Player}s.
+     *
+     * @param sc the Scanner used to read input from the keyboard
+     * @param players the list of {@link Player}s
+     * @param player the current {@link Player}
+     * @return a set of player numbers selected by the current player
+     */
+    public static Map<Integer, Player> choosePlayersToPrint(Scanner sc, List<Player> players, Player player) {
+        String display = String.format("Enter player number (1 - %d), 0 to quit: ", players.size());
+
+        int choice;
+        Map<Integer, Player> playersChosen = new TreeMap<>();
+        while (true) {
+            choice = Utility.askForNum(sc, 0, players.size(), display);
+            if (choice == 0) {
+                break;
+            }
+            if (!players.get(choice - 1).getName().equals(player.getName())) {
+                playersChosen.put(choice, players.get(choice - 1));
+            }
+        }
+
+        return playersChosen;
+    }
+
+    /**
+     * Prints other {@link Player}s' hand.
+     * @param playersToPrint
+     */
+    public static void printOtherPlayers(Map<Integer, Player> playersToPrint) {
+
+        if (!playersToPrint.isEmpty()) {
+            System.out.println("------------- Other players 👥 -------------\n");
+
+            for (Player p : playersToPrint.values()) {
+                System.out.println(p);
+            }
+        }
+    }
+
+    public static void printReserved(boolean toPrintReserved, Player player) {
+        if (toPrintReserved) {
+            System.out.println("---------------- Reserved 🎒 ----------------\n");
+            player.printReserved();
+        }
     }
 
 

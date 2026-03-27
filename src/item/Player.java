@@ -206,7 +206,7 @@ public class Player implements Comparable<Player> {
                 addCard(c, tokensLeft);
                 return true;
             } else {
-                String message = "Gold may be spent to pay for the cost. Do you wish to pay gold? {Y/N}:";
+                String message = "Gold may be spent to pay for the cost. Do you wish to pay gold? (Y/N): ";
                 boolean isSpendingGold = Utility.willProceed(keyboard, message);
 
                 if (!isSpendingGold) {
@@ -248,7 +248,7 @@ public class Player implements Comparable<Player> {
         } else {
             int necessaryGold = startingGold - tokensLeft.get(Gem.Gold);
 
-            String message = "You must spend " + necessaryGold + " of your gold to buy this card. Proceed? (Y/N):";
+            String message = "You must spend " + necessaryGold + " of your gold to buy this card. Proceed? (Y/N): ";
             boolean willSpendGold = Utility.willProceed(keyboard, message);
 
             if (!willSpendGold) {
@@ -362,7 +362,7 @@ public class Player implements Comparable<Player> {
         sb.append("Player No. ").append(order).append("\n");
         sb.append("Player Name: ").append(name).append("\n");
         sb.append("Gems: ").append(displayTokens());
-        sb.append("Produces: ").append(displayProduction());
+        sb.append("Bonuses: ").append(displayProduction());
         sb.append("Reserved: ").append(reserveCards.size()).append("\n");
         sb.append("Prestige: ").append(points).append("\n");
 
