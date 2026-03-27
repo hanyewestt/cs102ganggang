@@ -43,6 +43,8 @@ public class Deck<T> {
 
     /**
      * Shuffles the deck.
+     * 
+     * @param seed Random seed used for shuffle
      */
     public void shuffleDeck(long seed) {
         Collections.shuffle(deck, new Random(seed));
