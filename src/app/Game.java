@@ -104,6 +104,18 @@ public class Game {
         return seed;
     }
 
+    public Card[][] getMarket() {
+        return market;
+    }
+
+    public List<NobleTile> getNobles() {
+        return nobles;
+    }
+
+    public Map<Gem, Integer> getBank() {
+        return bank;
+    }
+
     /**
      * Initializes the player array by prompting each player to enter their name
      * and creating a corresponding {@link Player} for each entry.
@@ -242,7 +254,7 @@ public class Game {
      *
      * @param player the {@link Player} being checked
      * @return true if the {@link Player} has reached the win condition, false
-     *         otherwise
+     * otherwise
      */
     public static boolean hitWinCondition(Player player) {
 
@@ -578,7 +590,7 @@ public class Game {
      * player is not a cpu.
      *
      * @return a hashmap of the tokens to draw. returns null if {@link Player}
-     *         cancels.
+     * cancels.
      */
     public static HashMap<Gem, Integer> drawTokenFromPlayer() {
         while (true) {
@@ -635,7 +647,7 @@ public class Game {
      * that the selected tokens are available in the bank.
      *
      * @return a hashmap of the tokens to draw. returns null if {@link Player}
-     *         cancels.
+     * cancels.
      */
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = new HashMap<>();

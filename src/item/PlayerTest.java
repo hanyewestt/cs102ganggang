@@ -2,7 +2,6 @@ package item;
 
 import java.util.*;
 
-
 public class PlayerTest {
 
     private List<Player> players = new ArrayList<>();
@@ -30,9 +29,9 @@ public class PlayerTest {
     }
 
     public PlayerTest() {
-        Player p1 = new Player("A",1);
-        Player p2 = new Player("B",2);
-        Player p3 = new Player("C",3);
+        Player p1 = new Player("A", 1);
+        Player p2 = new Player("B", 2);
+        Player p3 = new Player("C", 3);
 
         p1.addPoints(15);
         p2.addPoints(15);
@@ -53,8 +52,6 @@ public class PlayerTest {
         for (int idx = 0; idx < winners.size(); idx++) {
             System.out.println(winners.get(idx));
         }
-        
-
 
     }
 }

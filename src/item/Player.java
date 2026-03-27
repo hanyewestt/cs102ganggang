@@ -139,12 +139,13 @@ public class Player implements Comparable<Player> {
         points += p;
     }
 
-    /**
-     * Updates points, production levels, and the {@link Player}’s remaining tokens after the purchase of the card.
-     * 
-     * @param c Card
-     * @param remainingGems The {@link Player}’s remaining tokens
-     */
+    public void discountCost(HashMap<Gem, Integer> cost) {
+        for (Gem g : Gem.values()) {
+            int reducedCost = cost.get(g) - production.get(g);
+            cost.replace(g, reducedCost < 0 ? reducedCost : 0);
+        }
+    }
+
     public void addCard(Card c, HashMap<Gem, Integer> remainingGems) {
         tokens = remainingGems;
         addPoints(c.getPoints());
@@ -169,16 +170,8 @@ public class Player implements Comparable<Player> {
         boolean needGold = false;
 
         HashMap<Gem, Integer> discountCardCost = c.getTokens();
-        for (Gem gem : Gem.values()) {
-            int discountedCost = discountCardCost.get(gem) - production.get(gem);
-
-            if (discountedCost < 0) {
-                discountedCost = 0;
-            }
-
-            discountCardCost.replace(gem, discountedCost);
-        }
-
+        discountCost(discountCardCost);
+        
         HashMap<Gem, Integer> tokensLeft = new HashMap<>();
 
         for (Gem gem : Gem.values()) {
