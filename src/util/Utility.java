@@ -1,7 +1,7 @@
 package util;
 
 import item.*;
-import java.lang.classfile.instruction.ThrowInstruction;
+// import java.lang.classfile.instruction.ThrowInstruction;
 import java.util.*;
 
 public class Utility {
@@ -91,6 +91,7 @@ public class Utility {
 
                 goldAvailable -= difference;
                 result.replace(Gem.Gold, result.get(Gem.Gold) + difference);
+                result.replace(g, tokens.get(g));
             } else {
                 result.replace(g, cost.get(g));
             }
@@ -257,7 +258,9 @@ public class Utility {
     /**
      * Prompts the user for the row and column position of the card on the
      * board. User can enter '0' to cancel at any time.
-     * @return returns an array of size 2 {row, col}. Returns null if users cancels.
+     *
+     * @return returns an array of size 2 {row, col}. Returns null if users
+     * cancels.
      */
     public static int[] getPositionOnBoard(Scanner sc) {
         final int ROW_MAX = 3;

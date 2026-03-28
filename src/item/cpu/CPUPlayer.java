@@ -12,8 +12,16 @@ public class CPUPlayer extends Player {
     private Move optimalMove;
     private static Game splendor;
 
+    public CPUPlayer(String name, int order) {
+        super(name, order);
+    }
+
     public CPUPlayer(Game splendor, String name, int order) {
         super(name, order);
+        this.splendor = splendor;
+    }
+
+    public void setGame(Game splendor) {
         this.splendor = splendor;
     }
 
@@ -29,16 +37,17 @@ public class CPUPlayer extends Player {
         Map<Gem, Integer> bank = splendor.getBank();
         ArrayList<Gem> availableGems = new ArrayList<>();
         ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
+        optimalMove = null;
 
         ArrayList<NobleTile> gameNoblesCopy = new ArrayList<>();
         for (NobleTile noble : splendor.getNobles()) {
             gameNoblesCopy.add(noble);
         }
 
-        HashMap<Gem, Integer> playerProduction = super.getProduction();
+        HashMap<Gem, Integer> playerBonuses = super.getBonuses();
 
         for (int i = 0; i < gameNoblesCopy.size(); i++) {
-            if (Utility.isGreaterOrEqual(playerProduction, gameNoblesCopy.get(i).getTokens())) {
+            if (Utility.isGreaterOrEqual(playerBonuses, gameNoblesCopy.get(i).getTokens())) {
                 possibleNobleIdx.add(i);
                 gameNoblesCopy.set(i, null);
             }
@@ -50,7 +59,8 @@ public class CPUPlayer extends Player {
             }
 
             int amountLeft = bank.get(g);
-            if (amountLeft >= 2) {
+
+            if (amountLeft >= 4) {
                 DrawGems draw2 = new DrawGems(this, g, gameNoblesCopy);
                 optimalMove = draw2.isBetterMove(optimalMove) ? draw2 : optimalMove;
             }
@@ -59,7 +69,9 @@ public class CPUPlayer extends Player {
             }
         }
 
-        for (int i = 0; i <= availableGems.size() - 3; i++) {
+
+
+        for (int i = 0; i <= availableGems.size() - 3; i++) {            
             DrawGems draw3 = new DrawGems(this, availableGems.get(i),
                     availableGems.get(i + 1), availableGems.get(i + 2), gameNoblesCopy);
             optimalMove = draw3.isBetterMove(optimalMove) ? draw3 : optimalMove;
@@ -74,22 +86,24 @@ public class CPUPlayer extends Player {
                 }
 
                 HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
-                Utility.discount(cardCost, playerProduction);
+                Utility.discount(cardCost, playerBonuses);
 
                 HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);
                 if (tokensToPay != null) {
-                    BuyCard buyCard = new BuyCard(this, i + 1, j + 1, tokensToPay, gameNoblesCopy, possibleNobleIdx);
+                    BuyCard buyCard = new BuyCard(this, i, j, tokensToPay, gameNoblesCopy, possibleNobleIdx);
                     optimalMove = buyCard.isBetterMove(optimalMove) ? buyCard : optimalMove;
-
-                    ReserveCard reserveCard = new ReserveCard(this, i + 1, j + 1, gameNoblesCopy);
+                }
+                if (super.getReserveHandSize() < Player.MAX_RESERVE_HAND_SIZE) {
+                    ReserveCard reserveCard = new ReserveCard(this, i, j, gameNoblesCopy);
                     optimalMove = reserveCard.isBetterMove(optimalMove) ? reserveCard : optimalMove;
                 }
+                
             }
         }
 
         for (int i = 0; i < super.getReserveHand().size(); i++) {
             HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(super.getReserveHand().get(i).getTokens());
-            Utility.discount(cardCost, playerProduction);
+            Utility.discount(cardCost, playerBonuses);
 
             HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);
             if (tokensToPay != null) {
@@ -98,9 +112,12 @@ public class CPUPlayer extends Player {
             }
         }
 
+        if (optimalMove == null) {
+            return;
+        }
+
         if (possibleNobleIdx.size() != 0) {
             optimalMove.setPointsGain(optimalMove.getPointsGain() + 3);
-
             optimalMove.setNobleIdx(possibleNobleIdx.get(new Random().nextInt(possibleNobleIdx.size())));
         }
 
@@ -108,4 +125,13 @@ public class CPUPlayer extends Player {
             optimalMove.setWinning(true);
         }
     }
+
+    public boolean buyCard(Card card, HashMap<Gem, Integer> toPay) {
+        HashMap<Gem, Integer> remainingGems = Utility.generateEmptyHashmap();
+        
+        super.addCard(card, remainingGems);
+        return true;
+    }
+
+
 }

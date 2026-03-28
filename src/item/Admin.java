@@ -37,7 +37,7 @@ public class Admin extends Player {
         super(name, 0);
         for (Gem g : Gem.values()) {
             setToken(g, tokens.get(g));
-            setProduction(g, production.get(g));
+            setBonuses(g, production.get(g));
         }
         for (Card c : reserveCards) {
             super.reserveCard(c);
@@ -54,7 +54,7 @@ public class Admin extends Player {
      * @param p player object
      */
     public Admin(Player p) {
-        this(p.getName(), p.getTokens(), p.getReserveHand(), p.getProduction(), p.getOwnedNobleTile(), p.getPoints());
+        this(p.getName(), p.getTokens(), p.getReserveHand(), p.getBonuses(), p.getOwnedNobleTile(), p.getPoints());
     }
 
     /**
@@ -73,8 +73,8 @@ public class Admin extends Player {
      * @param g Gem Type
      * @param amt amount to set to
      */
-    public void setProduction(Gem g, int amt) {
-        super.addProduction(g, amt - super.getProduction().get(g));
+    public void setBonuses(Gem g, int amt) {
+        super.addBonuses(g, amt - super.getBonuses().get(g));
     }
 
     /**

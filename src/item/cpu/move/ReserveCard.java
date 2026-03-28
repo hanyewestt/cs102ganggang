@@ -16,6 +16,7 @@ public class ReserveCard extends Move {
     private HashMap<Gem, Integer> toReturn = Utility.generateEmptyHashmap();
 
     public ReserveCard(CPUPlayer cpu, int row, int column, List<NobleTile> nobleTiles) {
+        super(cpu);
         this.row = row;
         this.column = column;
 
@@ -41,9 +42,9 @@ public class ReserveCard extends Move {
             }
         }
 
-        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterReserving, cpu.getProduction(),
+        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterReserving, cpu.getBonuses(),
                 marketAfterReserving, nobleTiles, handAfterReserving)
-                + ExpectedValueCalculator.getReserveValue(c, nobleTiles, cpu.getProduction(), tokensAfterReserving));
+                + ExpectedValueCalculator.getReserveValue(c, nobleTiles, cpu.getBonuses(), tokensAfterReserving));
 
     }
 
@@ -59,11 +60,12 @@ public class ReserveCard extends Move {
         return takingGold;
     }
 
-    public Map<Gem, Integer> getToReturn() {
+    public HashMap<Gem, Integer> getToReturn() {
         return toReturn;
     }
 
-    public void doMove(CPUPlayer cpu) {
-        // to implement
+    public void doMove() {
+        System.out.println("CPU is reserving card: "+cpu.getGameState().getMarket()[row][column]);
+        cpu.getGameState().reserveCard(cpu);
     }
 }

@@ -17,6 +17,7 @@ public class BuyCard extends Move {
 
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
+        super(cpu);
         buyLocation = 1;
         this.row = row;
         this.column = column;
@@ -29,15 +30,16 @@ public class BuyCard extends Move {
         HashMap<Gem, Integer> tokensAfterBuying = Utility.generateHashMapClone(cpu.getTokens());
         Utility.subtract(tokensAfterBuying, toPay);
 
-        HashMap<Gem, Integer> currProduction = Utility.generateHashMapClone(cpu.getProduction());
+        HashMap<Gem, Integer> currBonuses = Utility.generateHashMapClone(cpu.getBonuses());
 
-        setPointsGain(PointsCalculator.calculatePoints(currProduction, c, availNobles, nobleIdx));
-        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currProduction, marketAfterBuying,
+        setPointsGain(PointsCalculator.calculatePoints(currBonuses, c, availNobles, nobleIdx));
+        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currBonuses, marketAfterBuying,
                 availNobles, cpu.getReserveHand()));
     }
 
     public BuyCard(CPUPlayer cpu, int reserveIdx, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
+        super(cpu);
         buyLocation = 2;
         this.reserveIdx = reserveIdx;
         this.toPay = toPay;
@@ -53,10 +55,10 @@ public class BuyCard extends Move {
         HashMap<Gem, Integer> tokensAfterBuying = Utility.generateHashMapClone(cpu.getTokens());
         Utility.subtract(tokensAfterBuying, toPay);
 
-        HashMap<Gem, Integer> currProduction = Utility.generateHashMapClone(cpu.getProduction());
+        HashMap<Gem, Integer> currBonuses = Utility.generateHashMapClone(cpu.getBonuses());
 
-        setPointsGain(PointsCalculator.calculatePoints(currProduction, c, availNobles, nobleIdx));
-        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currProduction,
+        setPointsGain(PointsCalculator.calculatePoints(currBonuses, c, availNobles, nobleIdx));
+        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currBonuses,
                 cpu.getGameState().getMarket(), availNobles, reserveAfterBuying));
     }
 
@@ -80,7 +82,12 @@ public class BuyCard extends Move {
         return toPay;
     }
 
-    public void doMove(CPUPlayer cpu) {
-
+    public void doMove() {
+        if (buyLocation == 1) {
+            System.out.println("CPU is buying card from market" + cpu.getGameState().getMarket()[row][column]);
+        } else {
+            System.out.println("CPU is buying card from reserve" + cpu.getReserveHand().get(reserveIdx));
+        }
+        cpu.getGameState().buyCard(cpu);
     }
 }

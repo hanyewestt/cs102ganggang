@@ -4,9 +4,10 @@ import java.lang.*;
 import java.util.*;
 import util.*;
 // Gem, Card, NobleTile
+
 /**
- * Represents a {@link Player} in the game. 
- * A {@link Player} has a name, tokens, reserved cards, production levels, nobles who visited them, and points.
+ * Represents a {@link Player} in the game. A {@link Player} has a name, tokens,
+ * reserved cards, bonuses levels, nobles who visited them, and points.
  *
  */
 public class Player implements Comparable<Player> {
@@ -16,30 +17,31 @@ public class Player implements Comparable<Player> {
 
     private HashMap<Gem, Integer> tokens = new HashMap<>(Gem.values().length);
 
-    private static final int MAX_RESERVE_HAND_SIZE = 3;
+    public static final int MAX_RESERVE_HAND_SIZE = 3;
     private List<Card> reserveCards = new ArrayList<>(MAX_RESERVE_HAND_SIZE);
 
-    private HashMap<Gem, Integer> production = new HashMap<>(Gem.values().length);
+    private HashMap<Gem, Integer> bonuses = new HashMap<>(Gem.values().length);
     private List<NobleTile> ownedNobles = new ArrayList<>();
 
     private int points = 0;
 
     /**
-     * No argument constructor.
-     * {@link Player} starts with 0 tokens for every Gem type.
+     * No argument constructor. {@link Player} starts with 0 tokens for every
+     * Gem type.
      */
     public Player() {
         this.name = "no name";
         for (Gem g : Gem.values()) {
             tokens.put(g, 0);
-            production.put(g, 0);
+            bonuses.put(g, 0);
         }
 
     }
 
     /**
-     * {@link Player} starts with 0 Gems for every type. {@link Player} has a name.
-     * 
+     * {@link Player} starts with 0 Gems for every type. {@link Player} has a
+     * name.
+     *
      * @param name Name of {@link Player}
      * @param order {@link Player} order number
      */
@@ -78,10 +80,10 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return HashMap of {@link Gem} production
+     * @return HashMap of {@link Gem} bonuses
      */
-    public HashMap<Gem, Integer> getProduction() {
-        return production;
+    public HashMap<Gem, Integer> getBonuses() {
+        return bonuses;
     }
 
     /**
@@ -92,8 +94,9 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Adds the specified number of tokens of Gem type g to {@link Player}’s tokens.
-     * 
+     * Adds the specified number of tokens of Gem type g to {@link Player}’s
+     * tokens.
+     *
      * @param g Gem type
      * @param amt Amount of token to add
      */
@@ -102,8 +105,9 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Removes the specified number of tokens of Gem type g from {@link Player}’s tokens.
-     * 
+     * Removes the specified number of tokens of Gem type g from
+     * {@link Player}’s tokens.
+     *
      * @param g Gem type
      * @param amt Amount of token to remove
      */
@@ -112,27 +116,28 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * Adds the specified number of tokens of Gem type g to {@link Player}’s production levels.
-     * 
+     * Adds the specified number of tokens of Gem type g to {@link Player}’s
+     * bonuses levels.
+     *
      * @param g Gem type
      * @param amt Amount of token to add
      */
-    public void addProduction(Gem g, int amt) {
-        production.put(g, production.get(g) + amt);
+    public void addBonuses(Gem g, int amt) {
+        bonuses.put(g, bonuses.get(g) + amt);
     }
 
     /**
-     * Adds 1 token of Gem type g to {@link Player}’s production levels.
-     * 
+     * Adds 1 token of Gem type g to {@link Player}’s bonuses levels.
+     *
      * @param g Gem type
      */
-    public void addProduction(Gem g) {
-        this.addProduction(g, 1);
+    public void addBonuses(Gem g) {
+        this.addBonuses(g, 1);
     }
 
     /**
      * Adds points to {@link Player}’s points.
-     * 
+     *
      * @param p Points
      */
     public void addPoints(int p) {
@@ -141,20 +146,26 @@ public class Player implements Comparable<Player> {
 
     public void discountCost(HashMap<Gem, Integer> cost) {
         for (Gem g : Gem.values()) {
-            int reducedCost = cost.get(g) - production.get(g);
+            int reducedCost = cost.get(g) - bonuses.get(g);
             cost.replace(g, reducedCost < 0 ? 0 : reducedCost);
         }
     }
 
+    /**
+     * Adds {@link Card} to {@link Player}. Updates the player's remaining
+     * tokens, and adds points and bonuses.
+     * @param c the Card to purchase.
+     * @param remainingGems a HashMap of the player's remaining gems
+     */
     public void addCard(Card c, HashMap<Gem, Integer> remainingGems) {
         tokens = remainingGems;
         addPoints(c.getPoints());
-        addProduction(c.getGemType());
+        addBonuses(c.getGemType());
     }
 
     /**
      * Adds this card to {@link Player}’s reserve hand. Does not increment gold.
-     * 
+     *
      * @param c Card
      */
     public void reserveCard(Card c) {
@@ -162,16 +173,17 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * 
+     *
      */
     public boolean buyCard(Card c, Scanner keyboard) {
         int startingGold = tokens.get(Gem.Gold);
         int gold = startingGold;
         boolean needGold = false;
+        System.out.println("trying to buy card: " + c);
 
         HashMap<Gem, Integer> discountCardCost = c.getTokens();
         discountCost(discountCardCost);
-        
+        System.out.println("discountCardCost: " + discountCardCost);
         HashMap<Gem, Integer> tokensLeft = new HashMap<>();
 
         for (Gem gem : Gem.values()) {
@@ -192,7 +204,8 @@ public class Player implements Comparable<Player> {
         }
         tokensLeft.put(Gem.Gold, gold);
 
-        boolean canUseGold = tokensLeft.get(Gem.Gold) != 0;
+        boolean canUseGold = tokensLeft.get(Gem.Gold) != 0 && 
+                            Utility.getTotalGems(discountCardCost) != (startingGold - gold);
 
         if (!needGold) {
             if (!canUseGold) {
@@ -206,6 +219,8 @@ public class Player implements Comparable<Player> {
                     addCard(c, tokensLeft);
                     return true;
                 } else {
+                    System.out.println("tokensLeft.get(Gem.Gold)" + tokensLeft.get(Gem.Gold));
+                    System.out.println("Utility.getTotalGems(discountCardCost)" + Utility.getTotalGems(discountCardCost));
                     int goldToSpend = Math.min(tokensLeft.get(Gem.Gold), Utility.getTotalGems(discountCardCost));
                     String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
                     int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
@@ -213,7 +228,7 @@ public class Player implements Comparable<Player> {
                     if (spentGold == Utility.getTotalGems(discountCardCost)) {
                         removeToken(Gem.Gold, spentGold);
                         addPoints(c.getPoints());
-                        addProduction(c.getGemType());
+                        addBonuses(c.getGemType());
                         return true;
                     }
 
@@ -269,7 +284,7 @@ public class Player implements Comparable<Player> {
             if (spentGold + necessaryGold == Utility.getTotalGems(discountCardCost)) {
                 removeToken(Gem.Gold, spentGold + necessaryGold);
                 addPoints(c.getPoints());
-                addProduction(c.getGemType());
+                addBonuses(c.getGemType());
                 return true;
             }
 
@@ -295,16 +310,17 @@ public class Player implements Comparable<Player> {
 
     /**
      * Removes this card from {@link Player}’s reserve hand.
-     * 
-     * @param pos The index of the card that is to be removed from the {@link Player}’s hand.
+     *
+     * @param pos The index of the card that is to be removed from the
+     * {@link Player}’s hand.
      */
     public void removeReserveCard(int pos) {
         reserveCards.remove(pos);
     }
-    
+
     /**
      * Removes this card from {@link Player}’s reserve hand.
-     * 
+     *
      * @param card Card that is to be removed from the {@link Player}’s hand.
      */
     public void removeReserveCard(Card card) {
@@ -313,7 +329,7 @@ public class Player implements Comparable<Player> {
 
     /**
      * Adds a NobleTile to {@link Player}’s list of visiting nobles.
-     *  
+     *
      * @param noble The NobleTile to be added
      */
     public void addNobleTile(NobleTile noble) {
@@ -322,19 +338,21 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return the total number of cards the {@link Player} has purchased thus far.
+     * @return the total number of cards the {@link Player} has purchased thus
+     * far.
      */
     public int getNumberOfCards() {
         int sum = 0;
         for (Gem g : Gem.values()) {
-            sum += production.get(g);
+            sum += bonuses.get(g);
         }
         return sum;
     }
 
     /**
-     * Compares 2 {@link Player}s in descending order of points. If points tie, return in ascending number of cards.
-     * 
+     * Compares 2 {@link Player}s in descending order of points. If points tie,
+     * return in ascending number of cards.
+     *
      * @param p The other {@link Player}
      */
     @Override
@@ -355,7 +373,7 @@ public class Player implements Comparable<Player> {
         sb.append("Player No. ").append(order).append("\n");
         sb.append("Player Name: ").append(name).append("\n");
         sb.append("Gems: ").append(displayTokens());
-        sb.append("Bonuses: ").append(displayProduction());
+        sb.append("Bonuses: ").append(displayBonuses());
         sb.append("Reserved: ").append(reserveCards.size()).append("\n");
         sb.append("Prestige: ").append(points).append("\n");
 
@@ -363,20 +381,20 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return String that displays {@link Player}’s production levels.
+     * @return String that displays {@link Player}’s bonuses levels.
      */
-    public String displayProduction() {
+    public String displayBonuses() {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
 
         for (Gem g : Gem.values()) {
-            if (production.get(g) != 0) {
+            if (bonuses.get(g) != 0) {
                 if (first) {
-                    sb.append(production.get(g)).append(Utility.fromGemToChar(g));
+                    sb.append(bonuses.get(g)).append(Utility.fromGemToChar(g));
                     first = false;
 
                 } else {
-                    sb.append(", ").append(production.get(g)).append(Utility.fromGemToChar(g));
+                    sb.append(", ").append(bonuses.get(g)).append(Utility.fromGemToChar(g));
                 }
             }
         }
@@ -390,7 +408,8 @@ public class Player implements Comparable<Player> {
     }
 
     /**
-     * @return String that displays {@link NobleTile} that have visited the {@link Player}.
+     * @return String that displays {@link NobleTile} that have visited the
+     * {@link Player}.
      */
     public String displayNobles() {
 
@@ -514,4 +533,3 @@ public class Player implements Comparable<Player> {
         return returnAmt;
     }
 }
-

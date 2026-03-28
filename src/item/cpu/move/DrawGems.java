@@ -11,22 +11,24 @@ public class DrawGems extends Move {
     private HashMap<Gem, Integer> toDraw = Utility.generateEmptyHashmap();
     private HashMap<Gem, Integer> toRemove = Utility.generateEmptyHashmap();
 
-    public DrawGems(CPUPlayer player, Gem type, List<NobleTile> availNobles) {
-        HashMap<Gem, Integer> newTokens = Utility.generateHashMapClone(player.getTokens());
+    public DrawGems(CPUPlayer cpu, Gem type, List<NobleTile> availNobles) {
+        super(cpu);
+        HashMap<Gem, Integer> newTokens = Utility.generateHashMapClone(cpu.getTokens());
         newTokens.replace(type, newTokens.get(type) + 2);
         toDraw.replace(type, 2);
 
         int currGemNo = Utility.getTotalGems(newTokens);
         if (currGemNo > 10) {
-            RemoveGems.getGemsToRemove(newTokens, toRemove, currGemNo, player, availNobles);
+            RemoveGems.getGemsToRemove(newTokens, toRemove, currGemNo, cpu, availNobles);
         }
 
-        super.setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(newTokens, player.getProduction(),
-                player.getGameState().getMarket(), availNobles, player.getReserveHand()));
+        super.setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
+                cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
     }
 
-    public DrawGems(CPUPlayer player, Gem type1, Gem type2, Gem type3, List<NobleTile> availNobles) {
-        HashMap<Gem, Integer> newTokens = Utility.generateHashMapClone(player.getTokens());
+    public DrawGems(CPUPlayer cpu, Gem type1, Gem type2, Gem type3, List<NobleTile> availNobles) {
+        super(cpu);
+        HashMap<Gem, Integer> newTokens = Utility.generateHashMapClone(cpu.getTokens());
 
         newTokens.replace(type1, newTokens.get(type1) + 1);
         newTokens.replace(type2, newTokens.get(type2) + 1);
@@ -38,22 +40,23 @@ public class DrawGems extends Move {
 
         int currGemNo = Utility.getTotalGems(newTokens);
         if (currGemNo > 10) {
-            RemoveGems.getGemsToRemove(newTokens, toRemove, currGemNo, player, availNobles);
+            RemoveGems.getGemsToRemove(newTokens, toRemove, currGemNo, cpu, availNobles);
         }
 
-        super.setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(newTokens, player.getProduction(),
-                player.getGameState().getMarket(), availNobles, player.getReserveHand()));
+        super.setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
+                cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
     }
 
     public HashMap<Gem, Integer> getToDraw() {
         return toDraw;
     }
 
-    public HashMap<Gem, Integer> getToRemove() {
+    public HashMap<Gem, Integer> getToReturn() {
         return toRemove;
     }
 
-    public void doMove(CPUPlayer cpu) {
-        // to implement
+    public void doMove() {
+        System.out.println("CPU is drawing tokens:"+toDraw);
+        cpu.getGameState().drawToken(cpu);
     }
 }
