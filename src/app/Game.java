@@ -9,8 +9,6 @@ import display.*;
 import item.*;
 import item.cpu.*;
 import item.cpu.move.*;
-import java.awt.geom.GeneralPath;
-import jdk.jshell.execution.Util;
 import util.*;
 
 public class Game {

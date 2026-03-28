@@ -3,7 +3,6 @@ package item.cpu.move;
 import app.*;
 import item.*;
 import item.cpu.*;
-import java.nio.channels.NonWritableChannelException;
 import util.*;
 
 import java.util.*;
