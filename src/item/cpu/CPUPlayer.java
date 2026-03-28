@@ -125,7 +125,6 @@ public class CPUPlayer extends Player {
 
     public boolean buyCard(Card card, HashMap<Gem, Integer> toPay) {
         HashMap<Gem, Integer> remainingGems = Utility.generateEmptyHashmap();
-        
         super.addCard(card, remainingGems);
         return true;
     }

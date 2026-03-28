@@ -51,7 +51,7 @@ public abstract class Move {
     }
 
     public boolean isBetterMove(Move other) {
-        if (other == null) {
+        if (other instanceof NoPossibleMove) {
             return true;
         }
         if (winning && !(other.getWinning())) {

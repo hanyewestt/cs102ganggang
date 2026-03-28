@@ -300,13 +300,21 @@ public class Display {
                     continue;
                 }
 
-                HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
-                Utility.discount(cardCost, playerBonuses);
+                HashMap<Gem, Integer> cardCost = c.getTokens();
+                player.discountCost(cardCost);
 
                 HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(player.getTokens(), cardCost);
                 if (tokensToPay != null) {
                     return true;
                 }
+            }
+        }
+        for (Card c : player.getReserveHand()) {
+            HashMap<Gem, Integer> cardCost = c.getTokens();
+            player.discountCost(cardCost);
+
+            if (Utility.findSubtractionAmount(player.getTokens(), cardCost) != null) {
+                return true;
             }
         }
         return false;
