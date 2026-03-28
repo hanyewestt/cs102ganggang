@@ -10,6 +10,7 @@ import item.*;
 import item.cpu.*;
 import item.cpu.move.*;
 import java.awt.geom.GeneralPath;
+import jdk.jshell.execution.Util;
 import util.*;
 
 public class Game {
@@ -31,7 +32,7 @@ public class Game {
      * Entry point of the game program. Prompts the user to enter the number of
      * players, creates a new Game instance, and conducts rounds until win
      * condition is reached. Once the game ends, it retrieves the winners using
-     * {@link getWinner()} and prints out the winning players.
+     * {@link #getWinner()} and prints out the winning players.
      *
      * @param args
      */
@@ -43,6 +44,7 @@ public class Game {
 
         Game.game = new Game(playerNumber, cpuNumber);
         setGameForCPU();
+        new Display(game);
 
         boolean lastRound = false;
         roundNumber = 1;
@@ -176,23 +178,38 @@ public class Game {
                 move.doMove();
             }
 
+        } else if (!Display.hideSkipOption(player)) {
+            System.out.println("There are no available options for you. Your turn is skipped.");
         } else {
+
             while (!turnDone) {
                 Display.clearScreen();
                 Display.printBoard(player, roundNumber, bank, nobles, market);
                 Display.printOtherPlayers(playersToPrint);
                 Display.printReserved(toPrintReserved, player);
-                Display.turnOptionDisplay();
+                Display.turnOptionDisplay(player);
 
                 switch (Utility.askForNum(sc, 1, 6, "Please enter your choice: ")) {
                     case 1:
-                        turnDone = drawToken(player);
+                        if (Display.showDrawToken()) {
+                            turnDone = drawToken(player);
+                        } else {
+                            System.out.println("This is not a valid option!");
+                        }
                         break;
                     case 2:
-                        turnDone = reserveCard(player);
+                        if (Display.showReserveCard(player)) {
+                            turnDone = reserveCard(player);
+                        } else {
+                            System.out.println("This is not a valid option!");
+                        }
                         break;
                     case 3:
-                        turnDone = buyCard(player);
+                        if (Display.showBuyCard(player)) {
+                            turnDone = buyCard(player);
+                        } else {
+                            System.out.println("This is not a valid option!");
+                        }
                         break;
                     case 4:
                         toPrintReserved = !toPrintReserved;
@@ -208,11 +225,12 @@ public class Game {
                 }
             }
         }
+
         nobleSelection(player);
 
         try {
-            System.out.println("\nYour turn has ended, continuing to next player...");
-            TimeUnit.SECONDS.sleep(3);
+            System.out.println("\nThe turn has ended, continuing to next player...\n");
+            TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             return;
         }
@@ -478,8 +496,6 @@ public class Game {
                     pos[0] = move.getRow();
                     pos[1] = move.getColumn();
                     card = market[pos[0]][pos[1]];
-                    System.out.println("cpu tokens: "+cpu.getTokens());
-                    System.out.println("cpu bonus: "+cpu.getBonuses());
                     toPay = new HashMap<>(move.getToPay());
                     cpu.buyCard(card, toPay);
 
@@ -501,8 +517,6 @@ public class Game {
                         continue;
                     }
                     HashMap<Gem, Integer> pAfter = player.getTokens();
-                    System.out.println("pBefore" + pBefore);
-                    System.out.println("pAfter" + pAfter);
                     for (Gem g : Gem.values()) {
                         toPay.put(g, pBefore.get(g) - pAfter.get(g));
                     }
@@ -546,8 +560,6 @@ public class Game {
                         continue;
                     }
                     HashMap<Gem, Integer> pAfter = player.getTokens();
-                    System.out.println("pBefore" + pBefore);
-                    System.out.println("pAfter" + pAfter);
                     for (Gem g : Gem.values()) {
                         toPay.put(g, pBefore.get(g) - pAfter.get(g));
                     }
@@ -556,12 +568,9 @@ public class Game {
 
                 player.removeReserveCard(idx);
             }
-            System.out.println("topay" + toPay);
             // update bank
             for (Gem g : Gem.values()) {
-                System.out.println("bank gem"+g+"has amt:"+bank.get(g));
-                System.out.println("toPay gem"+g+"has amt:"+toPay.get(g));
-                bank.put(g,  bank.get(g) + toPay.get(g));
+                bank.put(g, bank.get(g) + toPay.get(g));
             }
             return true;
         }
@@ -652,8 +661,6 @@ public class Game {
                 confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? (Y/N): ");
             }
         }
-
-        System.out.println("returnAmt:"+returnAmt);
 
         for (Gem g : returnAmt.keySet()) {
             bank.replace(g, bank.get(g) + returnAmt.get(g));

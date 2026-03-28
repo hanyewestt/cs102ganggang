@@ -179,11 +179,9 @@ public class Player implements Comparable<Player> {
         int startingGold = tokens.get(Gem.Gold);
         int gold = startingGold;
         boolean needGold = false;
-        System.out.println("trying to buy card: " + c);
 
         HashMap<Gem, Integer> discountCardCost = c.getTokens();
         discountCost(discountCardCost);
-        System.out.println("discountCardCost: " + discountCardCost);
         HashMap<Gem, Integer> tokensLeft = new HashMap<>();
 
         for (Gem gem : Gem.values()) {
@@ -219,8 +217,6 @@ public class Player implements Comparable<Player> {
                     addCard(c, tokensLeft);
                     return true;
                 } else {
-                    System.out.println("tokensLeft.get(Gem.Gold)" + tokensLeft.get(Gem.Gold));
-                    System.out.println("Utility.getTotalGems(discountCardCost)" + Utility.getTotalGems(discountCardCost));
                     int goldToSpend = Math.min(tokensLeft.get(Gem.Gold), Utility.getTotalGems(discountCardCost));
                     String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
                     int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
