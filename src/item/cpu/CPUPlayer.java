@@ -39,7 +39,6 @@ public class CPUPlayer extends Player {
         Map<Gem, Integer> bank = splendor.getBank();
         ArrayList<Gem> availableGems = new ArrayList<>();
         ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
-        optimalMove = null;
 
         ArrayList<NobleTile> gameNoblesCopy = new ArrayList<>();
         for (NobleTile noble : splendor.getNobles()) {
