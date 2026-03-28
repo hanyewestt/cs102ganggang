@@ -34,10 +34,11 @@ public class CPUPlayer extends Player {
     }
 
     public void calculateOptimalMove() {
+        optimalMove = new NoPossibleMove(this);
+
         Map<Gem, Integer> bank = splendor.getBank();
         ArrayList<Gem> availableGems = new ArrayList<>();
         ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
-        optimalMove = null;
 
         ArrayList<NobleTile> gameNoblesCopy = new ArrayList<>();
         for (NobleTile noble : splendor.getNobles()) {
@@ -112,12 +113,8 @@ public class CPUPlayer extends Player {
             }
         }
 
-        if (optimalMove == null) {
-            return;
-        }
-
         if (possibleNobleIdx.size() != 0) {
-            optimalMove.setPointsGain(optimalMove.getPointsGain() + 3);
+            optimalMove.setPointsGain(optimalMove.getPointsGain() + NobleTile.getPoints());
             optimalMove.setNobleIdx(possibleNobleIdx.get(new Random().nextInt(possibleNobleIdx.size())));
         }
 

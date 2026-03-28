@@ -155,6 +155,48 @@ public class Game {
         }
     }
 
+    public boolean isTurnPossible(Player player) {
+        if (player.getReserveHandSize() < player.MAX_RESERVE_HAND_SIZE) {
+            return true;
+        }
+
+        for (Gem g : Gem.values()) {
+            if (g == Gem.Gold) {
+                continue;
+            }
+
+            if (bank.get(g) > 0) {
+                return true;
+            }
+        }
+
+        for (Card[] row : market) {
+            for (Card c : row) {
+                if (c == null) {
+                    continue;
+                }
+
+                HashMap<Gem, Integer> cardCost = c.getTokens();
+                player.discountCost(cardCost);
+
+                if (Utility.findSubtractionAmount(player.getTokens(), cardCost) != null) {
+                    return true;
+                }
+            }
+        }
+
+        for (Card c : player.getReserveHand()){
+            HashMap<Gem, Integer> cardCost = c.getTokens();
+            player.discountCost(cardCost);
+
+            if (Utility.findSubtractionAmount(player.getTokens(), cardCost) != null) {
+                return true;
+            }            
+        }
+
+        return false;
+    }
+
     /**
      * Executes a player's turn by presenting three available options, Draw
      * tokens, Reserve a card and Buy a card The player is repeatedly prompted
