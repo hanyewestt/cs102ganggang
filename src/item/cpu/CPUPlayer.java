@@ -7,6 +7,10 @@ import util.*;
 
 import java.util.*;
 
+/**
+ * Represents the CPUPlayer which extends Player.
+ * CPUPlayer can perform all actions that a player can do.
+ */
 public class CPUPlayer extends Player {
 
     private Move optimalMove;

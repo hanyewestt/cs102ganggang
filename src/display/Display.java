@@ -5,6 +5,10 @@ import item.*;
 import util.*;
 import app.*;
 
+
+/**
+ * Displays information on console
+ */
 public class Display {
 
     private static Game splendor;
@@ -19,7 +23,7 @@ public class Display {
     }
 
     /**
-     * Prints turn options the player can take.
+     * Prints turn options the {@link Player} can take.
      */
     public static void turnOptionDisplay(Player player) {
         StringBuilder sb = new StringBuilder();
@@ -49,7 +53,7 @@ public class Display {
     }
 
     /**
-     * Prints options the player has to buy cards.
+     * Prints options the player has to buy {@link Card}s.
      */
     public static void buyCardDisplay() {
         System.out.println();
@@ -60,7 +64,7 @@ public class Display {
     }
 
     /**
-     * Prints options the player has to draw tokens.
+     * Prints options the {@link Player} has to draw tokens.
      */
     public static void drawTokenDisplay() {
         System.out.println();
@@ -72,7 +76,7 @@ public class Display {
     }
 
     /**
-     * Prints options the player has to reserve cards.
+     * Prints options the {@link Player} has to reserve {@link Card}s.
      */
     public static void reserveCardDisplay() {
         System.out.println();
@@ -84,11 +88,13 @@ public class Display {
     }
 
     /**
-     * Prints the current state of the board, including all cards and noble
-     * tiles. Includes: Avaliable cards, Bank, Nobile Tiles
-     *
+     * Prints the current state of the board, including all {@link Card}s and {@link NobleTile}s
+     * Includes: Avaliable {@link Card}s, Bank, {@link NobleTile}s
+     * 
+     * @param player {@link Player} who is performing their turn
+     * @param roundNumber number of the round currently being played
      * @param bank the bank
-     * @param nobles the nobles
+     * @param nobles the {@link NobleTile}
      * @param market the market
      */
     public static void printBoard(Player player, int roundNumber, HashMap<Gem, Integer> bank, ArrayList<NobleTile> nobles, Card[][] market) {
@@ -117,8 +123,8 @@ public class Display {
     }
 
     /**
-     * Prints the cards currently out in the market.
-     *
+     * Prints the {@link Card}s currently out in the market.
+     * 
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
@@ -192,13 +198,13 @@ public class Display {
     }
 
     /**
-     * Prompts the current player to select which players' hands they wish to
-     * view and returns a map of the chosen {@link Player}s.
+     * Prompts the current {@link Player} to select which {@link Player}s' hands they wish to view
+     * and returns a map of the chosen {@link Player}s.
      *
      * @param sc the Scanner used to read input from the keyboard
      * @param players the list of {@link Player}s
      * @param player the current {@link Player}
-     * @return a set of player numbers selected by the current player
+     * @return a set of {@link Player} numbers selected by the current {@link Player}
      */
     public static Map<Integer, Player> choosePlayersToPrint(Scanner sc, List<Player> players, Player player) {
         String display = String.format("Enter player number (1 - %d), 0 to finish your selection: ", players.size());
@@ -221,8 +227,8 @@ public class Display {
 
     /**
      * Prints other {@link Player}s' hand.
-     *
-     * @param playersToPrint
+     * 
+     * @param playersToPrint Map of {@link Player} number and corresponding {@link Player} object
      */
     public static void printOtherPlayers(Map<Integer, Player> playersToPrint) {
 
@@ -235,6 +241,12 @@ public class Display {
         }
     }
 
+    /**
+     * Prints the reserve hand of the {@link Player}
+     * 
+     * @param toPrintReserved if true, print {@link Player}'s reserve hand
+     * @param player {@link Player} who's reserve hand is to be printed
+     */
     public static void printReserved(boolean toPrintReserved, Player player) {
         if (toPrintReserved) {
             System.out.println("---------------- Reserved 🎒 ----------------\n");
@@ -243,9 +255,9 @@ public class Display {
     }
 
     /**
-     * Formats a printable string for card costs
-     *
-     * @param tokens a HashMap of the card costs to print
+     * Formats a printable string for {@link Card} costs
+     * 
+     * @param tokens a HashMap of the {@link Card} costs to print
      * @return String the printable string
      */
     public static String costDisplayString(HashMap<Gem, Integer> tokens) {

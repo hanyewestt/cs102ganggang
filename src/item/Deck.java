@@ -2,6 +2,9 @@ package item;
 
 import java.util.*;
 
+/**
+ * Class for Deck which stores all the {@link Card}s/ {@link NobleTile}s
+ */
 public class Deck<T> {
 
     private ArrayList<T> deck;

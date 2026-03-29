@@ -4,6 +4,10 @@ import display.Display;
 import java.util.*;
 import util.*;
 
+/**
+ * Represents a {@link Card}. 
+ * {@link Card} contains HashMap of its cost, the production GemType, and the number prestiege points awarded.
+ */
 public class Card {
 
     private HashMap<Gem, Integer> tokens = Utility.generateEmptyHashmap();
@@ -11,15 +15,15 @@ public class Card {
     private final int POINTS;
     
     /**
-     * Constructor for Card that initialises the Gem Hashmap
+     * Constructor for {@link Card} that initialises the {@link Gem} Hashmap
      * 
-     * @param GEMTYPE Gem enum
-     * @param POINTS points of Card
-     * @param Diamond no. of Diamonds needed to purchase Card
-     * @param Ruby no. of Ruby needed to purchase Card
-     * @param Sapphire no. of Sapphire needed to purchase Card
-     * @param Emerald no. of Emerald needed to purchase Card
-     * @param Onyx no. of Onyx needed to purchase Card
+     * @param GEMTYPE {@link Gem} enum
+     * @param POINTS points of {@link Card}
+     * @param Diamond no. of Diamonds needed to purchase {@link Card}
+     * @param Ruby no. of Ruby needed to purchase {@link Card}
+     * @param Sapphire no. of Sapphire needed to purchase {@link Card}
+     * @param Emerald no. of Emerald needed to purchase {@link Card}
+     * @param Onyx no. of Onyx needed to purchase {@link Card}
      */
     public Card(Gem GEMTYPE, int POINTS, int Diamond, int Ruby, int Sapphire, int Emerald, int Onyx) {
         this.GEMTYPE = GEMTYPE;
@@ -33,28 +37,36 @@ public class Card {
     }
 
     /**
-     * @return Cost of Card as HashMap
+     * Get cost of the {@link Card}.
+     * 
+     * @return Cost of {@link Card} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
         return tokens;
     }
 
     /**
-     * @return Gem production type of Card
+     * Get type of {@link Gem} this card produces.
+     * 
+     * @return {@link Gem} production type of {@link Card}
      */
     public Gem getGemType() {
         return GEMTYPE;
     }
 
     /**
-     * @return Prestige points of Card
+     * Gets prestige points that this {@link Card} gives.
+     * 
+     * @return Prestige points of {@link Card}
      */
     public int getPoints() {
         return POINTS;
     }
 
     /**
-     * @return Card info to be displayed on console
+     * Prints {@link Card} info to be displayed on console
+     * 
+     * @return String info to be displayed on console
      */
     @Override
     public String toString() {

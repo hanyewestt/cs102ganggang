@@ -2,6 +2,9 @@ package item;
 
 import java.util.*;
 
+/**
+ * For testing purposes
+ */
 public class Admin extends Player {
 
     private int adminNo;
@@ -27,7 +30,7 @@ public class Admin extends Player {
      * 
      * @param name name of player
      * @param tokens player's existing tokens in hand
-     * @param reserveCards player's existing reserve cards
+     * @param reserveCards player's existing reserve {@link Card}
      * @param production player's existing production levels
      * @param nobles player's exisiting noble tiles
      * @param points player's existing points
