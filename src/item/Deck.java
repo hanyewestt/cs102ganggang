@@ -10,7 +10,7 @@ public class Deck<T> {
      * Constructor that makes an empty deck.
      */
     public Deck() {
-        deck = new ArrayList<T>();
+        deck = new ArrayList<>();
     }
 
     /**
@@ -43,6 +43,8 @@ public class Deck<T> {
 
     /**
      * Shuffles the deck.
+     * 
+     * @param seed Random seed used for shuffle
      */
     public void shuffleDeck(long seed) {
         Collections.shuffle(deck, new Random(seed));
