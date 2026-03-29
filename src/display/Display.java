@@ -1,8 +1,9 @@
 package display;
 
-import java.util.*; 
+import java.util.*;
 import item.*;
 import util.*;
+import app.*;
 
 
 /**
@@ -10,19 +11,45 @@ import util.*;
  */
 public class Display {
 
+    private static Game splendor;
+    private static Card[][] market;
+    private static Map<Gem, Integer> bank;
+
+    public Display(Game splendor) {
+        this.splendor = splendor;
+        market = splendor.getMarket();
+        bank = splendor.getBank();
+        //..
+    }
+
     /**
      * Prints turn options the {@link Player} can take.
      */
-    public static void turnOptionDisplay() {
-        System.out.println();
-        System.out.println("----------------- Moves 🎮 -----------------\n");
-        System.out.println("1. Draw tokens");
-        System.out.println("2. Reserve a card");
-        System.out.println("3. Buy a card");
-        System.out.println("4. Show reserved cards");
-        System.out.println("5. Display other players");
-        System.out.println("6. admin perms");
-        System.out.println();
+    public static void turnOptionDisplay(Player player) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("----------------- Moves 🎮 -----------------\n");
+        sb.append("1. Draw tokens\n");
+        sb.append("2. Reserve a card\n");
+        sb.append("3. Buy a card\n");
+        sb.append("4. Show reserved cards\n");
+        sb.append("5. Display other players\n");
+        sb.append("6. admin perms");
+
+        if (!showDrawToken()) {
+            sb.insert(sb.indexOf("1."), "\u001b[9m");
+            sb.insert(sb.indexOf("2."), "\u001b[0m");
+        }
+        if (!showReserveCard(player)) {
+            sb.insert(sb.indexOf("2."), "\u001b[9m");
+            sb.insert(sb.indexOf("3."), "\u001b[0m");
+        }
+        if (!showBuyCard(player)) {
+            sb.insert(sb.indexOf("3."), "\u001b[9m");
+            sb.insert(sb.indexOf("4."), "\u001b[0m");
+        }
+
+        System.out.println(sb);
+
     }
 
     /**
@@ -76,7 +103,7 @@ public class Display {
         System.out.println("\n=== " + player.getName() + "'s turn ===\n");
 
         System.out.println("------------------ Bank 🏦 ------------------\n");
-        
+
         printBank(bank);
         System.out.println();
 
@@ -84,7 +111,7 @@ public class Display {
 
         printMarket(market);
         System.out.println();
-        
+
         System.out.println("----------------- Nobles 👑 -----------------\n");
 
         Display.printNobles(nobles);
@@ -122,7 +149,7 @@ public class Display {
 
     /**
      * Prints bank contents.
-     * 
+     *
      * @param bank the bank
      */
     public static void printBank(HashMap<Gem, Integer> bank) {
@@ -136,19 +163,19 @@ public class Display {
 
     /**
      * Prints {@link NobleTile}s on the board.
-     * 
+     *
      * @param nobles a list of {@link NobleTile} to print
      */
     public static void printNobles(List<NobleTile> nobles) {
         System.out.println("     [ Prestige | Bonus Req. ]\n");
         for (int i = 0; i < nobles.size(); i++) {
-            System.out.printf("%d.   %s\n", i+1, nobles.get(i));
+            System.out.printf("%d.   %s\n", i + 1, nobles.get(i));
         }
     }
 
     /**
      * Prints the winners of the game.
-     * 
+     *
      * @param winnningPlayers a list of {@link Player} that have won the game
      */
     public static void printWinner(List<Player> winningPlayers) {
@@ -167,22 +194,8 @@ public class Display {
      * Clears the terminal.
      */
     public static void clearScreen() {
-        System.out.print("\033c");
+        // System.out.print("\033c");
     }
-
-    // /**
-    //  * Prompts user to enter a player to display by entering their number
-    //  * 
-    //  * @param sc Scanner
-    //  * @param totalPlayers the number of total players
-    //  * @return the selected player’s order number
-    //  */
-    // public static int printPlayerNo(Scanner sc, int totalPlayers) {
-    //     String display = String.format("Enter player number (1 - %d), 0 to cancel: ", totalPlayers);
-
-    //     int choice = Utility.askForNum(sc, 0, totalPlayers, display);
-    //     return choice - 1;
-    // }
 
     /**
      * Prompts the current {@link Player} to select which {@link Player}s' hands they wish to view
@@ -194,7 +207,7 @@ public class Display {
      * @return a set of {@link Player} numbers selected by the current {@link Player}
      */
     public static Map<Integer, Player> choosePlayersToPrint(Scanner sc, List<Player> players, Player player) {
-        String display = String.format("Enter player number (1 - %d), 0 to quit: ", players.size());
+        String display = String.format("Enter player number (1 - %d), 0 to finish your selection: ", players.size());
 
         int choice;
         Map<Integer, Player> playersChosen = new TreeMap<>();
@@ -203,7 +216,8 @@ public class Display {
             if (choice == 0) {
                 break;
             }
-            if (!players.get(choice - 1).getName().equals(player.getName())) {
+
+            if (!playersChosen.containsValue(players.get(choice - 1))) {
                 playersChosen.put(choice, players.get(choice - 1));
             }
         }
@@ -240,7 +254,6 @@ public class Display {
         }
     }
 
-
     /**
      * Formats a printable string for {@link Card} costs
      * 
@@ -250,9 +263,9 @@ public class Display {
     public static String costDisplayString(HashMap<Gem, Integer> tokens) {
         boolean first = true;
         String costDisplay = "";
-        
+
         Iterator tokenIterator = tokens.entrySet().iterator();
-        
+
         while (tokenIterator.hasNext()) {
             Map.Entry entry = (Map.Entry) tokenIterator.next();
 
@@ -262,12 +275,124 @@ public class Display {
                 } else {
                     costDisplay += ", ";
                 }
-                
-                costDisplay += "" + entry.getValue() + Utility.fromGemToChar((Gem)entry.getKey());
-                
+
+                costDisplay += "" + entry.getValue() + Utility.fromGemToChar((Gem) entry.getKey());
+
             }
         }
 
         return costDisplay;
+    }
+
+    /**
+     * If any of the following actions are possible, hide the skip option.
+     * Possible actions: 1. Draw tokens 2. Buy cards 3. Reserve cards. Calls
+     * {@link #showDrawToken()}, {@link #showBuyCard()}, {@link #showReserveCard()},
+     *
+     * @param player the current {@link Player}
+     */
+    public static boolean hideSkipOption(Player player) {
+        return showDrawToken() || showBuyCard(player) || showReserveCard(player);
+    }
+
+    /**
+     * Returns true if the {@link Player} can afford any of the cards. Returns
+     * false otherwise.
+     *
+     * @param player the current {@link Player}
+     * @param market market
+     */
+    public static boolean showBuyCard(Player player) {
+
+        HashMap<Gem, Integer> playerBonuses = player.getBonuses();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                Card c = market[i][j];
+                if (c == null) {
+                    continue;
+                }
+
+                HashMap<Gem, Integer> cardCost = c.getTokens();
+                player.discountCost(cardCost);
+
+                HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(player.getTokens(), cardCost);
+                if (tokensToPay != null) {
+                    return true;
+                }
+            }
+        }
+        for (Card c : player.getReserveHand()) {
+            HashMap<Gem, Integer> cardCost = c.getTokens();
+            player.discountCost(cardCost);
+
+            if (Utility.findSubtractionAmount(player.getTokens(), cardCost) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the {@link Player} can draw 2 or draw 3 tokens. Calls
+     * {@link #canDrawTwo()} and {@link #canDrawThree()}.
+     *
+     */
+    public static boolean showDrawToken() {
+        // 0, 1, 2 in bank is impossible to draw from.
+        if (Utility.getTotalGems(new HashMap<>(bank)) < 3) {
+            return false;
+        }
+        return canDrawTwo() || canDrawThree();
+    }
+
+    /**
+     * Returns true if the {@link Player} can draw 2 tokens. Returns true if
+     * there is at least 4 of a single token type in bank. Returns false
+     * otherwise.
+     *
+     */
+    public static boolean canDrawTwo() {
+        for (Gem g : Gem.values()) {
+            if (g == Gem.Gold) {
+                continue;
+            }
+            if (bank.get(g) >= 4) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the {@link Player} can draw 3 tokens. Returns true if
+     * there is at least 3 different token types, each with more than one token
+     * each in bank. Returns false otherwise.
+     *
+     */
+    public static boolean canDrawThree() {
+
+        int nTokensNotEmpty = 0;
+        for (Gem g : Gem.values()) {
+            if (g == Gem.Gold) {
+                continue;
+            }
+            if (bank.get(g) > 0) {
+                nTokensNotEmpty++;
+            }
+        }
+
+        // at least 3 different tokens, at least one each.
+        return (nTokensNotEmpty >= 3) ? true : false;
+    }
+
+    /**
+     * Returns false if {@link Player} reserve hand size has hit the max reserve
+     * hand size.
+     *
+     * @param player
+     *
+     */
+    public static boolean showReserveCard(Player player) {
+        return (player.getReserveHandSize() == Player.MAX_RESERVE_HAND_SIZE) ? false : true;
     }
 }

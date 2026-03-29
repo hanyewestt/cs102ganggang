@@ -6,12 +6,17 @@ import item.cpu.*;
 
 public abstract class Move {
 
-    private int expectedValue;
-    private int pointsGain;
-    private boolean winning;
-    private int nobleIdx;
+    private int expectedValue = 0;
+    private int pointsGain = 0;
+    private boolean winning = false;
+    private int nobleIdx = 0;
+    public CPUPlayer cpu;
 
-    public abstract void doMove(CPUPlayer cpu);
+    public abstract void doMove();
+
+    public Move(CPUPlayer cpu) {
+        this.cpu = cpu;
+    }
 
     public int getExpectedValue() {
         return expectedValue;
@@ -46,6 +51,9 @@ public abstract class Move {
     }
 
     public boolean isBetterMove(Move other) {
+        if (other instanceof NoPossibleMove) {
+            return true;
+        }
         if (winning && !(other.getWinning())) {
             return true;
         }

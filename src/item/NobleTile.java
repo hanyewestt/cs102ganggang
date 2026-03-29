@@ -51,7 +51,7 @@ public class NobleTile {
      * 
      * @return Prestige points of {@link NobleTile}
      */
-    public int getPoints() {
+    public static int getPoints() {
         return POINTS;
     }
 

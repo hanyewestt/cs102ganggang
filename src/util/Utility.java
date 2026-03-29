@@ -1,7 +1,6 @@
 package util;
 
 import item.*;
-import java.lang.classfile.instruction.ThrowInstruction;
 import java.util.*;
 
 /**
@@ -94,6 +93,7 @@ public class Utility {
 
                 goldAvailable -= difference;
                 result.replace(Gem.Gold, result.get(Gem.Gold) + difference);
+                result.replace(g, tokens.get(g));
             } else {
                 result.replace(g, cost.get(g));
             }
