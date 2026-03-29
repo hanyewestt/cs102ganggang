@@ -3,10 +3,13 @@ package util;
 import item.*;
 import java.util.*;
 
+/**
+ * This class contains all the utility functions.
+ */
 public class Utility {
 
     /**
-     * Returns an empty hashmap with Gem keys, and their respective values
+     * Returns an empty hashmap with {@link Gem} keys, and their respective values
      * initialised to 0.
      *
      * @return The empty hashmap.
@@ -52,7 +55,7 @@ public class Utility {
      * Returns the total gems within a Hashmap.
      *
      * @param tokens The HashMap to be considered.
-     * @return The total number of gems.
+     * @return The total number of {@link Gem}s.
      */
     public static int getTotalGems(HashMap<Gem, Integer> tokens) {
         int sum = 0;
@@ -64,7 +67,7 @@ public class Utility {
     }
 
     /**
-     * Performs subtraction with gold on two HashMaps with Gem, Integer. Returns
+     * Performs subtraction with gold on two HashMaps with {@link Gem}, Integer. Returns
      * the amount of tokens that are subtracted, with gold as a wildcard.
      * Returns null if insufficient amount of tokens.
      *
@@ -100,12 +103,12 @@ public class Utility {
     }
 
     /**
-     * Subtracts the number of gems in the first HashMap by the amount of said
+     * Subtracts the number of {@link Gem}s in the first HashMap by the amount of said
      * gem in right HashMap. Use findSubtractionAmount to find the second
      * HashMap and ensure it is not null or more than the first.
      *
      * @param orig The HashMap to be modified.
-     * @param subtractAmount The HashMap containing the amount of gems to
+     * @param subtractAmount The HashMap containing the amount of {@link Gem}s to
      * subtract.
      */
     public static void subtract(HashMap<Gem, Integer> orig, HashMap<Gem, Integer> subtractAmount) {
@@ -115,13 +118,12 @@ public class Utility {
     }
 
     /**
-     * Subtracts the number of gems in the first HashMap by the amount of said
+     * Subtracts the number of {@link Gem}s in the first HashMap by the amount of said
      * gem in right HashMap, ignoring Gold, with a minimum value of 0 left.
      * Ensure both HashMaps are not null beforehand.
      *
      * @param orig The HashMap to be modified.
-     * @param discountAmount The HashMap containing the amount of gems to
-     * discount.
+     * @param discountAmount The HashMap containing the amount of {@link Gem}s to discount.
      */
     public static void discount(HashMap<Gem, Integer> orig, HashMap<Gem, Integer> discountAmount) {
         for (Gem g : Gem.values()) {
@@ -176,12 +178,12 @@ public class Utility {
     }
 
     /**
-     * Will prompt the user for a string representing a Gem. Keeps prompting
+     * Will prompt the user for a string representing a {@link Gem}. Keeps prompting
      * until a valid input is given.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
      * @param message The message to prompt for user input.
-     * @return The Gem that the user inputs.
+     * @return The {@link Gem} that the user inputs.
      */
     public static Gem askForGem(Scanner keyboard, String message, boolean takesGold) {
         boolean isValid;
@@ -255,11 +257,10 @@ public class Utility {
     }
 
     /**
-     * Prompts the user for the row and column position of the card on the
-     * board. User can enter '0' to cancel at any time.
-     *
-     * @return returns an array of size 2 {row, col}. Returns null if users
-     * cancels.
+     * Prompts the user for the row and column position of the {@link Card}s on the board.
+     * User can enter '0' to cancel at any time.
+     * 
+     * @return returns an array of size 2 {row, col}. Returns null if users cancels.
      */
     public static int[] getPositionOnBoard(Scanner sc) {
         final int ROW_MAX = 3;
@@ -286,10 +287,10 @@ public class Utility {
     }
 
     /**
-     * Converts a Gem to a char Returns X if Gem is invalid.
+     * Converts a {@link Gem} to a char Returns X if {@link Gem} is invalid.
      *
-     * @param Gem The Gem to be read.
-     * @return The char representing that Gem.
+     * @param Gem The {@link Gem} to be read.
+     * @return The char representing that {@link Gem}.
      */
     public static char fromGemToChar(Gem gem) {
         switch (gem) {
@@ -311,10 +312,10 @@ public class Utility {
     }
 
     /**
-     * Converts a char to a Gem. Returns null if char is invalid.
+     * Converts a char to a {@link Gem}. Returns null if char is invalid.
      *
      * @param character The char to be read.
-     * @return The Gem represented by that char.
+     * @return The {@link Gem} represented by that char.
      */
     public static Gem fromCharToGem(char character) {
         switch (character) {

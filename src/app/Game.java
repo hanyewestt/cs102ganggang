@@ -11,6 +11,9 @@ import item.cpu.*;
 import item.cpu.move.*;
 import util.*;
 
+/**
+ * Game class contains the main function where the game is run.
+ */
 public class Game {
 
     private static int playerNumber;
@@ -28,9 +31,9 @@ public class Game {
 
     /**
      * Entry point of the game program. Prompts the user to enter the number of
-     * players, creates a new Game instance, and conducts rounds until win
+     * {@link Player}s, creates a new Game instance, and conducts rounds until win
      * condition is reached. Once the game ends, it retrieves the winners using
-     * {@link #getWinner()} and prints out the winning players.
+     * {@link getWinner()} and prints out the winning {@link Player}s.
      *
      * @param args
      */
@@ -68,16 +71,23 @@ public class Game {
     }
 
     /**
-     * Initializes the game board with the specified number of players and
-     * cards. Sets up the bank, noble tiles, and player objects.
+     * Initializes the game board with the specified number of {@link Player}s and {@link Card}s.
+     * Sets up the bank, {@link NobleTile}s, and {@link Player} objects.
      *
      * @param playerNumber the number of players in the game
      */
     public Game(int playerNumber, int cpuNumber) {
         this(playerNumber, cpuNumber, (new Random()).nextLong());
     }
-
-    public Game(int playerNumber, int cpuNumber, long seed) {
+    
+    /**
+     * Initializes the game board with the specified number of {@link Player}s and {@link Card}s.
+     * Sets up the bank, {@link NobleTile}s, and {@link Player} objects.
+     *
+     * @param playerNumber the number of players in the game
+     * @param seed to shuffle the deck
+     */
+    public Game(int playerNumber, long seed) {
         Configuration.load();
 
         this.playerNumber = playerNumber;
@@ -113,27 +123,48 @@ public class Game {
         setPlayerArray();
     }
 
+    /**
+     * Gets seed.
+     * 
+     * @return seed
+     */
     public long getSeed() {
         return seed;
     }
 
+    /**
+     * Gets the market in the game.
+     * 
+     * @return 2-D {@link Card} array of market in the game
+     */
     public Card[][] getMarket() {
         return market;
     }
 
+    /**
+     * Get {@link NobleTile}s in the game.
+     * 
+     * @return List of {@link NobleTile} in the game
+     */
     public List<NobleTile> getNobles() {
         return nobles;
     }
 
+    /**
+     * Get bank of the game.
+     * 
+     * @return Map of the {@link Gem}s and their corresponding quantities in bank
+     */
     public Map<Gem, Integer> getBank() {
         return bank;
     }
 
     /**
-     * Initializes the player array by prompting each player to enter their name
+     * Initializes the {@link Player} array by prompting each {@link Player} to enter their name
      * and creating a corresponding {@link Player} for each entry.
      *
      * @param playerNumber the total number of players participating in the game
+     * @param cpuNumber number of cpu players participating in the game
      */
     public static void setPlayerArray() {
         System.out.println("\nThe first player is the youngest.");
@@ -156,8 +187,8 @@ public class Game {
     
 
     /**
-     * Executes a player's turn by presenting three available options, Draw
-     * tokens, Reserve a card and Buy a card The player is repeatedly prompted
+     * Executes a {@link Player}'s turn by presenting three available options, Draw
+     * tokens, Reserve a {@link Card} and Buy a {@link Card} The {@link Player} is repeatedly prompted
      * to enter a choice until a valid action is performed.
      *
      * @param player the {@link Player} whose turn is being executed
@@ -239,7 +270,7 @@ public class Game {
 
     /**
      * Prompts the {@link Player} to choose a {@link NobleTile} if more than one
-     * visits the player. Adds the chosen {@link NobleTile} to the
+     * visits the {@link Player}. Adds the chosen {@link NobleTile} to the
      * {@link Player}
      *
      * @param player the {@link Player} whose turn is being executed
@@ -276,12 +307,11 @@ public class Game {
     }
 
     /**
-     * Checks whether the player has met the win condition. The win condition is
-     * reached when the player's points total is 15.
+     * Checks whether the {@link Player} has met the win condition. 
+     * The win condition is reached when the {@link Player}'s points total is greater than or equals 15.
      *
      * @param player the {@link Player} being checked
-     * @return true if the {@link Player} has reached the win condition, false
-     * otherwise
+     * @return true if the {@link Player} has reached the win condition, false otherwise
      */
     public static boolean hitWinCondition(Player player) {
 
@@ -289,9 +319,8 @@ public class Game {
     }
 
     /**
-     * Checks if the player’s points are equal to or more than 15.
+     * Checks if the {@link Player}’s points are greater than or equals 15.
      *
-     * @param p the {@link Player} being checked.
      * @return a list of {@link Player} objects that have hit the win condition.
      */
     public static List<Player> getWinner() {
@@ -317,11 +346,11 @@ public class Game {
     }
 
     /**
-     * Determines which {@link NobleTile}s are visiting the specified player.
-     * One or more {@link NobileTile}s may visit a player.
+     * Determines which {@link NobleTile}s are visiting the specified {@link Player}.
+     * One or more {@link NobileTile}s may visit a {@link Player}.
      *
-     * @param p the {@link Player} being checked
-     * @return a list of {@link NobleTile} that are visiting the player
+     * @param player the {@link Player} being checked
+     * @return a List of {@link NobleTile}s that are visiting the {@link Player}
      */
     public static List<NobleTile> visitingNobles(Player player) {
         List<NobleTile> result = new ArrayList<>();
@@ -345,7 +374,7 @@ public class Game {
     }
 
     /**
-     * Performs the reserve card action. The {@link Player} selects a card to
+     * Performs the reserve {@link Card} action. The {@link Player} selects a {@link Card} to
      * reserve, and receives 1 gold if the bank has gold available.
      *
      * @param player the {@link Player} performing the action
@@ -462,8 +491,8 @@ public class Game {
     }
 
     /**
-     * Performs the buy card action. The {@link Player} selects a card to buy,
-     * and the player's tokens and the bank are updated accordingly.
+     * Performs the buy {@link Card} action. The {@link Player} selects a {@link Card} to buy,
+     * and the {@link Player}'s tokens and the bank are updated accordingly.
      *
      * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
@@ -578,8 +607,8 @@ public class Game {
 
     /**
      * Performs the draw token action. Handles the overall logical flow of the
-     * draw token action, including CPU actions and player actions. Updates
-     * player and bank based on the hashmaps returned.
+     * draw token action, including CPU actions and {@link Player} actions. Updates
+     * {@link Player} and bank based on the HashMap returned.
      *
      * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
@@ -611,9 +640,9 @@ public class Game {
 
     /**
      * Handles the choice to draw 3 or draw 2 tokens. Should only be accessed if
-     * player is not a cpu.
+     * {@link Player} is not a cpu.
      *
-     * @return a hashmap of the tokens to draw. returns null if {@link Player}
+     * @return a HashMap of the tokens to draw. returns null if {@link Player}
      * cancels.
      */
     public static HashMap<Gem, Integer> drawTokenFromPlayer() {
@@ -635,8 +664,7 @@ public class Game {
     }
 
     /**
-     * Returns excess tokens from the player, if tokens in player's hand exceed
-     * 10.
+     * Returns excess tokens from the {@link Player}, if tokens in {@link Player}'s hand exceed 10.
      *
      * @param player the {@link Player} performing the action
      */
@@ -669,11 +697,10 @@ public class Game {
     }
 
     /**
-     * Prompts the player to select three tokens of different types, ensuring
+     * Prompts the {@link Player} to select three tokens of different types, ensuring
      * that the selected tokens are available in the bank.
      *
-     * @return a hashmap of the tokens to draw. returns null if {@link Player}
-     * cancels.
+     * @return a hashmap of the tokens to draw. returns null if {@link Player} cancels.
      */
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
@@ -702,10 +729,9 @@ public class Game {
 
     /**
      * Prompts the {@link Player} to select a token or cancel the action.
-     * Ensures that the selected token type is available in the bank (at least
-     * four tokens must be present).
+     * Ensures that the selected token type is available in the bank (at least four tokens must be present).
      *
-     * @return a hashmap of the tokens to draw
+     * @return a HashMap of the tokens to draw
      */
     private static HashMap<Gem, Integer> pickTwoSameGem() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
@@ -729,7 +755,7 @@ public class Game {
     /**
      * Admin Permissions Allows user to set token, set bonuses, set points
      *
-     * @param p the current player
+     * @param p the current {@link Player}
      */
     public static Player adminPerms(Player p) {
         boolean finishAction = false;
