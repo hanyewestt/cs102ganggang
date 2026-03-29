@@ -13,10 +13,13 @@ public class RemoveGems {
             int bestValue = Integer.MIN_VALUE;
             Gem typeToRemove = Gem.Diamond;
             for (Gem g : Gem.values()) {
+                if (newTokens.get(g) == 0) {
+                    continue;
+                }
                 HashMap<Gem, Integer> tokensAfterRemoval = Utility.generateHashMapClone(newTokens);
                 tokensAfterRemoval.replace(g, tokensAfterRemoval.get(g) - 1);
 
-                int expectedValue = ExpectedValueCalculator.calculateExpectedValue(tokensAfterRemoval, player.getProduction(),
+                int expectedValue = ExpectedValueCalculator.calculateExpectedValue(tokensAfterRemoval, player.getBonuses(),
                         player.getGameState().getMarket(), availNobles, player.getReserveHand());
                 if (expectedValue > bestValue) {
                     bestValue = expectedValue;
