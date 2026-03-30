@@ -9,7 +9,7 @@ import util.*;
 public class ExpectedValueCalculator {
     private static final int goldWeight = 6;
     private static final int valueLossPerRemoval = -5;
-    private static final nobleWeight = 3;
+    private static final int nobleWeight = 3;
 
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
