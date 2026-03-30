@@ -134,7 +134,6 @@ public class CPUPlayer extends Player {
         for (Gem g : Gem.values()) {
             remainingGems.put(g, playerTokens.get(g) - toPay.get(g));
         }
-        System.out.println("CPUPlayer buyCard remainingGems: "+remainingGems);
         super.addCard(card, remainingGems);
         return true;
     }
