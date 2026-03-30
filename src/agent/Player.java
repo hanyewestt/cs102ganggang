@@ -1,14 +1,15 @@
-package item;
+package agent;
 
 import java.lang.*;
 import java.util.*;
+
+import item.*;
 import util.*;
 // Gem, Card, NobleTile
 
 /**
  * Represents a {@link Player} in the game. 
  * A {@link Player} has a name, tokens, reserved {@link Card}s, bonuses levels, nobles who visited them, and points.
- *
  */
 public class Player implements Comparable<Player> {
 
@@ -155,6 +156,8 @@ public class Player implements Comparable<Player> {
 
     /**
      * Calculates the cost after subtracting from production
+     * 
+     * @param cost Hashmap of {@link Gem} and respective their quantities.
      */
     public void discountCost(HashMap<Gem, Integer> cost) {
         for (Gem g : Gem.values()) {
@@ -190,7 +193,7 @@ public class Player implements Comparable<Player> {
      * @param c {@link Card} to be purchased
      * @param keyboard takes in user input for number of {@link Gem}
      * 
-     * @return True if able to buy {@link Card}. False, otherwise.
+     * @return True if able to buy {@link Card}. False if otherwise.
      */
     public boolean buyCard(Card c, Scanner keyboard) {
         int startingGold = tokens.get(Gem.Gold);
@@ -523,10 +526,8 @@ public class Player implements Comparable<Player> {
      * Prompts the {@link Player} to select gems to return, if the number of
      * tokens in their hand exceeds 10.
      *
-     * @param player the {@link Player} performing the action
      * @return a hashmap of the tokens to return to bank.
      */
-  
     public HashMap<Gem, Integer> getReturnAmt() {
         HashMap<Gem, Integer> returnAmt = new HashMap<>();
         HashMap<Gem, Integer> pTokens = getTokens();

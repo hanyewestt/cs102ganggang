@@ -6,7 +6,7 @@ import display.Display;
 
 /**
  * Represents a {@link NobleTile}.
- * {@link NobleTile} contains HashMap of its cost and the number prestiege points awarded.
+ * {@link NobleTile} contains HashMap of its cost and the number prestige points awarded.
  */
 public class NobleTile {
 

@@ -1,4 +1,4 @@
-package item.cpu;
+package agent;
 
 import item.*;
 import app.*;
@@ -161,7 +161,7 @@ public class CPUPlayer extends Player {
     /**
      * Updates points, production levels, and the {@link Player}’s remaining tokens after the purchase of the {@link Card}.
      * 
-     * @param c {@link Card} to be purchased
+     * @param card {@link Card} to be purchased
      * @param toPay Tokens that {@link CPUPlayer} has to pay to buy {@link Card}.
      * 
      * @return True if able to buy {@link Card}. False if otherwise.

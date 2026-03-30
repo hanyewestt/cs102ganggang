@@ -2,7 +2,7 @@ package item.cpu.move;
 
 import app.*;
 import item.*;
-import item.cpu.*;
+import agent.*;
 import java.util.*;
 import util.*;
 

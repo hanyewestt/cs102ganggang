@@ -2,7 +2,7 @@ package item.cpu.move;
 
 import app.*;
 import item.*;
-import item.cpu.*;
+import agent.*;
 
 /**
  * Abstract class for all moves the {@link CPUPlayer} performs.
@@ -97,7 +97,7 @@ public abstract class Move {
     /**
      * Sets nobleIdx.
      *
-     * @param nobleInx value to be set.
+     * @param nobleIdx value to be set.
      */
     public void setNobleIdx(int nobleIdx) {
         this.nobleIdx = nobleIdx;

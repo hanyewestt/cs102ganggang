@@ -1,7 +1,6 @@
 package item.cpu.move;
 
 import item.*;
-import item.cpu.*;
 import app.*;
 import java.util.*;
 import util.*;
@@ -16,8 +15,8 @@ public class PointsCalculator {
      * 
      * @param currProduction Current levels of {@link Gem} production.
      * @param c {@link Card} to be bought.
-     * @param availNobles {@link NobleTiles} available.
-     * @param nobleIndx nobleIndx.
+     * @param availNobles {@link NobleTile} available.
+     * @param nobleIdx nobleIndx.
      * 
      * @return points.
      */

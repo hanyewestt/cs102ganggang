@@ -1,7 +1,7 @@
 package item.cpu.move;
 
 import item.*;
-import item.cpu.*;
+import agent.*;
 import app.*;
 import java.util.*;
 import util.*;
@@ -21,6 +21,8 @@ public class ExpectedValueCalculator {
      * @param market {@link Card}s in the market.
      * @param nobles {@link NobleTile}s available in game.
      * @param reserveHand {@link Card}s in reserve hand.
+     * 
+     * @return Expected value of move.
      */
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
@@ -49,6 +51,11 @@ public class ExpectedValueCalculator {
     /**
      * Gets value of {@link Card} in market.
      *
+     * @param c {@link Card}.
+     * @param nobles {@link NobleTile}s available.
+     * @param production {@link Gem} production levels.
+     * @param tokens {@link Gem}s owned by {@link CPUPlayer}.
+     * 
      * @return Card value.
      */
     public static int getCardValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
@@ -84,6 +91,11 @@ public class ExpectedValueCalculator {
     /**
      * Gets value of {@link Card} in reserve hand.
      *
+     * @param c {@link Card}.
+     * @param nobles {@link NobleTile}s available
+     * @param production {@link Gem} production levels
+     * @param tokens {@link Gem} owned by {@link CPUPlayer}
+     * 
      * @return Reserve Card value.
      */
     public static int getReserveValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
@@ -121,6 +133,13 @@ public class ExpectedValueCalculator {
         return sum;
     }
 
+    /**
+     * Calculate loss for removing of tokens
+     * 
+     * @param tokenNoToRemove Token number to be removed.
+     * 
+     * @return Value lost.
+     */
     public static int getValueLossForRemoval(int tokenNoToRemove) {
         return tokenNoToRemove * valueLossPerRemoval;
     }

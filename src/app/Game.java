@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 import config.*;
 import display.*;
 import item.*;
-import item.cpu.*;
 import item.cpu.move.*;
 import util.*;
+import agent.*;
 
 /**
  * Game class contains the main function where the game is run.
@@ -35,7 +35,7 @@ public class Game {
      * win condition is reached. Once the game ends, it retrieves the winners
      * using {@link getWinner()} and prints out the winning {@link Player}s.
      *
-     * @param args
+     * @param args Command Line Arguments
      */
     public static void main(String[] args) {
         String msg = "Enter number of players (between 2 and 4): ";
@@ -62,6 +62,9 @@ public class Game {
         sc.close();
     }
 
+    /**
+     * Creates a {@link Game} with {@link CPUPlayer}.
+     */
     public static void setGameForCPU() {
         for (Player player : players) {
             if (player instanceof CPUPlayer cpu) {
@@ -75,7 +78,8 @@ public class Game {
      * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
      * {@link Player} objects.
      *
-     * @param playerNumber the number of players in the game
+     * @param playerNumber the number of {@link Player}s in the game.
+     * @param cpuNumber the number of {@link CPUPlayer}s in the game.
      */
     public Game(int playerNumber, int cpuNumber) {
         this(playerNumber, cpuNumber, (new Random()).nextLong());
@@ -84,9 +88,10 @@ public class Game {
     /**
      * Initializes the game board with the specified number of {@link Player}s
      * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
-     * {@link Player} objects.
+     * {@link Player} objects. 
      *
-     * @param playerNumber the number of players in the game
+     * @param playerNumber the number of {@link Player}s in the game
+     * @param cpuNumber the number of {@link CPUPlayer}s
      * @param seed to shuffle the deck
      */
     public Game(int playerNumber, int cpuNumber, long seed) {
@@ -166,9 +171,6 @@ public class Game {
      * Initializes the {@link Player} array by prompting each {@link Player} to
      * enter their name and creating a corresponding {@link Player} for each
      * entry.
-     *
-     * @param playerNumber the total number of players participating in the game
-     * @param cpuNumber number of cpu players participating in the game
      */
     public static void setPlayerArray() {
         System.out.println("\nThe first player is the youngest.");
@@ -355,7 +357,7 @@ public class Game {
 
     /**
      * Determines which {@link NobleTile}s are visiting the specified
-     * {@link Player}. One or more {@link NobileTile}s may visit a
+     * {@link Player}. One or more {@link NobleTile}s may visit a
      * {@link Player}.
      *
      * @param player the {@link Player} being checked
@@ -785,6 +787,8 @@ public class Game {
      * Admin Permissions Allows user to set token, set bonuses, set points
      *
      * @param p the current {@link Player}
+     * 
+     * @return {@link Player} with admin perms enabled
      */
     public static Player adminPerms(Player p) {
         boolean finishAction = false;

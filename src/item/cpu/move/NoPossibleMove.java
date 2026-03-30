@@ -2,7 +2,7 @@ package item.cpu.move;
 
 import app.*;
 import item.*;
-import item.cpu.*;
+import agent.*;
 import util.*;
 
 import java.util.*;
@@ -13,6 +13,8 @@ import java.util.*;
 public class NoPossibleMove extends Move {
     /**
      * Stores information of {@link CPUPlayer} to do nothing.
+     * 
+     * @param cpu {@link CPUPlayer}
      */
     public NoPossibleMove(CPUPlayer cpu) {
         super(cpu);

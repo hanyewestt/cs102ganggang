@@ -2,7 +2,7 @@ package item.cpu.move;
 
 import app.*;
 import item.*;
-import item.cpu.*;
+import agent.*;
 import util.*;
 
 import java.util.*;
@@ -19,14 +19,14 @@ public class BuyCard extends Move {
     private Map<Gem, Integer> toPay;
 
     /**
-     *  Stores information for {@link CPUPlayer} to buy {@link Card}.
+     *  Stores information for {@link CPUPlayer} to buy {@link Card} from market.
      * 
      * @param cpu {@link CPUPlayer}
      * @param row Row of the {@link CPUPlayer}
      * @param column Column of the {@link CPUPlayer}
      * @param toPay HashMap of tokens needed
      * @param availNobles {@link NobleTile}s play
-     * @param nobleIdx
+     * @param nobleIdx {@link NobleTile} index
      */
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
@@ -51,7 +51,13 @@ public class BuyCard extends Move {
     }
 
     /**
+     *  Stores information for {@link CPUPlayer} to buy {@link Card} from reserve hand.
      * 
+     * @param cpu {@link CPUPlayer}
+     * @param reserveIdx Reserve hand index.
+     * @param toPay HashMap of tokens needed
+     * @param availNobles {@link NobleTile}s play
+     * @param nobleIdx {@link NobleTile} index
      */
     public BuyCard(CPUPlayer cpu, int reserveIdx, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
