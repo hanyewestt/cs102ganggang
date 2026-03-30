@@ -24,7 +24,6 @@ public class PointsCalculator {
             }
 
             if (Utility.isGreaterOrEqual(currProduction, noble.getTokens())) {
-                availNobles.set(i, null);
                 nobleIdx.add(i);
             }
         }
