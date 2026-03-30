@@ -87,7 +87,7 @@ public class Game {
      * @param playerNumber the number of players in the game
      * @param seed to shuffle the deck
      */
-    public Game(int playerNumber, long seed) {
+    public Game(int playerNumber, int cpuNumber, long seed) {
         Configuration.load();
 
         this.playerNumber = playerNumber;
