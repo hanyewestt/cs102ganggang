@@ -539,13 +539,19 @@ public class Game {
                         continue;
                     }
 
-                    HashMap<Gem, Integer> pBefore = player.getTokens();
+                    System.out.println("\nCard selected: " + card); 
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                    if (!confirm){
+                        continue; 
+                    }
+
+                    HashMap<Gem, Integer> pBefore = new HashMap<>(player.getTokens());
                     boolean success = player.buyCard(card, sc);
                     if (!success) {
                         System.out.println("‼️ Unable to buy that card. ‼️");
                         continue;
                     }
-                    HashMap<Gem, Integer> pAfter = player.getTokens();
+                    HashMap<Gem, Integer> pAfter = new HashMap<>(player.getTokens());
                     for (Gem g : Gem.values()) {
                         toPay.put(g, pBefore.get(g) - pAfter.get(g));
                     }
@@ -580,16 +586,22 @@ public class Game {
                     System.out.println();
 
                     if (hand.size() == 1) {
-                        boolean toBuy = Utility.willProceed(sc, "Buy this card? (Y/N): ");
-                        if (toBuy) idx = 0;
+                        idx = 0;
                     } else {
                         int cardNumber = Utility.askForNum(sc, 0, hand.size(), "Enter card number, 0 to cancel: ");
                         if (cardNumber == 0) {
                             continue;
                         }
+                        
                         idx = cardNumber - 1;
                     }
                     Card card = hand.get(idx);
+                    
+                    System.out.println("Card selected: " + card); 
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                    if (!confirm){
+                        continue; 
+                    }
 
                     HashMap<Gem, Integer> pBefore = new HashMap<>(player.getTokens());
                     boolean success = player.buyCard(card, sc);
