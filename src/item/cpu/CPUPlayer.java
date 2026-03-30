@@ -8,35 +8,68 @@ import util.*;
 import java.util.*;
 
 /**
- * Represents the CPUPlayer which extends Player.
- * CPUPlayer can perform all actions that a player can do.
+ * Represents the {@link CPUPlayer} which extends {@link Player}.
+ * {@link CPUPlayer} can perform all actions that a {@link Player} can do.
  */
 public class CPUPlayer extends Player {
 
     private Move optimalMove;
     private static Game splendor;
 
+    /**
+     * {@link CPUPlayer} starts with 0 Gems for every type.
+     * {@link CPUPlayer} has a name and turn order.
+     * 
+     * @param name Name of {@link CPUPlayer}
+     * @param order {@link CPUPlayer} order number
+     */
     public CPUPlayer(String name, int order) {
         super(name, order);
     }
 
+    /**
+     * {@link CPUPlayer} starts with 0 Gems for every type.
+     * {@link CPUPlayer} has a name and turn order.
+     * 
+     * @param name Name of {@link CPUPlayer}
+     * @param order {@link CPUPlayer} order number
+     * @param splendor Game that {@link CPUPlayer} is playing in.
+     */
     public CPUPlayer(Game splendor, String name, int order) {
         super(name, order);
         this.splendor = splendor;
     }
 
+    /**
+     * Sets game which {@link CPUPlayer} is playing in.
+     * 
+     * @param splendor Game that {@link CPUPlayer} is playing in.
+     */
     public void setGame(Game splendor) {
         this.splendor = splendor;
     }
 
+    /**
+     * Gets current {@link Game}.
+     * 
+     * @return {@link Game} 
+     */
     public Game getGameState() {
         return splendor;
     }
 
+    /**
+     * Gets optimal move that {@link CPUPlayer} can perform.
+     * 
+     * @return {@link Move}
+     */
     public Move getMove() {
         return optimalMove;
     }
 
+    /**
+     * Calculates most optimal move that {@link CPUPlayer} can perform in this turn.
+     */
     public void calculateOptimalMove() {
         optimalMove = new NoPossibleMove(this);
 
@@ -73,8 +106,6 @@ public class CPUPlayer extends Player {
                 availableGems.add(g);
             }
         }
-
-
 
         for (int i = 0; i <= availableGems.size() - 3; i++) {            
             DrawGems draw3 = new DrawGems(this, availableGems.get(i),
@@ -127,6 +158,14 @@ public class CPUPlayer extends Player {
         }
     }
 
+    /**
+     * Updates points, production levels, and the {@link Player}’s remaining tokens after the purchase of the {@link Card}.
+     * 
+     * @param c {@link Card} to be purchased
+     * @param toPay Tokens that {@link CPUPlayer} has to pay to buy {@link Card}.
+     * 
+     * @return True if able to buy {@link Card}. False if otherwise.
+     */
     public boolean buyCard(Card card, HashMap<Gem, Integer> toPay) {
         HashMap<Gem, Integer> remainingGems = Utility.generateEmptyHashmap();
         HashMap<Gem, Integer> playerTokens = getTokens();

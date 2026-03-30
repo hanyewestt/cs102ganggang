@@ -6,8 +6,20 @@ import item.cpu.*;
 import java.util.*;
 import util.*;
 
+/**
+ * {@link CPUPlayer} removes {@link Gem} from their hand.
+ */
 public class RemoveGems {
 
+    /**
+     * If {@link CPUPlayer} has more than 10{@link Gem}s, remove specfied {@link Gem}s.
+     * 
+     * @param newTokens Current amount of {@link Gem}s {@link CPUPlayer} has.
+     * @param toRemove Gems to remove.
+     * @param currGemNo Number of {@link Gem}s in newTokens.
+     * @param player {@link CPUPlayer}.
+     * @param availNoble {@link NobleTile}s available.
+     */
     public static void getGemsToRemove(HashMap<Gem, Integer> newTokens, HashMap<Gem, Integer> toRemove, int currGemNo, CPUPlayer player, List<NobleTile> availNobles) {
         while (currGemNo > 10) {
             int bestValue = Integer.MIN_VALUE;

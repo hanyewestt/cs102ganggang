@@ -6,8 +6,20 @@ import app.*;
 import java.util.*;
 import util.*;
 
+/**
+ * Calculates expected value of performing a {@link Move}.
+ */
 public class ExpectedValueCalculator {
 
+    /**
+     * Calculates expected value of performing a move without considering points.
+     * 
+     * @param tokens {@link CPUPlayer} current tokens.
+     * @param production {@link CPUPlayer} current production levels.
+     * @param market {@link Card}s in the market.
+     * @param nobles {@link NobleTile}s available in game.
+     * @param reserveHand {@link Card}s in reserve hand.
+     */
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
         int sum = 0;
@@ -33,6 +45,11 @@ public class ExpectedValueCalculator {
         return sum;
     }
 
+    /**
+     * Gets value of {@link Card} in market.
+     *
+     * @return Card value.
+     */
     public static int getCardValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
             HashMap<Gem, Integer> tokens) {
         int sum = 0;
@@ -63,6 +80,11 @@ public class ExpectedValueCalculator {
         return sum;
     }
 
+    /**
+     * Gets value of {@link Card} in reserve hand.
+     *
+     * @return Reserve Card value.
+     */
     public static int getReserveValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
             HashMap<Gem, Integer> tokens) {
         int sum = 0;

@@ -26,8 +26,8 @@ public class Player implements Comparable<Player> {
     private int points = 0;
 
     /**
-     * No argument constructor. {@link Player} starts with 0 tokens for every
-     * Gem type.
+     * No argument constructor. 
+     * {@link Player} starts with 0 tokens for every Gem type.
      */
     public Player() {
         this.name = "no name";
@@ -40,7 +40,7 @@ public class Player implements Comparable<Player> {
 
     /**
      * {@link Player} starts with 0 Gems for every type.
-     * {@link Player} has a name.
+     * {@link Player} has a name and turn order.
      * 
      * @param name Name of {@link Player}
      * @param order {@link Player} order number
@@ -189,6 +189,8 @@ public class Player implements Comparable<Player> {
      * 
      * @param c {@link Card} to be purchased
      * @param keyboard takes in user input for number of {@link Gem}
+     * 
+     * @return True if able to buy {@link Card}. False, otherwise.
      */
     public boolean buyCard(Card c, Scanner keyboard) {
         int startingGold = tokens.get(Gem.Gold);
