@@ -217,7 +217,7 @@ public class Display {
                 break;
             }
 
-            if (!playersChosen.containsValue(players.get(choice - 1))) {
+            if (!playersChosen.containsValue(players.get(choice - 1)) && !players.get(choice - 1).getName().equals(player.getName())) {
                 playersChosen.put(choice, players.get(choice - 1));
             }
         }

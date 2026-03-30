@@ -301,7 +301,7 @@ public class Player implements Comparable<Player> {
 
             int currGoldSpent = 0;
             while (currGoldSpent < spentGold) {
-                String gemPrompt = "Enter a gem to discount(Diamond, Ruby, Sapphire, Emerald, Onyx): ";
+                String gemPrompt = "Enter a gem to discount(diamond, ruby, sapphire, emerald, onyx): ";
                 Gem discountGem = Utility.askForGem(keyboard, gemPrompt);
 
                 if (tokensLeft.get(discountGem) + 1 > discountCardCost.get(discountGem)) {
