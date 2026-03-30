@@ -156,7 +156,7 @@ public class Utility {
         boolean isValid;
         do {
             System.out.print(message);
-            String input = keyboard.nextLine().toLowerCase();
+            String input = keyboard.nextLine().trim().toLowerCase();
 
             if (input.compareTo("y") == 0) {
                 return true;
@@ -187,7 +187,7 @@ public class Utility {
         boolean isValid;
         do {
             System.out.print(message);
-            String input = keyboard.nextLine().toLowerCase();
+            String input = keyboard.nextLine().trim().toLowerCase();
 
             input = input.toLowerCase();
 

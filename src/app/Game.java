@@ -531,6 +531,12 @@ public class Game {
 
                 Card card = hand.get(idx);
 
+                System.out.println("Card selected: " + card); 
+                boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                if (!confirm){
+                    continue; 
+                }
+
                 Map<Gem, Integer> pBefore = player.getTokens();
                 boolean success = player.buyCard(card, sc);
                 if (!success) {
