@@ -1,9 +1,10 @@
 package display;
 
-import java.util.*;
-import item.*;
-import util.*;
 import app.*;
+import item.*;
+import item.agent.*;
+import java.util.*;
+import util.*;
 
 
 /**
@@ -33,7 +34,7 @@ public class Display {
         sb.append("3. Buy a card\n");
         sb.append("4. Show reserved cards\n");
         sb.append("5. Display other players\n");
-        sb.append("6. admin perms");
+        sb.append("6. admin perms\n");
 
         if (!showDrawToken()) {
             sb.insert(sb.indexOf("1."), "\u001b[9m");
@@ -69,7 +70,7 @@ public class Display {
     public static void drawTokenDisplay() {
         System.out.println();
         System.out.println("Token options: ");
-        System.out.println("1. Take 3 different tokens");
+        System.out.println("1. Take up to 3 different tokens");
         System.out.println("2. Take 2 same tokens");
         System.out.println("0. Cancel");
         System.out.println();
@@ -194,7 +195,7 @@ public class Display {
      * Clears the terminal.
      */
     public static void clearScreen() {
-        // System.out.print("\033c");
+        System.out.print("\033c");
     }
 
     /**
@@ -217,7 +218,7 @@ public class Display {
                 break;
             }
 
-            if (!playersChosen.containsValue(players.get(choice - 1))) {
+            if (!playersChosen.containsValue(players.get(choice - 1)) && !players.get(choice - 1).getName().equals(player.getName())) {
                 playersChosen.put(choice, players.get(choice - 1));
             }
         }

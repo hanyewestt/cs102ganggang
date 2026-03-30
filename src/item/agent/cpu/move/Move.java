@@ -1,8 +1,6 @@
-package item.cpu.move;
+package item.agent.cpu.move;
 
-import app.*;
-import item.*;
-import item.cpu.*;
+import item.agent.cpu.*;
 
 public abstract class Move {
 

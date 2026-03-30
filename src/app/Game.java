@@ -7,8 +7,9 @@ import java.util.concurrent.TimeUnit;
 import config.*;
 import display.*;
 import item.*;
-import item.cpu.*;
-import item.cpu.move.*;
+import item.agent.*;
+import item.agent.cpu.*;
+import item.agent.cpu.move.*;
 import util.*;
 
 /**
@@ -550,6 +551,12 @@ public class Game {
                         continue;
                     }
 
+                    System.out.println("\nCard selected: " + card); 
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                    if (!confirm){
+                        continue; 
+                    }
+
                     HashMap<Gem, Integer> pBefore = player.getTokens();
                     boolean success = player.buyCard(card, sc);
                     if (!success) {
@@ -575,7 +582,7 @@ public class Game {
                     continue;
                 }
 
-                int idx;
+                int idx = -1;
                 if (player instanceof CPUPlayer cpu) {
                     BuyCard move = (BuyCard) cpu.getMove();
                     idx = move.getReserveIdx();
@@ -590,14 +597,18 @@ public class Game {
                     }
                     System.out.println();
 
-                    idx = Utility.askForNum(sc, 0, hand.size(), "Enter card number, or '0' to cancel: ");
-                    if (idx == 0) {
-                        continue;
+                    if (hand.size() == 1) {
+                        idx = 0;
+                    } else {
+                        int cardNumber = Utility.askForNum(sc, 0, hand.size(), "Enter card number, 0 to cancel: ");
+                        if (cardNumber == 0) {
+                            continue;
+                        }
+                        
+                        idx = cardNumber - 1;
                     }
-                    idx--; // set to 0 indexing
-
                     Card card = hand.get(idx);
-
+                    
                     System.out.println("Card selected: " + card); 
                     boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
                     if (!confirm){
@@ -619,9 +630,6 @@ public class Game {
 
                 player.removeReserveCard(idx);
             }
-            // update bank
-            System.out.println("buyCard bank: " + bank);
-            System.out.println("buyCard toPay: " + toPay);
             for (Gem g : Gem.values()) {
                 bank.put(g, bank.get(g) + toPay.get(g));
             }
@@ -652,8 +660,6 @@ public class Game {
             }
         }
         
-        System.out.println("drawToken bank: "+bank);
-        System.out.println("drawToken chosen: " + chosen);
         for (Gem g : Gem.values()) {
             bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
@@ -718,10 +724,6 @@ public class Game {
             }
         }
 
-        System.out.println("returnExcessTokens bank: "+bank);
-        System.out.println("returnExcessTokens returnAmt: "+returnAmt);
-        
-
         for (Gem g : returnAmt.keySet()) {
             bank.put(g, bank.get(g) + returnAmt.get(g));
             player.removeToken(g, returnAmt.get(g));
@@ -738,7 +740,11 @@ public class Game {
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 3) {
-            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel: ");
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx), 'done' to stop, or 'cancel': ");
+
+            if (g == null && Utility.getTotalGems(chosen) > 0){
+                break; 
+            }
 
             if (g == null) {
                 return null;

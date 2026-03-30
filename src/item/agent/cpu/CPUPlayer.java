@@ -1,11 +1,11 @@
-package item.cpu;
+package item.agent.cpu;
 
-import item.*;
 import app.*;
-import item.cpu.move.*;
-import util.*;
-
+import item.*;
+import item.agent.*;
+import item.agent.cpu.move.*;
 import java.util.*;
+import util.*;
 
 /**
  * Represents the CPUPlayer which extends Player.
@@ -134,7 +134,6 @@ public class CPUPlayer extends Player {
         for (Gem g : Gem.values()) {
             remainingGems.put(g, playerTokens.get(g) - toPay.get(g));
         }
-        System.out.println("CPUPlayer buyCard remainingGems: "+remainingGems);
         super.addCard(card, remainingGems);
         return true;
     }

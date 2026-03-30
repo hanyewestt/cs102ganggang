@@ -1,5 +1,6 @@
-package item;
+package item.agent;
 
+import item.*;
 import java.util.*;
 
 /**

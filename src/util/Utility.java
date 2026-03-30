@@ -204,11 +204,15 @@ public class Utility {
                     return Gem.Emerald;
                 case "onyx", "o":
                     return Gem.Onyx;
-                case "cancel", "c":
+                case "cancel", "c","done":
                     return null;
                 case "gold", "g":
                     if (takesGold) {
                         return Gem.Gold;
+                    } else {
+                        System.out.println("‼️ Cannot take gold! ‼️");
+                        isValid = false;
+                        break;
                     }
                 default:
                     System.out.println("‼️ Invalid input! Try again! ‼️");
