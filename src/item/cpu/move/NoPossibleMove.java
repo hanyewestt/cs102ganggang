@@ -13,6 +13,5 @@ public class NoPossibleMove extends Move {
     }
 
     public void doMove() {
-        // insert your failsafe here
     }
 }

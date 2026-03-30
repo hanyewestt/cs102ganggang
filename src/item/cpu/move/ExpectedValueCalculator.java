@@ -7,6 +7,8 @@ import java.util.*;
 import util.*;
 
 public class ExpectedValueCalculator {
+    private static final int goldWeight = 6;
+    private static final int valueLossPerRemoval = -5;
 
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
@@ -27,8 +29,7 @@ public class ExpectedValueCalculator {
             sum += getCardValue(c, nobles, production, tokens);
         }
 
-        // Gold has a weight of 3
-        sum += tokens.get(Gem.Gold) * 3;
+        sum += tokens.get(Gem.Gold) * goldWeight;
 
         return sum;
     }
@@ -96,5 +97,9 @@ public class ExpectedValueCalculator {
         sum *= c.getPoints();
 
         return sum;
+    }
+
+    public static int getValueLossForRemoval(int tokenNoToRemove) {
+        return tokenNoToRemove * valueLossPerRemoval;
     }
 }

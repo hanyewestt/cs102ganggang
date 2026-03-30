@@ -29,6 +29,7 @@ public class ReserveCard extends Move {
         }
         handAfterReserving.add(c);
 
+        int gemsToRemove = 0;
         HashMap<Gem, Integer> tokensAfterReserving = Utility.generateHashMapClone(cpu.getTokens());
         if (cpu.getGameState().getBank().get(Gem.Gold) > 0) {
             takingGold = true;
@@ -37,11 +38,13 @@ public class ReserveCard extends Move {
 
             int totalGemCount = Utility.getTotalGems(tokensAfterReserving);
             if (totalGemCount > 10) {
+                gemsToRemove = totalGemCount - 10;
                 RemoveGems.getGemsToRemove(tokensAfterReserving, toReturn, totalGemCount, cpu, nobleTiles);
             }
         }
 
-        setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterReserving, cpu.getBonuses(),
+        setExpectedValue(ExpectedValueCalculator.getValueLossForRemoval(gemsToRemove)
+            + ExpectedValueCalculator.calculateExpectedValue(tokensAfterReserving, cpu.getBonuses(),
                 marketAfterReserving, nobleTiles, handAfterReserving)
                 + ExpectedValueCalculator.getReserveValue(c, nobleTiles, cpu.getBonuses(), tokensAfterReserving));
 
