@@ -619,9 +619,6 @@ public class Game {
 
                 player.removeReserveCard(idx);
             }
-            // update bank
-            System.out.println("buyCard bank: " + bank);
-            System.out.println("buyCard toPay: " + toPay);
             for (Gem g : Gem.values()) {
                 bank.put(g, bank.get(g) + toPay.get(g));
             }
@@ -652,8 +649,6 @@ public class Game {
             }
         }
         
-        System.out.println("drawToken bank: "+bank);
-        System.out.println("drawToken chosen: " + chosen);
         for (Gem g : Gem.values()) {
             bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
@@ -717,10 +712,6 @@ public class Game {
                 confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? (Y/N): ");
             }
         }
-
-        System.out.println("returnExcessTokens bank: "+bank);
-        System.out.println("returnExcessTokens returnAmt: "+returnAmt);
-        
 
         for (Gem g : returnAmt.keySet()) {
             bank.put(g, bank.get(g) + returnAmt.get(g));

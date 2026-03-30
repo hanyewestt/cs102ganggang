@@ -194,7 +194,7 @@ public class Display {
      * Clears the terminal.
      */
     public static void clearScreen() {
-        // System.out.print("\033c");
+        System.out.print("\033c");
     }
 
     /**
