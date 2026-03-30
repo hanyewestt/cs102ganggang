@@ -42,7 +42,7 @@ public class Card {
      * @return Cost of {@link Card} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
-        return tokens;
+        return new HashMap<>(tokens);
     }
 
     /**
