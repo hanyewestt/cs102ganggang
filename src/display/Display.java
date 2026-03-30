@@ -69,7 +69,7 @@ public class Display {
     public static void drawTokenDisplay() {
         System.out.println();
         System.out.println("Token options: ");
-        System.out.println("1. Take 3 different tokens");
+        System.out.println("1. Take up to 3 different tokens");
         System.out.println("2. Take 2 same tokens");
         System.out.println("0. Cancel");
         System.out.println();
@@ -194,7 +194,7 @@ public class Display {
      * Clears the terminal.
      */
     public static void clearScreen() {
-        // System.out.print("\033c");
+        System.out.print("\033c");
     }
 
     /**

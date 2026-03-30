@@ -10,6 +10,8 @@ import util.*;
  * Calculates expected value of performing a {@link Move}.
  */
 public class ExpectedValueCalculator {
+    private static final int goldWeight = 6;
+    private static final int valueLossPerRemoval = -5;
 
     /**
      * Calculates expected value of performing a move without considering points.
@@ -39,8 +41,7 @@ public class ExpectedValueCalculator {
             sum += getCardValue(c, nobles, production, tokens);
         }
 
-        // Gold has a weight of 3
-        sum += tokens.get(Gem.Gold) * 3;
+        sum += tokens.get(Gem.Gold) * goldWeight;
 
         return sum;
     }
@@ -118,5 +119,9 @@ public class ExpectedValueCalculator {
         sum *= c.getPoints();
 
         return sum;
+    }
+
+    public static int getValueLossForRemoval(int tokenNoToRemove) {
+        return tokenNoToRemove * valueLossPerRemoval;
     }
 }

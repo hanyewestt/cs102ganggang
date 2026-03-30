@@ -22,6 +22,5 @@ public class NoPossibleMove extends Move {
      * If there are no possible moves, the CPUPlayer does nothing.
      */
     public void doMove() {
-        // insert your failsafe here
     }
 }

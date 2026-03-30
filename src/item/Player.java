@@ -197,7 +197,7 @@ public class Player implements Comparable<Player> {
         int gold = startingGold;
         boolean needGold = false;
 
-        HashMap<Gem, Integer> discountCardCost = c.getTokens();
+        HashMap<Gem, Integer> discountCardCost = Utility.generateHashMapClone(c.getTokens());
         discountCost(discountCardCost);
         HashMap<Gem, Integer> tokensLeft = new HashMap<>();
 
@@ -489,7 +489,7 @@ public class Player implements Comparable<Player> {
         } else {
             for (int i = 0; i < reserveCards.size(); i++) {
                 sb.append(i + 1).append(". ");
-                sb.append(reserveCards.get(i).toString()).append("\n");
+                sb.append(reserveCards.get(i)).append("\n");
             }
         }
 

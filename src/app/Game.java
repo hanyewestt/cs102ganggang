@@ -619,9 +619,6 @@ public class Game {
 
                 player.removeReserveCard(idx);
             }
-            // update bank
-            System.out.println("buyCard bank: " + bank);
-            System.out.println("buyCard toPay: " + toPay);
             for (Gem g : Gem.values()) {
                 bank.put(g, bank.get(g) + toPay.get(g));
             }
@@ -652,8 +649,6 @@ public class Game {
             }
         }
         
-        System.out.println("drawToken bank: "+bank);
-        System.out.println("drawToken chosen: " + chosen);
         for (Gem g : Gem.values()) {
             bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
@@ -718,10 +713,6 @@ public class Game {
             }
         }
 
-        System.out.println("returnExcessTokens bank: "+bank);
-        System.out.println("returnExcessTokens returnAmt: "+returnAmt);
-        
-
         for (Gem g : returnAmt.keySet()) {
             bank.put(g, bank.get(g) + returnAmt.get(g));
             player.removeToken(g, returnAmt.get(g));
@@ -738,7 +729,11 @@ public class Game {
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 3) {
-            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel: ");
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx), 'done' to stop, or 'cancel': ");
+
+            if (g == null && Utility.getTotalGems(chosen) > 0){
+                break; 
+            }
 
             if (g == null) {
                 return null;
