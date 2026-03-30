@@ -206,20 +206,19 @@ public class Utility {
             input = input.toLowerCase();
 
             switch (input) {
-                case "diamond":
+                case "diamond", "d":
                     return Gem.Diamond;
-                case "ruby":
+                case "ruby", "r":
                     return Gem.Ruby;
-                case "sapphire":
+                case "sapphire", "s":
                     return Gem.Sapphire;
-                case "emerald":
+                case "emerald", "e":
                     return Gem.Emerald;
-                case "onyx":
+                case "onyx", "o":
                     return Gem.Onyx;
-                case "cancel":
-                case "done":
+                case "cancel", "c","done":
                     return null;
-                case "gold":
+                case "gold", "g":
                     if (takesGold) {
                         return Gem.Gold;
                     } else {
