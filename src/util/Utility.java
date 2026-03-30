@@ -205,6 +205,7 @@ public class Utility {
                 case "onyx":
                     return Gem.Onyx;
                 case "cancel":
+                case "done":
                     return null;
                 case "gold":
                     if (takesGold) {

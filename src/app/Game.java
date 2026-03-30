@@ -729,7 +729,11 @@ public class Game {
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 3) {
-            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx) or cancel: ");
+            Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx), 'done' to stop, or 'cancel': ");
+
+            if (g == null && Utility.getTotalGems(chosen) > 0){
+                break; 
+            }
 
             if (g == null) {
                 return null;
