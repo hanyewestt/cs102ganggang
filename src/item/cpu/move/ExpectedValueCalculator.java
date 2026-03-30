@@ -12,8 +12,8 @@ public class ExpectedValueCalculator {
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
         int sum = 0;
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; i < 4; i++) {
+        for (int i = 0; i < market.length; i++) {
+            for (int j = 0; j < market[i].length; j++) {
                 Card c = market[i][j];
                 if (c == null) {
                     continue;
