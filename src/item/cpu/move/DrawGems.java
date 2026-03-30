@@ -18,11 +18,14 @@ public class DrawGems extends Move {
         toDraw.replace(type, 2);
 
         int currGemNo = Utility.getTotalGems(newTokens);
+        int gemsToRemove = 0;
         if (currGemNo > 10) {
+            gemsToRemove = currGemNo - 10;
             RemoveGems.getGemsToRemove(newTokens, toRemove, currGemNo, cpu, availNobles);
         }
 
-        super.setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
+        super.setExpectedValue(ExpectedValueCalculator.getValueLossForRemoval(gemsToRemove)
+                + ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
                 cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
     }
 
@@ -39,11 +42,14 @@ public class DrawGems extends Move {
         toDraw.replace(type3, 1);
 
         int currGemNo = Utility.getTotalGems(newTokens);
+        int gemsToRemove = 0;
         if (currGemNo > 10) {
+            gemsToRemove = currGemNo - 10;
             RemoveGems.getGemsToRemove(newTokens, toRemove, currGemNo, cpu, availNobles);
         }
 
-        super.setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
+        super.setExpectedValue(ExpectedValueCalculator.getValueLossForRemoval(gemsToRemove)
+                + ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
                 cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
     }
 
