@@ -1,8 +1,6 @@
-package item.cpu.move;
+package item.agent.cpu.move;
 
 import item.*;
-import item.cpu.*;
-import app.*;
 import java.util.*;
 import util.*;
 

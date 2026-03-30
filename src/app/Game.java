@@ -7,8 +7,9 @@ import java.util.concurrent.TimeUnit;
 import config.*;
 import display.*;
 import item.*;
-import item.cpu.*;
-import item.cpu.move.*;
+import item.agent.*;
+import item.agent.cpu.*;
+import item.agent.cpu.move.*;
 import util.*;
 
 /**

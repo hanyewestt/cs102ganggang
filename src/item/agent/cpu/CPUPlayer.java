@@ -1,11 +1,11 @@
-package item.cpu;
+package item.agent.cpu;
 
-import item.*;
 import app.*;
-import item.cpu.move.*;
-import util.*;
-
+import item.*;
+import item.agent.*;
+import item.agent.cpu.move.*;
 import java.util.*;
+import util.*;
 
 /**
  * Represents the CPUPlayer which extends Player.

@@ -1,11 +1,6 @@
-package item.cpu.move;
+package item.agent.cpu.move;
 
-import app.*;
-import item.*;
-import item.cpu.*;
-import util.*;
-
-import java.util.*;
+import item.agent.cpu.*;
 
 public class NoPossibleMove extends Move {
     public NoPossibleMove(CPUPlayer cpu) {
