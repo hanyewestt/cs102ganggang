@@ -4,12 +4,13 @@ import java.lang.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import agent.*;
+import agent.cpu.*;
+import agent.cpu.move.*;
 import config.*;
 import display.*;
 import item.*;
-import item.cpu.move.*;
 import util.*;
-import agent.*;
 
 /**
  * Game class contains the main function where the game is run.
@@ -88,7 +89,7 @@ public class Game {
     /**
      * Initializes the game board with the specified number of {@link Player}s
      * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
-     * {@link Player} objects. 
+     * {@link Player} objects.
      *
      * @param playerNumber the number of {@link Player}s in the game
      * @param cpuNumber the number of {@link CPUPlayer}s
@@ -212,7 +213,7 @@ public class Game {
             System.out.println("Computer is making its move...");
             cpu.calculateOptimalMove();
             Move move = cpu.getMove();
-            System.out.println("CPU Hand: "+cpu.getTokens());
+            System.out.println("CPU Hand: " + cpu.getTokens());
             if (move != null) {
                 move.doMove();
             }
@@ -552,10 +553,10 @@ public class Game {
                         continue;
                     }
 
-                    System.out.println("\nCard selected: " + card); 
-                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
-                    if (!confirm){
-                        continue; 
+                    System.out.println("\nCard selected: " + card);
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): ");
+                    if (!confirm) {
+                        continue;
                     }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
@@ -605,15 +606,15 @@ public class Game {
                         if (cardNumber == 0) {
                             continue;
                         }
-                        
+
                         idx = cardNumber - 1;
                     }
                     Card card = hand.get(idx);
-                    
-                    System.out.println("Card selected: " + card); 
-                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
-                    if (!confirm){
-                        continue; 
+
+                    System.out.println("Card selected: " + card);
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): ");
+                    if (!confirm) {
+                        continue;
                     }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
@@ -660,7 +661,7 @@ public class Game {
                 return false;
             }
         }
-        
+
         for (Gem g : Gem.values()) {
             bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
@@ -715,7 +716,7 @@ public class Game {
             } else if (cpu.getMove() instanceof ReserveCard rc) {
                 returnAmt = rc.getToReturn();
             }
-            System.out.println("returnExcessToken cpu hand: "+ cpu.getTokens());
+            System.out.println("returnExcessToken cpu hand: " + cpu.getTokens());
         } else {
             boolean confirmReturn = false;
             while (!confirmReturn) {
@@ -743,8 +744,8 @@ public class Game {
         while (Utility.getTotalGems(chosen) < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx), 'done' to stop, or 'cancel': ");
 
-            if (g == null && Utility.getTotalGems(chosen) > 0){
-                break; 
+            if (g == null && Utility.getTotalGems(chosen) > 0) {
+                break;
             }
 
             if (g == null) {
@@ -797,7 +798,7 @@ public class Game {
      * Admin Permissions Allows user to set token, set bonuses, set points
      *
      * @param p the current {@link Player}
-     * 
+     *
      * @return {@link Player} with admin perms enabled
      */
     public static Player adminPerms(Player p) {

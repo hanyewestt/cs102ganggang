@@ -1,8 +1,9 @@
-package agent;
+package agent.cpu;
 
-import item.*;
+import agent.*;
+import agent.cpu.move.*;
 import app.*;
-import item.cpu.move.*;
+import item.*;
 import util.*;
 
 import java.util.*;
@@ -17,9 +18,9 @@ public class CPUPlayer extends Player {
     private static Game splendor;
 
     /**
-     * {@link CPUPlayer} starts with 0 Gems for every type.
-     * {@link CPUPlayer} has a name and turn order.
-     * 
+     * {@link CPUPlayer} starts with 0 Gems for every type. {@link CPUPlayer}
+     * has a name and turn order.
+     *
      * @param name Name of {@link CPUPlayer}
      * @param order {@link CPUPlayer} order number
      */
@@ -28,9 +29,9 @@ public class CPUPlayer extends Player {
     }
 
     /**
-     * {@link CPUPlayer} starts with 0 Gems for every type.
-     * {@link CPUPlayer} has a name and turn order.
-     * 
+     * {@link CPUPlayer} starts with 0 Gems for every type. {@link CPUPlayer}
+     * has a name and turn order.
+     *
      * @param name Name of {@link CPUPlayer}
      * @param order {@link CPUPlayer} order number
      * @param splendor Game that {@link CPUPlayer} is playing in.
@@ -42,7 +43,7 @@ public class CPUPlayer extends Player {
 
     /**
      * Sets game which {@link CPUPlayer} is playing in.
-     * 
+     *
      * @param splendor Game that {@link CPUPlayer} is playing in.
      */
     public void setGame(Game splendor) {
@@ -51,8 +52,8 @@ public class CPUPlayer extends Player {
 
     /**
      * Gets current {@link Game}.
-     * 
-     * @return {@link Game} 
+     *
+     * @return {@link Game}
      */
     public Game getGameState() {
         return splendor;
@@ -60,7 +61,7 @@ public class CPUPlayer extends Player {
 
     /**
      * Gets optimal move that {@link CPUPlayer} can perform.
-     * 
+     *
      * @return {@link Move}
      */
     public Move getMove() {
@@ -68,7 +69,8 @@ public class CPUPlayer extends Player {
     }
 
     /**
-     * Calculates most optimal move that {@link CPUPlayer} can perform in this turn.
+     * Calculates most optimal move that {@link CPUPlayer} can perform in this
+     * turn.
      */
     public void calculateOptimalMove() {
         optimalMove = new NoPossibleMove(this);
@@ -107,7 +109,7 @@ public class CPUPlayer extends Player {
             }
         }
 
-        for (int i = 0; i <= availableGems.size() - 3; i++) {            
+        for (int i = 0; i <= availableGems.size() - 3; i++) {
             DrawGems draw3 = new DrawGems(this, availableGems.get(i),
                     availableGems.get(i + 1), availableGems.get(i + 2), gameNoblesCopy);
             optimalMove = draw3.isBetterMove(optimalMove) ? draw3 : optimalMove;
@@ -126,14 +128,14 @@ public class CPUPlayer extends Player {
 
                 HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);
                 if (tokensToPay != null) {
-                    BuyCard buyCard = new BuyCard(this, i, j, tokensToPay, gameNoblesCopy, possibleNobleIdx);
+                    BuyCard buyCard = new BuyCard(this, i, j, tokensToPay, gameNoblesCopy);
                     optimalMove = buyCard.isBetterMove(optimalMove) ? buyCard : optimalMove;
                 }
                 if (super.getReserveHandSize() < Player.MAX_RESERVE_HAND_SIZE) {
                     ReserveCard reserveCard = new ReserveCard(this, i, j, gameNoblesCopy);
                     optimalMove = reserveCard.isBetterMove(optimalMove) ? reserveCard : optimalMove;
                 }
-                
+
             }
         }
 
@@ -143,8 +145,14 @@ public class CPUPlayer extends Player {
 
             HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);
             if (tokensToPay != null) {
-                BuyCard buyCard = new BuyCard(this, i, tokensToPay, gameNoblesCopy, possibleNobleIdx);
+                BuyCard buyCard = new BuyCard(this, i, tokensToPay, gameNoblesCopy);
                 optimalMove = buyCard.isBetterMove(optimalMove) ? buyCard : optimalMove;
+            }
+        }
+
+        if (optimalMove instanceof BuyCard bc) {
+            for (int num : bc.getPossibleNobleIdx()) {
+                possibleNobleIdx.add(num);
             }
         }
 
@@ -159,11 +167,13 @@ public class CPUPlayer extends Player {
     }
 
     /**
-     * Updates points, production levels, and the {@link Player}’s remaining tokens after the purchase of the {@link Card}.
-     * 
+     * Updates points, production levels, and the {@link Player}’s remaining
+     * tokens after the purchase of the {@link Card}.
+     *
      * @param card {@link Card} to be purchased
-     * @param toPay Tokens that {@link CPUPlayer} has to pay to buy {@link Card}.
-     * 
+     * @param toPay Tokens that {@link CPUPlayer} has to pay to buy
+     * {@link Card}.
+     *
      * @return True if able to buy {@link Card}. False if otherwise.
      */
     public boolean buyCard(Card card, HashMap<Gem, Integer> toPay) {
@@ -176,6 +186,5 @@ public class CPUPlayer extends Player {
         super.addCard(card, remainingGems);
         return true;
     }
-
 
 }
