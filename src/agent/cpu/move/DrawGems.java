@@ -1,15 +1,28 @@
-package item.agent.cpu.move;
+package agent.cpu.move;
+
+import java.util.*;
 
 import item.*;
-import item.agent.cpu.*;
-import java.util.*;
+import agent.*;
+import agent.cpu.*;
+import agent.cpu.move.*;
 import util.*;
 
+/**
+ * {@link CPUPlayer} draws {@link Gem}.
+ */
 public class DrawGems extends Move {
 
     private HashMap<Gem, Integer> toDraw = Utility.generateEmptyHashmap();
     private HashMap<Gem, Integer> toRemove = Utility.generateEmptyHashmap();
 
+    /**
+     * Stores information for {@link CPUPlayer} to draw 2 of {@link Gem}s.
+     *
+     * @param cpu {@link CPUPlayer}
+     * @param type {@link Gem}
+     * @param availNobles {@link NobleTile}s available
+     */
     public DrawGems(CPUPlayer cpu, Gem type, List<NobleTile> availNobles) {
         super(cpu);
         HashMap<Gem, Integer> newTokens = Utility.generateHashMapClone(cpu.getTokens());
@@ -25,9 +38,18 @@ public class DrawGems extends Move {
 
         super.setExpectedValue(ExpectedValueCalculator.getValueLossForRemoval(gemsToRemove)
                 + ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
-                cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
+                        cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
     }
 
+    /**
+     * Stores information for {@link CPUPlayer} to draw 3 of {@link Gem}s.
+     *
+     * @param cpu {@link CPUPlayer}
+     * @param type1 First {@link Gem}
+     * @param type2 Second{@link Gem}
+     * @param type3 Third {@link Gem}
+     * @param availNobles {@link NobleTile}s available
+     */
     public DrawGems(CPUPlayer cpu, Gem type1, Gem type2, Gem type3, List<NobleTile> availNobles) {
         super(cpu);
         HashMap<Gem, Integer> newTokens = Utility.generateHashMapClone(cpu.getTokens());
@@ -49,19 +71,33 @@ public class DrawGems extends Move {
 
         super.setExpectedValue(ExpectedValueCalculator.getValueLossForRemoval(gemsToRemove)
                 + ExpectedValueCalculator.calculateExpectedValue(newTokens, cpu.getBonuses(),
-                cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
+                        cpu.getGameState().getMarket(), availNobles, cpu.getReserveHand()));
     }
 
+    /**
+     * Gets toDraw.
+     *
+     * @return HashMap of {@link Gem} and respective quantities.
+     */
     public HashMap<Gem, Integer> getToDraw() {
         return toDraw;
     }
 
+    /**
+     * Gets toRemove.
+     *
+     * @return HashMap of {@link Gem} and thier respective quantities.
+     */
     public HashMap<Gem, Integer> getToReturn() {
         return toRemove;
     }
 
+    /**
+     * Performs buyCard action and prints message to indicate what move the
+     * {@link CPUPlayer} makes.
+     */
     public void doMove() {
-        System.out.println("CPU is drawing tokens:"+toDraw);
+        System.out.println("CPU is drawing tokens:" + toDraw);
         cpu.getGameState().drawToken(cpu);
     }
 }

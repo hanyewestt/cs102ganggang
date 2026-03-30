@@ -1,13 +1,15 @@
 package config;
 
-import item.*;
 import java.io.*;
 import java.util.*;
+
+import item.*;
 import util.Utility;
 
 /**
- * This class loads information like {@link Card} and {@link NobleTile} data, number of starting {@link Gem}s in bank, and the number
- * of points needed to win a game from the data directory.
+ * This class loads information like {@link Card} and {@link NobleTile} data,
+ * number of starting {@link Gem}s in bank, and the number of points needed to
+ * win a game from the data directory.
  */
 public class Configuration {
 
@@ -42,8 +44,8 @@ public class Configuration {
     }
 
     /**
-     * Getter to retrieve the starting number of {@link Gem}s in the bank based on a
-     * player no.
+     * Getter to retrieve the starting number of {@link Gem}s in the bank based
+     * on a player no.
      *
      * @param playerNo The amount of players in the game. Guaranteed to be
      * between 2 to 4 (inclusive).
@@ -195,7 +197,8 @@ public class Configuration {
     }
 
     /**
-     * Will fill a given deck with {@link Card} using information from a file Scanner.
+     * Will fill a given deck with {@link Card} using information from a file
+     * Scanner.
      *
      * @param deck The deck to be filled with {@link Card}.
      * @param sc The Scanner reading from a file.
@@ -210,7 +213,8 @@ public class Configuration {
     }
 
     /**
-     * Will fill a given deck with {@link NobleTile} using information from a file Scanner.
+     * Will fill a given deck with {@link NobleTile} using information from a
+     * file Scanner.
      *
      * @param deck The deck to be filled with {@link NobleTile}.
      * @param sc The Scanner reading from a file.

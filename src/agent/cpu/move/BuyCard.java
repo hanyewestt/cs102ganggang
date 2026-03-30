@@ -1,10 +1,15 @@
-package item.agent.cpu.move;
+package agent.cpu.move;
 
-import item.*;
-import item.agent.cpu.*;
 import java.util.*;
+
+import agent.cpu.*;
+import agent.cpu.move.*;
+import item.*;
 import util.*;
 
+/**
+ * {@link CPUPlayer} buys {@link Card}.
+ */
 public class BuyCard extends Move {
 
     private int buyLocation; // 1 for market, 2 for reserve
@@ -14,6 +19,16 @@ public class BuyCard extends Move {
     private Map<Gem, Integer> toPay;
     private ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
 
+    /**
+     * Stores information for {@link CPUPlayer} to buy {@link Card} from market.
+     *
+     * @param cpu {@link CPUPlayer}
+     * @param row Row of the {@link CPUPlayer}
+     * @param column Column of the {@link CPUPlayer}
+     * @param toPay HashMap of tokens needed
+     * @param availNobles {@link NobleTile}s play
+     * @param nobleIdx {@link NobleTile} index
+     */
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles) {
         super(cpu);
@@ -36,6 +51,16 @@ public class BuyCard extends Move {
                 availNobles, cpu.getReserveHand()));
     }
 
+    /**
+     * Stores information for {@link CPUPlayer} to buy {@link Card} from reserve
+     * hand.
+     *
+     * @param cpu {@link CPUPlayer}
+     * @param reserveIdx Reserve hand index.
+     * @param toPay HashMap of tokens needed
+     * @param availNobles {@link NobleTile}s play
+     * @param nobleIdx {@link NobleTile} index
+     */
     public BuyCard(CPUPlayer cpu, int reserveIdx, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles) {
         super(cpu);
@@ -61,30 +86,65 @@ public class BuyCard extends Move {
                 cpu.getGameState().getMarket(), availNobles, reserveAfterBuying));
     }
 
+    /**
+     * Gets location of {@link Card}. 1 for market. 2 for reserve.
+     *
+     * @return buyLocation.
+     */
     public int getBuyLocation() {
         return buyLocation;
     }
 
+    /**
+     * Gets row of {@link Card} in market. Represents deck no. (1, 2, 3) or
+     * reserve hand (0).
+     *
+     * @return row.
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * Gets column of {@link Card} (1, 2, 3, 4) in market.
+     *
+     * @return column.
+     */
     public int getColumn() {
         return column;
     }
 
+    /**
+     * Gets reserve index.
+     *
+     * @return reserveIdx.
+     */
     public int getReserveIdx() {
         return reserveIdx;
     }
 
+    /**
+     * Gets tokens that {@link CPUPlayer} needs to pay.
+     *
+     * @return Map of {@link Gem} and respective quantities.
+     */
     public Map<Gem, Integer> getToPay() {
         return toPay;
     }
 
+    /**
+     * Gets the indexes of all possible nobles.
+     *
+     * @return List of indexes of the nobles based on availNobles
+     */
     public List<Integer> getPossibleNobleIdx() {
         return possibleNobleIdx;
     }
 
+    /**
+     * Performs buyCard action and prints message to indicate what move the
+     * {@link CPUPlayer} makes.
+     */
     public void doMove() {
         if (buyLocation == 1) {
             System.out.println("CPU is buying card from market" + cpu.getGameState().getMarket()[row][column]);

@@ -4,12 +4,12 @@ import java.lang.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import agent.*;
+import agent.cpu.*;
+import agent.cpu.move.*;
 import config.*;
 import display.*;
 import item.*;
-import item.agent.*;
-import item.agent.cpu.*;
-import item.agent.cpu.move.*;
 import util.*;
 
 /**
@@ -36,7 +36,7 @@ public class Game {
      * win condition is reached. Once the game ends, it retrieves the winners
      * using {@link getWinner()} and prints out the winning {@link Player}s.
      *
-     * @param args
+     * @param args Command Line Arguments
      */
     public static void main(String[] args) {
         String msg = "Enter number of players (between 2 and 4): ";
@@ -63,6 +63,9 @@ public class Game {
         sc.close();
     }
 
+    /**
+     * Creates a {@link Game} with {@link CPUPlayer}.
+     */
     public static void setGameForCPU() {
         for (Player player : players) {
             if (player instanceof CPUPlayer cpu) {
@@ -76,7 +79,8 @@ public class Game {
      * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
      * {@link Player} objects.
      *
-     * @param playerNumber the number of players in the game
+     * @param playerNumber the number of {@link Player}s in the game.
+     * @param cpuNumber the number of {@link CPUPlayer}s in the game.
      */
     public Game(int playerNumber, int cpuNumber) {
         this(playerNumber, cpuNumber, (new Random()).nextLong());
@@ -87,7 +91,8 @@ public class Game {
      * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
      * {@link Player} objects.
      *
-     * @param playerNumber the number of players in the game
+     * @param playerNumber the number of {@link Player}s in the game
+     * @param cpuNumber the number of {@link CPUPlayer}s
      * @param seed to shuffle the deck
      */
     public Game(int playerNumber, int cpuNumber, long seed) {
@@ -167,9 +172,6 @@ public class Game {
      * Initializes the {@link Player} array by prompting each {@link Player} to
      * enter their name and creating a corresponding {@link Player} for each
      * entry.
-     *
-     * @param playerNumber the total number of players participating in the game
-     * @param cpuNumber number of cpu players participating in the game
      */
     public static void setPlayerArray() {
         System.out.println("\nThe first player is the youngest.");
@@ -211,7 +213,7 @@ public class Game {
             System.out.println("Computer is making its move...");
             cpu.calculateOptimalMove();
             Move move = cpu.getMove();
-            System.out.println("CPU Hand: "+cpu.getTokens());
+            System.out.println("CPU Hand: " + cpu.getTokens());
             if (move != null) {
                 move.doMove();
             }
@@ -356,7 +358,7 @@ public class Game {
 
     /**
      * Determines which {@link NobleTile}s are visiting the specified
-     * {@link Player}. One or more {@link NobileTile}s may visit a
+     * {@link Player}. One or more {@link NobleTile}s may visit a
      * {@link Player}.
      *
      * @param player the {@link Player} being checked
@@ -551,10 +553,10 @@ public class Game {
                         continue;
                     }
 
-                    System.out.println("\nCard selected: " + card); 
-                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
-                    if (!confirm){
-                        continue; 
+                    System.out.println("\nCard selected: " + card);
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): ");
+                    if (!confirm) {
+                        continue;
                     }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
@@ -604,15 +606,15 @@ public class Game {
                         if (cardNumber == 0) {
                             continue;
                         }
-                        
+
                         idx = cardNumber - 1;
                     }
                     Card card = hand.get(idx);
-                    
-                    System.out.println("Card selected: " + card); 
-                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
-                    if (!confirm){
-                        continue; 
+
+                    System.out.println("Card selected: " + card);
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): ");
+                    if (!confirm) {
+                        continue;
                     }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
@@ -659,7 +661,7 @@ public class Game {
                 return false;
             }
         }
-        
+
         for (Gem g : Gem.values()) {
             bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
@@ -714,7 +716,7 @@ public class Game {
             } else if (cpu.getMove() instanceof ReserveCard rc) {
                 returnAmt = rc.getToReturn();
             }
-            System.out.println("returnExcessToken cpu hand: "+ cpu.getTokens());
+            System.out.println("returnExcessToken cpu hand: " + cpu.getTokens());
         } else {
             boolean confirmReturn = false;
             while (!confirmReturn) {
@@ -742,8 +744,8 @@ public class Game {
         while (Utility.getTotalGems(chosen) < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx), 'done' to stop, or 'cancel': ");
 
-            if (g == null && Utility.getTotalGems(chosen) > 0){
-                break; 
+            if (g == null && Utility.getTotalGems(chosen) > 0) {
+                break;
             }
 
             if (g == null) {
@@ -796,6 +798,8 @@ public class Game {
      * Admin Permissions Allows user to set token, set bonuses, set points
      *
      * @param p the current {@link Player}
+     *
+     * @return {@link Player} with admin perms enabled
      */
     public static Player adminPerms(Player p) {
         boolean finishAction = false;

@@ -1,13 +1,26 @@
-package item.agent.cpu.move;
+package agent.cpu.move;
+
+import java.util.*;
 
 import item.*;
-import item.agent.cpu.*;
-import app.*;
-import java.util.*;
+import agent.cpu.*;
 import util.*;
 
+/**
+ * Calculates points to be gained for performing a {@link Move}.
+ */
 public class PointsCalculator {
 
+    /**
+     * Calculates points to be gained for performing a {@link Move}.
+     *
+     * @param currProduction Current levels of {@link Gem} production.
+     * @param c {@link Card} to be bought.
+     * @param availNobles {@link NobleTile} available.
+     * @param nobleIdx nobleIndx.
+     *
+     * @return points.
+     */
     public static int calculatePoints(HashMap<Gem, Integer> currProduction, Card c,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
         int points = 0;

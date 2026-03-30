@@ -1,14 +1,31 @@
-package item.agent.cpu.move;
+package agent.cpu.move;
+
+import java.util.*;
 
 import item.*;
-import java.util.*;
 import util.*;
 
+/**
+ * Calculates expected value of performing a {@link Move}.
+ */
 public class ExpectedValueCalculator {
+
     private static final int goldWeight = 6;
     private static final int valueLossPerRemoval = -5;
     private static final int nobleWeight = 3;
 
+    /**
+     * Calculates expected value of performing a move without considering
+     * points.
+     *
+     * @param tokens {@link CPUPlayer} current tokens.
+     * @param production {@link CPUPlayer} current production levels.
+     * @param market {@link Card}s in the market.
+     * @param nobles {@link NobleTile}s available in game.
+     * @param reserveHand {@link Card}s in reserve hand.
+     *
+     * @return Expected value of move.
+     */
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
         int sum = 0;
@@ -33,6 +50,16 @@ public class ExpectedValueCalculator {
         return sum;
     }
 
+    /**
+     * Gets value of {@link Card} in market.
+     *
+     * @param c {@link Card}.
+     * @param nobles {@link NobleTile}s available.
+     * @param production {@link Gem} production levels.
+     * @param tokens {@link Gem}s owned by {@link CPUPlayer}.
+     *
+     * @return Card value.
+     */
     public static int getCardValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
             HashMap<Gem, Integer> tokens) {
         int sum = 0;
@@ -67,14 +94,28 @@ public class ExpectedValueCalculator {
         return sum;
     }
 
+    /**
+     * Gets value of {@link Card} in reserve hand.
+     *
+     * @param c {@link Card}.
+     * @param nobles {@link NobleTile}s available
+     * @param production {@link Gem} production levels
+     * @param tokens {@link Gem} owned by {@link CPUPlayer}
+     *
+     * @return Reserve Card value.
+     */
     public static int getReserveValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
             HashMap<Gem, Integer> tokens) {
         int sum = 0;
 
         Gem type = c.getGemType();
         for (NobleTile noble : nobles) {
+            if (noble == null) {
+                continue;
+            }
+
             if (noble.getTokens().get(type) > 0) {
-                sum++;
+                sum += nobleWeight;
             }
         }
 
@@ -102,6 +143,13 @@ public class ExpectedValueCalculator {
         return sum;
     }
 
+    /**
+     * Calculate loss for removing of tokens
+     *
+     * @param tokenNoToRemove Token number to be removed.
+     *
+     * @return Value lost.
+     */
     public static int getValueLossForRemoval(int tokenNoToRemove) {
         return tokenNoToRemove * valueLossPerRemoval;
     }

@@ -1,22 +1,23 @@
 package item;
 
-import display.Display;
 import java.util.*;
+
+import display.Display;
 import util.*;
 
 /**
- * Represents a {@link Card}. 
- * {@link Card} contains HashMap of its cost, the production GemType, and the number prestiege points awarded.
+ * Represents a {@link Card}. {@link Card} contains HashMap of its cost, the
+ * production GemType, and the number prestiege points awarded.
  */
 public class Card {
 
     private HashMap<Gem, Integer> tokens = Utility.generateEmptyHashmap();
     private final Gem GEMTYPE;
     private final int POINTS;
-    
+
     /**
      * Constructor for {@link Card} that initialises the {@link Gem} Hashmap
-     * 
+     *
      * @param GEMTYPE {@link Gem} enum
      * @param POINTS points of {@link Card}
      * @param Diamond no. of Diamonds needed to purchase {@link Card}
@@ -38,7 +39,7 @@ public class Card {
 
     /**
      * Get cost of the {@link Card}.
-     * 
+     *
      * @return Cost of {@link Card} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
@@ -47,7 +48,7 @@ public class Card {
 
     /**
      * Get type of {@link Gem} this card produces.
-     * 
+     *
      * @return {@link Gem} production type of {@link Card}
      */
     public Gem getGemType() {
@@ -56,7 +57,7 @@ public class Card {
 
     /**
      * Gets prestige points that this {@link Card} gives.
-     * 
+     *
      * @return Prestige points of {@link Card}
      */
     public int getPoints() {
@@ -65,7 +66,7 @@ public class Card {
 
     /**
      * Prints {@link Card} info to be displayed on console
-     * 
+     *
      * @return String info to be displayed on console
      */
     @Override
@@ -82,7 +83,7 @@ public class Card {
         int pointWidth = 8;
         sb.append(String.format("%-" + pointWidth + "s", POINTS));
         sb.append(" | ");
-        
+
         // print costs
         int costWidth = 14;
 

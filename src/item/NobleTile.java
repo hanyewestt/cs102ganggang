@@ -1,12 +1,13 @@
 package item;
 
 import java.util.*;
+
 import util.Utility;
 import display.Display;
 
 /**
- * Represents a {@link NobleTile}.
- * {@link NobleTile} contains HashMap of its cost and the number prestiege points awarded.
+ * Represents a {@link NobleTile}. {@link NobleTile} contains HashMap of its
+ * cost and the number prestige points awarded.
  */
 public class NobleTile {
 
@@ -15,7 +16,7 @@ public class NobleTile {
 
     /**
      * Constructor for {@link NobleTile} that initialises the Gem Hashmap
-     * 
+     *
      * @param gem1 GemType
      * @param gem2 GemType
      * @param gem3 GemType
@@ -28,7 +29,7 @@ public class NobleTile {
 
     /**
      * Constructor for {@link NobleTile} that initialises the Gem Hashmap
-     * 
+     *
      * @param gem1 GemType
      * @param gem2 GemType
      */
@@ -39,7 +40,7 @@ public class NobleTile {
 
     /**
      * Get cost of the {@link NobleTile}.
-     * 
+     *
      * @return Cost of {@link NobleTile} as HashMap
      */
     public HashMap<Gem, Integer> getTokens() {
@@ -48,7 +49,7 @@ public class NobleTile {
 
     /**
      * Gets prestige points that this {@link NobleTile} gives.
-     * 
+     *
      * @return Prestige points of {@link NobleTile}
      */
     public static int getPoints() {
@@ -57,14 +58,14 @@ public class NobleTile {
 
     /**
      * Prints {@link NobleTile} info to be displayed on console
-     * 
+     *
      * @return String info to be displayed on console
      */
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
-        
+
         // print pts
         int pointWidth = 8;
         sb.append(String.format("%-" + pointWidth + "s", POINTS));
@@ -72,7 +73,7 @@ public class NobleTile {
 
         // print tokens
         int costWidth = 10;
-        
+
         sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");
 

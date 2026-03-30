@@ -1,7 +1,8 @@
 package util;
 
-import item.*;
 import java.util.*;
+
+import item.*;
 
 /**
  * This class contains all the utility functions.
@@ -173,17 +174,29 @@ public class Utility {
         return false;
     }
 
+    /**
+     * Will prompt the user for a string representing a {@link Gem}. 
+     * Keeps prompting until a valid input is given.
+     * Gold cannot be taken.
+     * 
+     * @param keyboard The Scanner that is looking at keyboard input
+     * @param message The message to prompt for user input.
+     * 
+     * @return {@link Gem} that the user inputs.
+     */
     public static Gem askForGem(Scanner keyboard, String message) {
         return askForGem(keyboard, message, false);
     }
 
     /**
-     * Will prompt the user for a string representing a {@link Gem}. Keeps prompting
-     * until a valid input is given.
+     * Will prompt the user for a string representing a {@link Gem}. 
+     * Keeps prompting until a valid input is given.
+     * Gold can be taken.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
      * @param message The message to prompt for user input.
-     * @return The {@link Gem} that the user inputs.
+     * 
+     * @return {@link Gem} that the user inputs.
      */
     public static Gem askForGem(Scanner keyboard, String message, boolean takesGold) {
         boolean isValid;

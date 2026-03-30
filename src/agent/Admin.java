@@ -1,4 +1,4 @@
-package item.agent;
+package agent;
 
 import item.*;
 import java.util.*;

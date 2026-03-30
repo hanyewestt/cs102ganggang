@@ -1,42 +1,77 @@
-package item.agent.cpu;
+package agent.cpu;
 
+import agent.*;
+import agent.cpu.move.*;
 import app.*;
 import item.*;
-import item.agent.*;
-import item.agent.cpu.move.*;
-import java.util.*;
 import util.*;
 
+import java.util.*;
+
 /**
- * Represents the CPUPlayer which extends Player.
- * CPUPlayer can perform all actions that a player can do.
+ * Represents the {@link CPUPlayer} which extends {@link Player}.
+ * {@link CPUPlayer} can perform all actions that a {@link Player} can do.
  */
 public class CPUPlayer extends Player {
 
     private Move optimalMove;
     private static Game splendor;
 
+    /**
+     * {@link CPUPlayer} starts with 0 Gems for every type. {@link CPUPlayer}
+     * has a name and turn order.
+     *
+     * @param name Name of {@link CPUPlayer}
+     * @param order {@link CPUPlayer} order number
+     */
     public CPUPlayer(String name, int order) {
         super(name, order);
     }
 
+    /**
+     * {@link CPUPlayer} starts with 0 Gems for every type. {@link CPUPlayer}
+     * has a name and turn order.
+     *
+     * @param name Name of {@link CPUPlayer}
+     * @param order {@link CPUPlayer} order number
+     * @param splendor Game that {@link CPUPlayer} is playing in.
+     */
     public CPUPlayer(Game splendor, String name, int order) {
         super(name, order);
         this.splendor = splendor;
     }
 
+    /**
+     * Sets game which {@link CPUPlayer} is playing in.
+     *
+     * @param splendor Game that {@link CPUPlayer} is playing in.
+     */
     public void setGame(Game splendor) {
         this.splendor = splendor;
     }
 
+    /**
+     * Gets current {@link Game}.
+     *
+     * @return {@link Game}
+     */
     public Game getGameState() {
         return splendor;
     }
 
+    /**
+     * Gets optimal move that {@link CPUPlayer} can perform.
+     *
+     * @return {@link Move}
+     */
     public Move getMove() {
         return optimalMove;
     }
 
+    /**
+     * Calculates most optimal move that {@link CPUPlayer} can perform in this
+     * turn.
+     */
     public void calculateOptimalMove() {
         optimalMove = new NoPossibleMove(this);
 
@@ -74,9 +109,7 @@ public class CPUPlayer extends Player {
             }
         }
 
-
-
-        for (int i = 0; i <= availableGems.size() - 3; i++) {            
+        for (int i = 0; i <= availableGems.size() - 3; i++) {
             DrawGems draw3 = new DrawGems(this, availableGems.get(i),
                     availableGems.get(i + 1), availableGems.get(i + 2), gameNoblesCopy);
             optimalMove = draw3.isBetterMove(optimalMove) ? draw3 : optimalMove;
@@ -102,7 +135,7 @@ public class CPUPlayer extends Player {
                     ReserveCard reserveCard = new ReserveCard(this, i, j, gameNoblesCopy);
                     optimalMove = reserveCard.isBetterMove(optimalMove) ? reserveCard : optimalMove;
                 }
-                
+
             }
         }
 
@@ -133,6 +166,16 @@ public class CPUPlayer extends Player {
         }
     }
 
+    /**
+     * Updates points, production levels, and the {@link Player}’s remaining
+     * tokens after the purchase of the {@link Card}.
+     *
+     * @param card {@link Card} to be purchased
+     * @param toPay Tokens that {@link CPUPlayer} has to pay to buy
+     * {@link Card}.
+     *
+     * @return True if able to buy {@link Card}. False if otherwise.
+     */
     public boolean buyCard(Card card, HashMap<Gem, Integer> toPay) {
         HashMap<Gem, Integer> remainingGems = Utility.generateEmptyHashmap();
         HashMap<Gem, Integer> playerTokens = getTokens();
@@ -143,6 +186,5 @@ public class CPUPlayer extends Player {
         super.addCard(card, remainingGems);
         return true;
     }
-
 
 }

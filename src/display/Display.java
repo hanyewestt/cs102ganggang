@@ -1,11 +1,11 @@
 package display;
 
+import java.util.*;
+
+import agent.*;
 import app.*;
 import item.*;
-import item.agent.*;
-import java.util.*;
 import util.*;
-
 
 /**
  * Displays information on console
@@ -16,6 +16,11 @@ public class Display {
     private static Card[][] market;
     private static Map<Gem, Integer> bank;
 
+    /**
+     * Constructor for displaying game information on console.
+     *
+     * @param splendor {@link Game} to be displayed
+     */
     public Display(Game splendor) {
         this.splendor = splendor;
         market = splendor.getMarket();
@@ -89,9 +94,10 @@ public class Display {
     }
 
     /**
-     * Prints the current state of the board, including all {@link Card}s and {@link NobleTile}s
-     * Includes: Avaliable {@link Card}s, Bank, {@link NobleTile}s
-     * 
+     * Prints the current state of the board, including all {@link Card}s and
+     * {@link NobleTile}s Includes: Avaliable {@link Card}s, Bank,
+     * {@link NobleTile}s
+     *
      * @param player {@link Player} who is performing their turn
      * @param roundNumber number of the round currently being played
      * @param bank the bank
@@ -125,7 +131,7 @@ public class Display {
 
     /**
      * Prints the {@link Card}s currently out in the market.
-     * 
+     *
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
@@ -177,7 +183,7 @@ public class Display {
     /**
      * Prints the winners of the game.
      *
-     * @param winnningPlayers a list of {@link Player} that have won the game
+     * @param winningPlayers a list of {@link Player} that have won the game
      */
     public static void printWinner(List<Player> winningPlayers) {
         clearScreen();
@@ -199,13 +205,15 @@ public class Display {
     }
 
     /**
-     * Prompts the current {@link Player} to select which {@link Player}s' hands they wish to view
-     * and returns a map of the chosen {@link Player}s.
+     * Prompts the current {@link Player} to select which {@link Player}s' hands
+     * they wish to view and returns a map of the chosen {@link Player}s.
      *
      * @param sc the Scanner used to read input from the keyboard
      * @param players the list of {@link Player}s
      * @param player the current {@link Player}
-     * @return a set of {@link Player} numbers selected by the current {@link Player}
+     *
+     * @return a set of {@link Player} numbers selected by the current
+     * {@link Player}
      */
     public static Map<Integer, Player> choosePlayersToPrint(Scanner sc, List<Player> players, Player player) {
         String display = String.format("Enter player number (1 - %d), 0 to finish your selection: ", players.size());
@@ -228,8 +236,9 @@ public class Display {
 
     /**
      * Prints other {@link Player}s' hand.
-     * 
-     * @param playersToPrint Map of {@link Player} number and corresponding {@link Player} object
+     *
+     * @param playersToPrint Map of {@link Player} number and corresponding
+     * {@link Player} object
      */
     public static void printOtherPlayers(Map<Integer, Player> playersToPrint) {
 
@@ -244,7 +253,7 @@ public class Display {
 
     /**
      * Prints the reserve hand of the {@link Player}
-     * 
+     *
      * @param toPrintReserved if true, print {@link Player}'s reserve hand
      * @param player {@link Player} who's reserve hand is to be printed
      */
@@ -257,7 +266,7 @@ public class Display {
 
     /**
      * Formats a printable string for {@link Card} costs
-     * 
+     *
      * @param tokens a HashMap of the {@link Card} costs to print
      * @return String the printable string
      */
@@ -288,9 +297,11 @@ public class Display {
     /**
      * If any of the following actions are possible, hide the skip option.
      * Possible actions: 1. Draw tokens 2. Buy cards 3. Reserve cards. Calls
-     * {@link #showDrawToken()}, {@link #showBuyCard()}, {@link #showReserveCard()},
+     * {@link #showDrawToken()}, {@link #showBuyCard(player)}, {@link #showReserveCard(player)},
      *
      * @param player the current {@link Player}
+     *
+     * @return True if action can still be performed. False if otherwise.
      */
     public static boolean hideSkipOption(Player player) {
         return showDrawToken() || showBuyCard(player) || showReserveCard(player);
@@ -301,7 +312,8 @@ public class Display {
      * false otherwise.
      *
      * @param player the current {@link Player}
-     * @param market market
+     *
+     * @return True if {@link Player} can buy {@link Card}. False if otherwise.
      */
     public static boolean showBuyCard(Player player) {
 
@@ -338,6 +350,7 @@ public class Display {
      * Returns true if the {@link Player} can draw 2 or draw 3 tokens. Calls
      * {@link #canDrawTwo()} and {@link #canDrawThree()}.
      *
+     * @return True if Player can draw tokens. False if otherwise.
      */
     public static boolean showDrawToken() {
         // 0, 1, 2 in bank is impossible to draw from.
@@ -352,6 +365,7 @@ public class Display {
      * there is at least 4 of a single token type in bank. Returns false
      * otherwise.
      *
+     * @return True if {@link Player} can draw 2 tokens. False if otherwise.
      */
     public static boolean canDrawTwo() {
         for (Gem g : Gem.values()) {
@@ -370,6 +384,7 @@ public class Display {
      * there is at least 3 different token types, each with more than one token
      * each in bank. Returns false otherwise.
      *
+     * @return True if {@link Player} can draw 3 tokens. False if otherwise.
      */
     public static boolean canDrawThree() {
 
@@ -384,17 +399,19 @@ public class Display {
         }
 
         // at least 3 different tokens, at least one each.
-        return (nTokensNotEmpty >= 3) ? true : false;
+        return nTokensNotEmpty >= 3;
     }
 
     /**
-     * Returns false if {@link Player} reserve hand size has hit the max reserve
-     * hand size.
+     * Returns false if {@link Player}'s reserve hand size has hit the max
+     * reserve hand size.
      *
-     * @param player
+     * @param player {@link Player}'s reserve hand to show.
      *
+     * @return True if {@link Player}'s reserve hand size is under the max
+     * reserve hand size. False if otherwise.
      */
     public static boolean showReserveCard(Player player) {
-        return (player.getReserveHandSize() == Player.MAX_RESERVE_HAND_SIZE) ? false : true;
+        return player.getReserveHandSize() != Player.MAX_RESERVE_HAND_SIZE;
     }
 }
