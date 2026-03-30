@@ -542,7 +542,7 @@ public class Game {
                 } else {
                     pos = Utility.getPositionOnBoard(sc);
                     if (pos == null) {
-                        return false;
+                        continue;
                     }
                     card = market[pos[0]][pos[1]];
                     if (card == null) {
@@ -590,8 +590,19 @@ public class Game {
                     }
                     System.out.println();
 
-                    idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
+                    idx = Utility.askForNum(sc, 0, hand.size(), "Enter card number, or '0' to cancel: ");
+                    if (idx == 0) {
+                        continue;
+                    }
+                    idx--; // set to 0 indexing
+
                     Card card = hand.get(idx);
+
+                    System.out.println("Card selected: " + card); 
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                    if (!confirm){
+                        continue; 
+                    }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
                     boolean success = player.buyCard(card, sc);
