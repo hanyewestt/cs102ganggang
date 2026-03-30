@@ -224,7 +224,7 @@ public class Utility {
      * limitation. Keeps prompting until a valid input is given.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
-     * @param min The minimum integer allowed (includive).
+     * @param min The minimum integer allowed (inclusive).
      * @param max The maximum integer allowed (inclusive).
      * @param message The message to prompt for user input.
      * @return The integer that the user inputs.
