@@ -552,6 +552,12 @@ public class Game {
                         continue;
                     }
 
+                    System.out.println("\nCard selected: " + card); 
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                    if (!confirm){
+                        continue; 
+                    }
+
                     HashMap<Gem, Integer> pBefore = player.getTokens();
                     boolean success = player.buyCard(card, sc);
                     if (!success) {
@@ -577,7 +583,7 @@ public class Game {
                     continue;
                 }
 
-                int idx;
+                int idx = -1;
                 if (player instanceof CPUPlayer cpu) {
                     BuyCard move = (BuyCard) cpu.getMove();
                     idx = move.getReserveIdx();
@@ -592,14 +598,18 @@ public class Game {
                     }
                     System.out.println();
 
-                    idx = Utility.askForNum(sc, 0, hand.size(), "Enter card number, or '0' to cancel: ");
-                    if (idx == 0) {
-                        continue;
+                    if (hand.size() == 1) {
+                        idx = 0;
+                    } else {
+                        int cardNumber = Utility.askForNum(sc, 0, hand.size(), "Enter card number, 0 to cancel: ");
+                        if (cardNumber == 0) {
+                            continue;
+                        }
+                        
+                        idx = cardNumber - 1;
                     }
-                    idx--; // set to 0 indexing
-
                     Card card = hand.get(idx);
-
+                    
                     System.out.println("Card selected: " + card); 
                     boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
                     if (!confirm){

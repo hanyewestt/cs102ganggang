@@ -222,6 +222,10 @@ public class Utility {
                 case "gold":
                     if (takesGold) {
                         return Gem.Gold;
+                    } else {
+                        System.out.println("‼️ Cannot take gold! ‼️");
+                        isValid = false;
+                        break;
                     }
                 default:
                     System.out.println("‼️ Invalid input! Try again! ‼️");

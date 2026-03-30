@@ -238,7 +238,7 @@ public class Player implements Comparable<Player> {
                     return true;
                 } else {
                     int goldToSpend = Math.min(tokensLeft.get(Gem.Gold), Utility.getTotalGems(discountCardCost));
-                    String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
+                    String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "): ";
                     int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
 
                     if (spentGold == Utility.getTotalGems(discountCardCost)) {
@@ -250,11 +250,11 @@ public class Player implements Comparable<Player> {
 
                     int currGoldSpent = 0;
                     while (currGoldSpent < spentGold) {
-                        String gemPrompt = "Enter a gem to discount(Diamond, Ruby, Sapphire, Emerald, Onyx):";
+                        String gemPrompt = "Enter a gem to discount(Diamond, Ruby, Sapphire, Emerald, Onyx): ";
                         Gem discountGem = Utility.askForGem(keyboard, gemPrompt);
 
                         if (discountCardCost.get(discountGem) == 0) {
-                            System.out.println("Can't discount this gem! Try again!");
+                            System.out.println("‼️ Can't discount this gem! Try again! ‼️");
                             continue;
                         }
 
@@ -285,7 +285,7 @@ public class Player implements Comparable<Player> {
             }
 
             int goldToSpend = Math.min(tokensLeft.get(Gem.Gold), Utility.getTotalGems(discountCardCost) - necessaryGold);
-            String message2 = "You can spend up to " + goldToSpend + " more gold if you want to. Will you spend more gold? (Y/N):";
+            String message2 = "You can spend up to " + goldToSpend + " more gold if you want to. Will you spend more gold? (Y/N): ";
 
             boolean spendingMoreGold = Utility.willProceed(keyboard, message2);
 
@@ -294,7 +294,7 @@ public class Player implements Comparable<Player> {
                 return true;
             }
 
-            String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "):";
+            String goldPrompt = "Enter how much gold to spend (1 - " + goldToSpend + "): ";
             int spentGold = Utility.askForNum(keyboard, 1, goldToSpend, goldPrompt);
 
             if (spentGold + necessaryGold == Utility.getTotalGems(discountCardCost)) {
@@ -306,11 +306,11 @@ public class Player implements Comparable<Player> {
 
             int currGoldSpent = 0;
             while (currGoldSpent < spentGold) {
-                String gemPrompt = "Enter a gem to discount(Diamond, Ruby, Sapphire, Emerald, Onyx):";
+                String gemPrompt = "Enter a gem to discount(diamond, ruby, sapphire, emerald, onyx): ";
                 Gem discountGem = Utility.askForGem(keyboard, gemPrompt);
 
                 if (tokensLeft.get(discountGem) + 1 > discountCardCost.get(discountGem)) {
-                    System.out.println("Can't discount this gem! Try again!");
+                    System.out.println("‼️ Can't discount this gem! Try again! ‼️");
                     continue;
                 }
 

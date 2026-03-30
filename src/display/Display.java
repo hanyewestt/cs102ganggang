@@ -38,7 +38,7 @@ public class Display {
         sb.append("3. Buy a card\n");
         sb.append("4. Show reserved cards\n");
         sb.append("5. Display other players\n");
-        sb.append("6. admin perms");
+        sb.append("6. admin perms\n");
 
         if (!showDrawToken()) {
             sb.insert(sb.indexOf("1."), "\u001b[9m");
@@ -223,7 +223,7 @@ public class Display {
                 break;
             }
 
-            if (!playersChosen.containsValue(players.get(choice - 1))) {
+            if (!playersChosen.containsValue(players.get(choice - 1)) && !players.get(choice - 1).getName().equals(player.getName())) {
                 playersChosen.put(choice, players.get(choice - 1));
             }
         }
