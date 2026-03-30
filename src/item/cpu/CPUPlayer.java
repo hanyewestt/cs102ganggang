@@ -129,6 +129,12 @@ public class CPUPlayer extends Player {
 
     public boolean buyCard(Card card, HashMap<Gem, Integer> toPay) {
         HashMap<Gem, Integer> remainingGems = Utility.generateEmptyHashmap();
+        HashMap<Gem, Integer> playerTokens = getTokens();
+
+        for (Gem g : Gem.values()) {
+            remainingGems.put(g, playerTokens.get(g) - toPay.get(g));
+        }
+        System.out.println("CPUPlayer buyCard remainingGems: "+remainingGems);
         super.addCard(card, remainingGems);
         return true;
     }
