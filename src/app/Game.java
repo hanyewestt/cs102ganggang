@@ -210,7 +210,7 @@ public class Game {
             System.out.println("Computer is making its move...");
             cpu.calculateOptimalMove();
             Move move = cpu.getMove();
-            System.out.println("CPU Hand: "+cpu.getTokens());
+            System.out.println("CPU Hand: " + cpu.getTokens());
             if (move != null) {
                 move.doMove();
             }
@@ -550,10 +550,10 @@ public class Game {
                         continue;
                     }
 
-                    System.out.println("\nCard selected: " + card); 
-                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
-                    if (!confirm){
-                        continue; 
+                    System.out.println("\nCard selected: " + card);
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): ");
+                    if (!confirm) {
+                        continue;
                     }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
@@ -603,15 +603,15 @@ public class Game {
                         if (cardNumber == 0) {
                             continue;
                         }
-                        
+
                         idx = cardNumber - 1;
                     }
                     Card card = hand.get(idx);
-                    
-                    System.out.println("Card selected: " + card); 
-                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
-                    if (!confirm){
-                        continue; 
+
+                    System.out.println("Card selected: " + card);
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): ");
+                    if (!confirm) {
+                        continue;
                     }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
@@ -658,7 +658,7 @@ public class Game {
                 return false;
             }
         }
-        
+
         for (Gem g : Gem.values()) {
             bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
@@ -713,7 +713,7 @@ public class Game {
             } else if (cpu.getMove() instanceof ReserveCard rc) {
                 returnAmt = rc.getToReturn();
             }
-            System.out.println("returnExcessToken cpu hand: "+ cpu.getTokens());
+            System.out.println("returnExcessToken cpu hand: " + cpu.getTokens());
         } else {
             boolean confirmReturn = false;
             while (!confirmReturn) {
@@ -741,8 +741,8 @@ public class Game {
         while (Utility.getTotalGems(chosen) < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (diamond/ruby/sapphire/emerald/onyx), 'done' to stop, or 'cancel': ");
 
-            if (g == null && Utility.getTotalGems(chosen) > 0){
-                break; 
+            if (g == null && Utility.getTotalGems(chosen) > 0) {
+                break;
             }
 
             if (g == null) {

@@ -5,7 +5,6 @@ import item.*;
 import util.*;
 import app.*;
 
-
 /**
  * Displays information on console
  */
@@ -27,7 +26,7 @@ public class Display {
      */
     public static void turnOptionDisplay(Player player) {
         StringBuilder sb = new StringBuilder();
-        sb.append("----------------- Moves 🎮 -----------------\n\n");
+        sb.append("----------------- Moves 🎮 ------------------\n\n");
         sb.append("1. Draw tokens\n");
         sb.append("2. Reserve a card\n");
         sb.append("3. Buy a card\n");
@@ -88,9 +87,10 @@ public class Display {
     }
 
     /**
-     * Prints the current state of the board, including all {@link Card}s and {@link NobleTile}s
-     * Includes: Avaliable {@link Card}s, Bank, {@link NobleTile}s
-     * 
+     * Prints the current state of the board, including all {@link Card}s and
+     * {@link NobleTile}s Includes: Avaliable {@link Card}s, Bank,
+     * {@link NobleTile}s
+     *
      * @param player {@link Player} who is performing their turn
      * @param roundNumber number of the round currently being played
      * @param bank the bank
@@ -124,7 +124,7 @@ public class Display {
 
     /**
      * Prints the {@link Card}s currently out in the market.
-     * 
+     *
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
@@ -198,13 +198,14 @@ public class Display {
     }
 
     /**
-     * Prompts the current {@link Player} to select which {@link Player}s' hands they wish to view
-     * and returns a map of the chosen {@link Player}s.
+     * Prompts the current {@link Player} to select which {@link Player}s' hands
+     * they wish to view and returns a map of the chosen {@link Player}s.
      *
      * @param sc the Scanner used to read input from the keyboard
      * @param players the list of {@link Player}s
      * @param player the current {@link Player}
-     * @return a set of {@link Player} numbers selected by the current {@link Player}
+     * @return a set of {@link Player} numbers selected by the current
+     * {@link Player}
      */
     public static Map<Integer, Player> choosePlayersToPrint(Scanner sc, List<Player> players, Player player) {
         String display = String.format("Enter player number (1 - %d), 0 to finish your selection: ", players.size());
@@ -227,8 +228,9 @@ public class Display {
 
     /**
      * Prints other {@link Player}s' hand.
-     * 
-     * @param playersToPrint Map of {@link Player} number and corresponding {@link Player} object
+     *
+     * @param playersToPrint Map of {@link Player} number and corresponding
+     * {@link Player} object
      */
     public static void printOtherPlayers(Map<Integer, Player> playersToPrint) {
 
@@ -243,7 +245,7 @@ public class Display {
 
     /**
      * Prints the reserve hand of the {@link Player}
-     * 
+     *
      * @param toPrintReserved if true, print {@link Player}'s reserve hand
      * @param player {@link Player} who's reserve hand is to be printed
      */
@@ -256,7 +258,7 @@ public class Display {
 
     /**
      * Formats a printable string for {@link Card} costs
-     * 
+     *
      * @param tokens a HashMap of the {@link Card} costs to print
      * @return String the printable string
      */
@@ -334,56 +336,11 @@ public class Display {
     }
 
     /**
-     * Returns true if the {@link Player} can draw 2 or draw 3 tokens. Calls
-     * {@link #canDrawTwo()} and {@link #canDrawThree()}.
+     * Returns true if the {@link Player} bank not empty.
      *
      */
     public static boolean showDrawToken() {
-        // 0, 1, 2 in bank is impossible to draw from.
-        if (Utility.getTotalGems(new HashMap<>(bank)) < 3) {
-            return false;
-        }
-        return canDrawTwo() || canDrawThree();
-    }
-
-    /**
-     * Returns true if the {@link Player} can draw 2 tokens. Returns true if
-     * there is at least 4 of a single token type in bank. Returns false
-     * otherwise.
-     *
-     */
-    public static boolean canDrawTwo() {
-        for (Gem g : Gem.values()) {
-            if (g == Gem.Gold) {
-                continue;
-            }
-            if (bank.get(g) >= 4) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns true if the {@link Player} can draw 3 tokens. Returns true if
-     * there is at least 3 different token types, each with more than one token
-     * each in bank. Returns false otherwise.
-     *
-     */
-    public static boolean canDrawThree() {
-
-        int nTokensNotEmpty = 0;
-        for (Gem g : Gem.values()) {
-            if (g == Gem.Gold) {
-                continue;
-            }
-            if (bank.get(g) > 0) {
-                nTokensNotEmpty++;
-            }
-        }
-
-        // at least 3 different tokens, at least one each.
-        return (nTokensNotEmpty >= 3) ? true : false;
+        return Utility.getTotalGems(new HashMap<>(bank)) > 0 ? true : false;
     }
 
     /**
