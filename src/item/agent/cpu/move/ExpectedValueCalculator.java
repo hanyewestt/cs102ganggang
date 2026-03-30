@@ -7,6 +7,7 @@ import util.*;
 public class ExpectedValueCalculator {
     private static final int goldWeight = 6;
     private static final int valueLossPerRemoval = -5;
+    private static final int nobleWeight = 3;
 
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
@@ -54,8 +55,12 @@ public class ExpectedValueCalculator {
 
         Gem produce = c.getGemType();
         for (NobleTile noble : nobles) {
+            if (noble == null) {
+                continue;
+            }
+
             if (noble.getTokens().get(produce) > 0) {
-                sum++;
+                sum += nobleWeight;
             }
         }
 

@@ -95,7 +95,7 @@ public class CPUPlayer extends Player {
 
                 HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);
                 if (tokensToPay != null) {
-                    BuyCard buyCard = new BuyCard(this, i, j, tokensToPay, gameNoblesCopy, possibleNobleIdx);
+                    BuyCard buyCard = new BuyCard(this, i, j, tokensToPay, gameNoblesCopy);
                     optimalMove = buyCard.isBetterMove(optimalMove) ? buyCard : optimalMove;
                 }
                 if (super.getReserveHandSize() < Player.MAX_RESERVE_HAND_SIZE) {
@@ -112,8 +112,14 @@ public class CPUPlayer extends Player {
 
             HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(super.getTokens(), cardCost);
             if (tokensToPay != null) {
-                BuyCard buyCard = new BuyCard(this, i, tokensToPay, gameNoblesCopy, possibleNobleIdx);
+                BuyCard buyCard = new BuyCard(this, i, tokensToPay, gameNoblesCopy);
                 optimalMove = buyCard.isBetterMove(optimalMove) ? buyCard : optimalMove;
+            }
+        }
+
+        if (optimalMove instanceof BuyCard bc) {
+            for (int num : bc.getPossibleNobleIdx()) {
+                possibleNobleIdx.add(num);
             }
         }
 

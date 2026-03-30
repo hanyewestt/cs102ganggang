@@ -12,9 +12,10 @@ public class BuyCard extends Move {
     private int column;
     private int reserveIdx;
     private Map<Gem, Integer> toPay;
+    private ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
 
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
-            ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
+            ArrayList<NobleTile> availNobles) {
         super(cpu);
         buyLocation = 1;
         this.row = row;
@@ -30,13 +31,13 @@ public class BuyCard extends Move {
 
         HashMap<Gem, Integer> currBonuses = Utility.generateHashMapClone(cpu.getBonuses());
 
-        setPointsGain(PointsCalculator.calculatePoints(currBonuses, c, availNobles, nobleIdx));
+        setPointsGain(PointsCalculator.calculatePoints(currBonuses, c, availNobles, possibleNobleIdx));
         setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currBonuses, marketAfterBuying,
                 availNobles, cpu.getReserveHand()));
     }
 
     public BuyCard(CPUPlayer cpu, int reserveIdx, HashMap<Gem, Integer> toPay,
-            ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {
+            ArrayList<NobleTile> availNobles) {
         super(cpu);
         buyLocation = 2;
         this.reserveIdx = reserveIdx;
@@ -55,7 +56,7 @@ public class BuyCard extends Move {
 
         HashMap<Gem, Integer> currBonuses = Utility.generateHashMapClone(cpu.getBonuses());
 
-        setPointsGain(PointsCalculator.calculatePoints(currBonuses, c, availNobles, nobleIdx));
+        setPointsGain(PointsCalculator.calculatePoints(currBonuses, c, availNobles, possibleNobleIdx));
         setExpectedValue(ExpectedValueCalculator.calculateExpectedValue(tokensAfterBuying, currBonuses,
                 cpu.getGameState().getMarket(), availNobles, reserveAfterBuying));
     }
@@ -78,6 +79,10 @@ public class BuyCard extends Move {
 
     public Map<Gem, Integer> getToPay() {
         return toPay;
+    }
+
+    public List<Integer> getPossibleNobleIdx() {
+        return possibleNobleIdx;
     }
 
     public void doMove() {
