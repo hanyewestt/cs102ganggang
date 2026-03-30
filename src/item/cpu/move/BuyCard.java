@@ -14,7 +14,7 @@ public class BuyCard extends Move {
     private int column;
     private int reserveIdx;
     private Map<Gem, Integer> toPay;
-    private ArrayList<Integer> possibleNobleIdx;
+    private ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
 
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles) {
