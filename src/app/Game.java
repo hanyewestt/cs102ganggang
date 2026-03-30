@@ -31,9 +31,9 @@ public class Game {
 
     /**
      * Entry point of the game program. Prompts the user to enter the number of
-     * {@link Player}s, creates a new Game instance, and conducts rounds until win
-     * condition is reached. Once the game ends, it retrieves the winners using
-     * {@link getWinner()} and prints out the winning {@link Player}s.
+     * {@link Player}s, creates a new Game instance, and conducts rounds until
+     * win condition is reached. Once the game ends, it retrieves the winners
+     * using {@link getWinner()} and prints out the winning {@link Player}s.
      *
      * @param args
      */
@@ -71,23 +71,25 @@ public class Game {
     }
 
     /**
-     * Initializes the game board with the specified number of {@link Player}s and {@link Card}s.
-     * Sets up the bank, {@link NobleTile}s, and {@link Player} objects.
+     * Initializes the game board with the specified number of {@link Player}s
+     * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
+     * {@link Player} objects.
      *
      * @param playerNumber the number of players in the game
      */
     public Game(int playerNumber, int cpuNumber) {
         this(playerNumber, cpuNumber, (new Random()).nextLong());
     }
-    
+
     /**
-     * Initializes the game board with the specified number of {@link Player}s and {@link Card}s.
-     * Sets up the bank, {@link NobleTile}s, and {@link Player} objects.
+     * Initializes the game board with the specified number of {@link Player}s
+     * and {@link Card}s. Sets up the bank, {@link NobleTile}s, and
+     * {@link Player} objects.
      *
      * @param playerNumber the number of players in the game
      * @param seed to shuffle the deck
      */
-    public Game(int playerNumber, long seed) {
+    public Game(int playerNumber, int cpuNumber, long seed) {
         Configuration.load();
 
         this.playerNumber = playerNumber;
@@ -125,7 +127,7 @@ public class Game {
 
     /**
      * Gets seed.
-     * 
+     *
      * @return seed
      */
     public long getSeed() {
@@ -134,7 +136,7 @@ public class Game {
 
     /**
      * Gets the market in the game.
-     * 
+     *
      * @return 2-D {@link Card} array of market in the game
      */
     public Card[][] getMarket() {
@@ -143,7 +145,7 @@ public class Game {
 
     /**
      * Get {@link NobleTile}s in the game.
-     * 
+     *
      * @return List of {@link NobleTile} in the game
      */
     public List<NobleTile> getNobles() {
@@ -152,44 +154,47 @@ public class Game {
 
     /**
      * Get bank of the game.
-     * 
-     * @return Map of the {@link Gem}s and their corresponding quantities in bank
+     *
+     * @return Map of the {@link Gem}s and their corresponding quantities in
+     * bank
      */
     public Map<Gem, Integer> getBank() {
         return bank;
     }
 
     /**
-     * Initializes the {@link Player} array by prompting each {@link Player} to enter their name
-     * and creating a corresponding {@link Player} for each entry.
+     * Initializes the {@link Player} array by prompting each {@link Player} to
+     * enter their name and creating a corresponding {@link Player} for each
+     * entry.
      *
      * @param playerNumber the total number of players participating in the game
      * @param cpuNumber number of cpu players participating in the game
      */
     public static void setPlayerArray() {
         System.out.println("\nThe first player is the youngest.");
-        int i;
-        for (i = 1; i <= playerNumber - cpuNumber; i++) {
-            System.out.print("Enter player " + i + " name: ");
+        int playerOrder = 1;
+        for (int i = 1; i <= playerNumber - cpuNumber; i++) {
+            System.out.print("Enter player " + playerOrder + " name: ");
             String name = sc.nextLine();
-            Player player = new Player(name, i);
+            Player player = new Player(name, playerOrder);
             players.add(player);
+            playerOrder++;
         }
         int cpuIdx = 1;
-        for (i = 1; i <= cpuNumber; i++) {
+        for (int i = 1; i <= cpuNumber; i++) {
             String name = "CPU" + cpuIdx;
-            Player player = new CPUPlayer(name, i + 1);
+            Player player = new CPUPlayer(name, playerOrder);
             players.add(player);
             cpuIdx++;
+            playerOrder++;
         }
     }
 
-    
-
     /**
-     * Executes a {@link Player}'s turn by presenting three available options, Draw
-     * tokens, Reserve a {@link Card} and Buy a {@link Card} The {@link Player} is repeatedly prompted
-     * to enter a choice until a valid action is performed.
+     * Executes a {@link Player}'s turn by presenting three available options,
+     * Draw tokens, Reserve a {@link Card} and Buy a {@link Card} The
+     * {@link Player} is repeatedly prompted to enter a choice until a valid
+     * action is performed.
      *
      * @param player the {@link Player} whose turn is being executed
      */
@@ -205,6 +210,7 @@ public class Game {
             System.out.println("Computer is making its move...");
             cpu.calculateOptimalMove();
             Move move = cpu.getMove();
+            System.out.println("CPU Hand: "+cpu.getTokens());
             if (move != null) {
                 move.doMove();
             }
@@ -307,11 +313,13 @@ public class Game {
     }
 
     /**
-     * Checks whether the {@link Player} has met the win condition. 
-     * The win condition is reached when the {@link Player}'s points total is greater than or equals 15.
+     * Checks whether the {@link Player} has met the win condition. The win
+     * condition is reached when the {@link Player}'s points total is greater
+     * than or equals 15.
      *
      * @param player the {@link Player} being checked
-     * @return true if the {@link Player} has reached the win condition, false otherwise
+     * @return true if the {@link Player} has reached the win condition, false
+     * otherwise
      */
     public static boolean hitWinCondition(Player player) {
 
@@ -346,8 +354,9 @@ public class Game {
     }
 
     /**
-     * Determines which {@link NobleTile}s are visiting the specified {@link Player}.
-     * One or more {@link NobileTile}s may visit a {@link Player}.
+     * Determines which {@link NobleTile}s are visiting the specified
+     * {@link Player}. One or more {@link NobileTile}s may visit a
+     * {@link Player}.
      *
      * @param player the {@link Player} being checked
      * @return a List of {@link NobleTile}s that are visiting the {@link Player}
@@ -374,8 +383,9 @@ public class Game {
     }
 
     /**
-     * Performs the reserve {@link Card} action. The {@link Player} selects a {@link Card} to
-     * reserve, and receives 1 gold if the bank has gold available.
+     * Performs the reserve {@link Card} action. The {@link Player} selects a
+     * {@link Card} to reserve, and receives 1 gold if the bank has gold
+     * available.
      *
      * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
@@ -491,8 +501,9 @@ public class Game {
     }
 
     /**
-     * Performs the buy {@link Card} action. The {@link Player} selects a {@link Card} to buy,
-     * and the {@link Player}'s tokens and the bank are updated accordingly.
+     * Performs the buy {@link Card} action. The {@link Player} selects a
+     * {@link Card} to buy, and the {@link Player}'s tokens and the bank are
+     * updated accordingly.
      *
      * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
@@ -531,7 +542,7 @@ public class Game {
                 } else {
                     pos = Utility.getPositionOnBoard(sc);
                     if (pos == null) {
-                        return false;
+                        continue;
                     }
                     card = market[pos[0]][pos[1]];
                     if (card == null) {
@@ -579,8 +590,19 @@ public class Game {
                     }
                     System.out.println();
 
-                    idx = Utility.askForNum(sc, 1, hand.size(), "Enter card number: ") - 1;
+                    idx = Utility.askForNum(sc, 0, hand.size(), "Enter card number, or '0' to cancel: ");
+                    if (idx == 0) {
+                        continue;
+                    }
+                    idx--; // set to 0 indexing
+
                     Card card = hand.get(idx);
+
+                    System.out.println("Card selected: " + card); 
+                    boolean confirm = Utility.willProceed(sc, "Confirm purchase? (Y/N): "); 
+                    if (!confirm){
+                        continue; 
+                    }
 
                     HashMap<Gem, Integer> pBefore = player.getTokens();
                     boolean success = player.buyCard(card, sc);
@@ -598,6 +620,8 @@ public class Game {
                 player.removeReserveCard(idx);
             }
             // update bank
+            System.out.println("buyCard bank: " + bank);
+            System.out.println("buyCard toPay: " + toPay);
             for (Gem g : Gem.values()) {
                 bank.put(g, bank.get(g) + toPay.get(g));
             }
@@ -607,8 +631,8 @@ public class Game {
 
     /**
      * Performs the draw token action. Handles the overall logical flow of the
-     * draw token action, including CPU actions and {@link Player} actions. Updates
-     * {@link Player} and bank based on the HashMap returned.
+     * draw token action, including CPU actions and {@link Player} actions.
+     * Updates {@link Player} and bank based on the HashMap returned.
      *
      * @param player the {@link Player} performing the action
      * @return true if the action was successfully performed, false otherwise
@@ -627,9 +651,11 @@ public class Game {
                 return false;
             }
         }
-
+        
+        System.out.println("drawToken bank: "+bank);
+        System.out.println("drawToken chosen: " + chosen);
         for (Gem g : Gem.values()) {
-            bank.replace(g, bank.get(g) - chosen.get(g));
+            bank.put(g, bank.get(g) - chosen.get(g));
             player.addToken(g, chosen.get(g));
         }
 
@@ -664,7 +690,8 @@ public class Game {
     }
 
     /**
-     * Returns excess tokens from the {@link Player}, if tokens in {@link Player}'s hand exceed 10.
+     * Returns excess tokens from the {@link Player}, if tokens in
+     * {@link Player}'s hand exceed 10.
      *
      * @param player the {@link Player} performing the action
      */
@@ -681,6 +708,7 @@ public class Game {
             } else if (cpu.getMove() instanceof ReserveCard rc) {
                 returnAmt = rc.getToReturn();
             }
+            System.out.println("returnExcessToken cpu hand: "+ cpu.getTokens());
         } else {
             boolean confirmReturn = false;
             while (!confirmReturn) {
@@ -690,17 +718,22 @@ public class Game {
             }
         }
 
+        System.out.println("returnExcessTokens bank: "+bank);
+        System.out.println("returnExcessTokens returnAmt: "+returnAmt);
+        
+
         for (Gem g : returnAmt.keySet()) {
-            bank.replace(g, bank.get(g) + returnAmt.get(g));
+            bank.put(g, bank.get(g) + returnAmt.get(g));
             player.removeToken(g, returnAmt.get(g));
         }
     }
 
     /**
-     * Prompts the {@link Player} to select three tokens of different types, ensuring
-     * that the selected tokens are available in the bank.
+     * Prompts the {@link Player} to select three tokens of different types,
+     * ensuring that the selected tokens are available in the bank.
      *
-     * @return a hashmap of the tokens to draw. returns null if {@link Player} cancels.
+     * @return a hashmap of the tokens to draw. returns null if {@link Player}
+     * cancels.
      */
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
@@ -729,7 +762,8 @@ public class Game {
 
     /**
      * Prompts the {@link Player} to select a token or cancel the action.
-     * Ensures that the selected token type is available in the bank (at least four tokens must be present).
+     * Ensures that the selected token type is available in the bank (at least
+     * four tokens must be present).
      *
      * @return a HashMap of the tokens to draw
      */
