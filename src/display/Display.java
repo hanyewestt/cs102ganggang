@@ -27,7 +27,7 @@ public class Display {
      */
     public static void turnOptionDisplay(Player player) {
         StringBuilder sb = new StringBuilder();
-        sb.append("----------------- Moves 🎮 -----------------\n");
+        sb.append("----------------- Moves 🎮 -----------------\n\n");
         sb.append("1. Draw tokens\n");
         sb.append("2. Reserve a card\n");
         sb.append("3. Buy a card\n");
@@ -194,7 +194,7 @@ public class Display {
      * Clears the terminal.
      */
     public static void clearScreen() {
-        // System.out.print("\033c");
+        System.out.print("\033c");
     }
 
     /**
@@ -312,8 +312,8 @@ public class Display {
                     continue;
                 }
 
-                HashMap<Gem, Integer> cardCost = c.getTokens();
-                player.discountCost(cardCost);
+                HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
+                Utility.discount(cardCost, playerBonuses);
 
                 HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(player.getTokens(), cardCost);
                 if (tokensToPay != null) {
@@ -322,8 +322,9 @@ public class Display {
             }
         }
         for (Card c : player.getReserveHand()) {
-            HashMap<Gem, Integer> cardCost = c.getTokens();
-            player.discountCost(cardCost);
+
+            HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
+            Utility.discount(cardCost, playerBonuses);
 
             if (Utility.findSubtractionAmount(player.getTokens(), cardCost) != null) {
                 return true;

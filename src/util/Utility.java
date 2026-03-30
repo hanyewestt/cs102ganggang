@@ -158,7 +158,7 @@ public class Utility {
         boolean isValid;
         do {
             System.out.print(message);
-            String input = keyboard.nextLine().toLowerCase();
+            String input = keyboard.nextLine().trim().toLowerCase();
 
             if (input.compareTo("y") == 0) {
                 return true;
@@ -189,7 +189,7 @@ public class Utility {
         boolean isValid;
         do {
             System.out.print(message);
-            String input = keyboard.nextLine().toLowerCase();
+            String input = keyboard.nextLine().trim().toLowerCase();
 
             input = input.toLowerCase();
 
@@ -228,7 +228,7 @@ public class Utility {
      * limitation. Keeps prompting until a valid input is given.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
-     * @param min The minimum integer allowed (includive).
+     * @param min The minimum integer allowed (inclusive).
      * @param max The maximum integer allowed (inclusive).
      * @param message The message to prompt for user input.
      * @return The integer that the user inputs.
