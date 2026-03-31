@@ -1,6 +1,7 @@
 agent
+agent.cpu
+agent.cpu.move
 app
 config
 display
 item
-item.cpu.move

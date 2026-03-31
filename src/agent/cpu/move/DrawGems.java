@@ -20,7 +20,7 @@ public class DrawGems extends Move {
      * Stores information for {@link CPUPlayer} to draw 2 of {@link Gem}s.
      *
      * @param cpu {@link CPUPlayer}
-     * @param type {@link Gem}
+     * @param type {@link Gem} to be drawn
      * @param availNobles {@link NobleTile}s available
      */
     public DrawGems(CPUPlayer cpu, Gem type, List<NobleTile> availNobles) {
@@ -86,7 +86,7 @@ public class DrawGems extends Move {
     /**
      * Gets toRemove.
      *
-     * @return HashMap of {@link Gem} and thier respective quantities.
+     * @return HashMap of {@link Gem} and thier respective quantities
      */
     public HashMap<Gem, Integer> getToReturn() {
         return toRemove;
@@ -94,7 +94,7 @@ public class DrawGems extends Move {
 
     /**
      * Performs buyCard action and prints message to indicate what move the
-     * {@link CPUPlayer} makes.
+     * {@link CPUPlayer} makes
      */
     public void doMove() {
         System.out.println("CPU is drawing tokens:" + toDraw);

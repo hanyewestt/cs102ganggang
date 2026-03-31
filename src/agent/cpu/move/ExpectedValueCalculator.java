@@ -3,6 +3,7 @@ package agent.cpu.move;
 import java.util.*;
 
 import item.*;
+import agent.cpu.*;
 import util.*;
 
 /**
@@ -24,7 +25,7 @@ public class ExpectedValueCalculator {
      * @param nobles {@link NobleTile}s available in game.
      * @param reserveHand {@link Card}s in reserve hand.
      *
-     * @return Expected value of move.
+     * @return Expected value of {@link Move}.
      */
     public static int calculateExpectedValue(HashMap<Gem, Integer> tokens, HashMap<Gem, Integer> production,
             Card[][] market, List<NobleTile> nobles, List<Card> reserveHand) {
@@ -53,12 +54,12 @@ public class ExpectedValueCalculator {
     /**
      * Gets value of {@link Card} in market.
      *
-     * @param c {@link Card}.
+     * @param c {@link Card} in the market.
      * @param nobles {@link NobleTile}s available.
      * @param production {@link Gem} production levels.
      * @param tokens {@link Gem}s owned by {@link CPUPlayer}.
      *
-     * @return Card value.
+     * @return {@link Card} value.
      */
     public static int getCardValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
             HashMap<Gem, Integer> tokens) {
@@ -97,7 +98,7 @@ public class ExpectedValueCalculator {
     /**
      * Gets value of {@link Card} in reserve hand.
      *
-     * @param c {@link Card}.
+     * @param c {@link Card} in the reserve hand
      * @param nobles {@link NobleTile}s available
      * @param production {@link Gem} production levels
      * @param tokens {@link Gem} owned by {@link CPUPlayer}
@@ -144,11 +145,11 @@ public class ExpectedValueCalculator {
     }
 
     /**
-     * Calculate loss for removing of tokens
+     * Calculate loss for removing tokens.
      *
-     * @param tokenNoToRemove Token number to be removed.
+     * @param tokenNoToRemove Token number to be removed
      *
-     * @return Value lost.
+     * @return Value lost
      */
     public static int getValueLossForRemoval(int tokenNoToRemove) {
         return tokenNoToRemove * valueLossPerRemoval;

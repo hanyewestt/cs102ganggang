@@ -27,7 +27,6 @@ public class BuyCard extends Move {
      * @param column Column of the {@link CPUPlayer}
      * @param toPay HashMap of tokens needed
      * @param availNobles {@link NobleTile}s play
-     * @param nobleIdx {@link NobleTile} index
      */
     public BuyCard(CPUPlayer cpu, int row, int column, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles) {
@@ -56,10 +55,9 @@ public class BuyCard extends Move {
      * hand.
      *
      * @param cpu {@link CPUPlayer}
-     * @param reserveIdx Reserve hand index.
+     * @param reserveIdx Reserve hand index
      * @param toPay HashMap of tokens needed
      * @param availNobles {@link NobleTile}s play
-     * @param nobleIdx {@link NobleTile} index
      */
     public BuyCard(CPUPlayer cpu, int reserveIdx, HashMap<Gem, Integer> toPay,
             ArrayList<NobleTile> availNobles) {
@@ -89,7 +87,7 @@ public class BuyCard extends Move {
     /**
      * Gets location of {@link Card}. 1 for market. 2 for reserve.
      *
-     * @return buyLocation.
+     * @return buyLocation of {@link Card}
      */
     public int getBuyLocation() {
         return buyLocation;
@@ -99,7 +97,7 @@ public class BuyCard extends Move {
      * Gets row of {@link Card} in market. Represents deck no. (1, 2, 3) or
      * reserve hand (0).
      *
-     * @return row.
+     * @return row of {@link Card} in market
      */
     public int getRow() {
         return row;
@@ -108,16 +106,16 @@ public class BuyCard extends Move {
     /**
      * Gets column of {@link Card} (1, 2, 3, 4) in market.
      *
-     * @return column.
+     * @return column of {@link Card} in market
      */
     public int getColumn() {
         return column;
     }
 
     /**
-     * Gets reserve index.
+     * Gets reserve index of {@link Card} in reserve hand.
      *
-     * @return reserveIdx.
+     * @return reserveIdx of {@link Card}.
      */
     public int getReserveIdx() {
         return reserveIdx;
@@ -126,16 +124,16 @@ public class BuyCard extends Move {
     /**
      * Gets tokens that {@link CPUPlayer} needs to pay.
      *
-     * @return Map of {@link Gem} and respective quantities.
+     * @return Map of {@link Gem} and respective their quantities
      */
     public Map<Gem, Integer> getToPay() {
         return toPay;
     }
 
     /**
-     * Gets the indexes of all possible nobles.
+     * Gets the indexes of all possible {@link NobleTile}s.
      *
-     * @return List of indexes of the nobles based on availNobles
+     * @return List of indexes of the {@link NobleTile}s based on availNobles
      */
     public List<Integer> getPossibleNobleIdx() {
         return possibleNobleIdx;

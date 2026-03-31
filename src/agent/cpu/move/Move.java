@@ -21,7 +21,7 @@ public abstract class Move {
     /**
      * Move performed by {@link CPUPlayer}.
      *
-     * @param cpu {@link CPUPlayer}.
+     * @param cpu {@link CPUPlayer}
      */
     public Move(CPUPlayer cpu) {
         this.cpu = cpu;
@@ -30,7 +30,7 @@ public abstract class Move {
     /**
      * Gets expectedValue.
      *
-     * @return expectedValue.
+     * @return expectedValue
      */
     public int getExpectedValue() {
         return expectedValue;
@@ -39,7 +39,7 @@ public abstract class Move {
     /**
      * Gets pointsGain.
      *
-     * @return pointsGain.
+     * @return pointsGain
      */
     public int getPointsGain() {
         return pointsGain;
