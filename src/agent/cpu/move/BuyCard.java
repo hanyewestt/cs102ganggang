@@ -8,7 +8,7 @@ import item.*;
 import util.*;
 
 /**
- * {@link CPUPlayer} buys {@link Card}.
+ * {@link CPUPlayer} buys {@link Card}
  */
 public class BuyCard extends Move {
 
@@ -20,7 +20,7 @@ public class BuyCard extends Move {
     private ArrayList<Integer> possibleNobleIdx = new ArrayList<>();
 
     /**
-     * Stores information for {@link CPUPlayer} to buy {@link Card} from market.
+     * Stores information for {@link CPUPlayer} to buy {@link Card} from market
      *
      * @param cpu {@link CPUPlayer}
      * @param row Row of the {@link CPUPlayer}
@@ -52,7 +52,7 @@ public class BuyCard extends Move {
 
     /**
      * Stores information for {@link CPUPlayer} to buy {@link Card} from reserve
-     * hand.
+     * hand
      *
      * @param cpu {@link CPUPlayer}
      * @param reserveIdx Reserve hand index
@@ -85,7 +85,7 @@ public class BuyCard extends Move {
     }
 
     /**
-     * Gets location of {@link Card}. 1 for market. 2 for reserve.
+     * Gets location of {@link Card}. 1 for market. 2 for reserve
      *
      * @return buyLocation of {@link Card}
      */
@@ -95,7 +95,7 @@ public class BuyCard extends Move {
 
     /**
      * Gets row of {@link Card} in market. Represents deck no. (1, 2, 3) or
-     * reserve hand (0).
+     * reserve hand (0)
      *
      * @return row of {@link Card} in market
      */
@@ -104,7 +104,7 @@ public class BuyCard extends Move {
     }
 
     /**
-     * Gets column of {@link Card} (1, 2, 3, 4) in market.
+     * Gets column of {@link Card} (1, 2, 3, 4) in market
      *
      * @return column of {@link Card} in market
      */
@@ -113,16 +113,16 @@ public class BuyCard extends Move {
     }
 
     /**
-     * Gets reserve index of {@link Card} in reserve hand.
+     * Gets reserve index of {@link Card} in reserve hand
      *
-     * @return reserveIdx of {@link Card}.
+     * @return reserveIdx of {@link Card}
      */
     public int getReserveIdx() {
         return reserveIdx;
     }
 
     /**
-     * Gets tokens that {@link CPUPlayer} needs to pay.
+     * Gets tokens that {@link CPUPlayer} needs to pay
      *
      * @return Map of {@link Gem} and respective their quantities
      */
@@ -131,7 +131,7 @@ public class BuyCard extends Move {
     }
 
     /**
-     * Gets the indexes of all possible {@link NobleTile}s.
+     * Gets the indexes of all possible {@link NobleTile}s
      *
      * @return List of indexes of the {@link NobleTile}s based on availNobles
      */
@@ -141,7 +141,7 @@ public class BuyCard extends Move {
 
     /**
      * Performs buyCard action and prints message to indicate what move the
-     * {@link CPUPlayer} makes.
+     * {@link CPUPlayer} makes
      */
     public void doMove() {
         if (buyLocation == 1) {
