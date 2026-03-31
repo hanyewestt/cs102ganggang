@@ -30,6 +30,7 @@ public class Display {
 
     /**
      * Prints turn options the {@link Player} can take.
+     * 
      */
     public static void turnOptionDisplay(Player player) {
         StringBuilder sb = new StringBuilder();

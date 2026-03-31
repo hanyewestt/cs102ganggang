@@ -3,7 +3,6 @@ package agent.cpu.move;
 import java.util.*;
 
 import item.*;
-import agent.cpu.*;
 import util.*;
 
 /**
@@ -101,7 +100,7 @@ public class ExpectedValueCalculator {
      * @param c {@link Card} in the reserve hand
      * @param nobles {@link NobleTile}s available
      * @param production {@link Gem} production levels
-     * @param tokens {@link Gem} owned by {@link CPUPlayer}
+     * @param tokens {@link Gem} owned by {@link agent.cpu.CPUPlayer}
      *
      * @return Reserve Card value.
      */
