@@ -1,8 +1,7 @@
 package util;
 
-import java.util.*;
-
 import item.*;
+import java.util.*;
 
 /**
  * This class contains all the utility functions.
@@ -368,5 +367,29 @@ public class Utility {
                 return null;
         }
     }
-
+    
+    /**
+     * Converts a {@link Gem} to a char Returns null if {@link Gem} is invalid.
+     *
+     * @param Gem The {@link Gem} to be read.
+     * @return The coloured char representing an {@link Gem}.
+     */
+    public static String fromGemToColour(Gem gem) {
+        switch (gem) {
+            case Diamond:
+                return "\u001B[34mD\u001B[0m";
+            case Ruby:
+                return "\u001B[31mR\u001B[0m";
+            case Sapphire:
+                return "\u001B[35mS\u001B[0m";
+            case Emerald:
+                return "\u001B[32mE\u001B[0m";
+            case Onyx:
+                return "\u001B[90mO\u001B[0m";
+            case Gold:
+                return "\u001B[33mG\u001B[0m";
+            default:
+                return null;
+        }
+    }
 }

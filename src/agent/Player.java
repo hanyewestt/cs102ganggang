@@ -1,9 +1,8 @@
 package agent;
 
+import item.*;
 import java.lang.*;
 import java.util.*;
-
-import item.*;
 import util.*;
 // Gem, Card, NobleTile
 
@@ -480,13 +479,13 @@ public class Player implements Comparable<Player> {
 
         for (Gem g : Gem.values()) {
             if (first) {
-                sb.append(tokens.get(g)).append(Utility.fromGemToChar(g));
+                sb.append(tokens.get(g)).append(Utility.fromGemToColour(g));
                 first = false;
             } else {
-                sb.append(", ").append(tokens.get(g)).append(Utility.fromGemToChar(g));
+                sb.append(", ").append(tokens.get(g)).append(Utility.fromGemToColour(g));
             }
         }
-        sb.append("]\n");
+        sb.append("  ]\n");
 
         return sb.toString();
     }

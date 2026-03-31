@@ -1,8 +1,7 @@
 package item;
 
-import java.util.*;
-
 import display.Display;
+import java.util.*;
 import util.*;
 
 /**
@@ -75,8 +74,8 @@ public class Card {
         sb.append("[ ");
 
         // print gems
-        int gemWidth = 8;
-        sb.append(String.format("%-" + gemWidth + "s", GEMTYPE));
+        int gemWidth = 7;
+        sb.append(String.format("%-" + gemWidth + "s", Utility.fromGemToColour(GEMTYPE)));
         sb.append(" | ");
 
         // print points
@@ -85,7 +84,7 @@ public class Card {
         sb.append(" | ");
 
         // print costs
-        int costWidth = 14;
+        int costWidth = 30 + 9 * (Display.costDisplayString(tokens).length() / 16);
 
         sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");

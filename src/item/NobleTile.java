@@ -1,9 +1,8 @@
 package item;
 
-import java.util.*;
-
-import util.Utility;
 import display.Display;
+import java.util.*;
+import util.Utility;
 
 /**
  * Represents a {@link NobleTile}. {@link NobleTile} contains HashMap of its
@@ -72,7 +71,7 @@ public class NobleTile {
         sb.append(" | ");
 
         // print tokens
-        int costWidth = 10;
+        int costWidth = 30 + 9 * (Display.costDisplayString(tokens).length() / 16);
 
         sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");
