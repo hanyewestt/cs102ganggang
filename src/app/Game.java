@@ -106,6 +106,10 @@ public class Game {
 
         int startingGems = Configuration.getStartingGems(playerNumber);
         for (Gem gem : Gem.values()) {
+            if (gem == Gem.Gold) {
+                bank.put(gem, 5);
+                continue;
+            }
             bank.put(gem, startingGems);
         }
 
@@ -234,21 +238,36 @@ public class Game {
                         if (Display.showDrawToken()) {
                             turnDone = drawToken(player);
                         } else {
-                            System.out.println("This is not a valid option!");
+                            try {
+                                System.out.println("\n‼️ This is not a valid option! ‼️\n");
+                                TimeUnit.SECONDS.sleep(2);
+                            } catch (InterruptedException e) {
+                                return;
+                            }
                         }
                         break;
                     case 2:
                         if (Display.showReserveCard(player)) {
                             turnDone = reserveCard(player);
                         } else {
-                            System.out.println("This is not a valid option!");
+                            try {
+                                System.out.println("\n‼️ This is not a valid option! ‼️\n");
+                                TimeUnit.SECONDS.sleep(2);
+                            } catch (InterruptedException e) {
+                                return;
+                            }
                         }
                         break;
                     case 3:
                         if (Display.showBuyCard(player)) {
                             turnDone = buyCard(player);
                         } else {
-                            System.out.println("This is not a valid option!");
+                            try {
+                                System.out.println("\n‼️ This is not a valid option! ‼️\n");
+                                TimeUnit.SECONDS.sleep(2);
+                            } catch (InterruptedException e) {
+                                return;
+                            }
                         }
                         break;
                     case 4:
