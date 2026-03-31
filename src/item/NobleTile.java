@@ -71,7 +71,7 @@ public class NobleTile {
         sb.append(" | ");
 
         // print tokens
-        int costWidth = 13;
+        int costWidth = 30 + 9 * (Display.costDisplayString(tokens).length() / 16);
 
         sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");

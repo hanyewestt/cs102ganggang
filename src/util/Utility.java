@@ -372,22 +372,22 @@ public class Utility {
      * Converts a {@link Gem} to a char Returns null if {@link Gem} is invalid.
      *
      * @param Gem The {@link Gem} to be read.
-     * @return The string of an emoji representing an {@link Gem}.
+     * @return The coloured char representing an {@link Gem}.
      */
     public static String fromGemToColour(Gem gem) {
         switch (gem) {
             case Diamond:
-                return "💎";
+                return "\u001B[34mD\u001B[0m";
             case Ruby:
-                return "🛑";
+                return "\u001B[31mR\u001B[0m";
             case Sapphire:
-                return "🔵";
+                return "\u001B[35mS\u001B[0m";
             case Emerald:
-                return "🟩";
+                return "\u001B[32mE\u001B[0m";
             case Onyx:
-                return "🔳";
+                return "\u001B[90mO\u001B[0m";
             case Gold:
-                return "🪙";
+                return "\u001B[33mG\u001B[0m";
             default:
                 return null;
         }
