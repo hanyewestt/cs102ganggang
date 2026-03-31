@@ -84,7 +84,7 @@ public class Card {
         sb.append(" | ");
 
         // print costs
-        int costWidth = 18;
+        int costWidth = 30 + 9 * (Display.costDisplayString(tokens).length() / 16);
 
         sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");

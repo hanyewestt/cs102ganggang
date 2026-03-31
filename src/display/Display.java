@@ -134,7 +134,7 @@ public class Display {
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
-        System.out.println("    [ Bonuses | Prestige | Card Costs 💰      ]\n");
+        System.out.println("    [ Bonuses | Prestige | Card Costs 💰   ]\n");
 
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
