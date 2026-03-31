@@ -14,12 +14,12 @@ public class PointsCalculator {
     /**
      * Calculates points to be gained for performing a {@link Move}.
      *
-     * @param currProduction Current levels of {@link Gem} production.
-     * @param c {@link Card} to be bought.
-     * @param availNobles {@link NobleTile} available.
-     * @param nobleIdx nobleIndx.
+     * @param currProduction Current levels of {@link Gem} production
+     * @param c {@link Card} to be bought
+     * @param availNobles {@link NobleTile} available
+     * @param nobleIdx nobleIdx
      *
-     * @return points.
+     * @return points
      */
     public static int calculatePoints(HashMap<Gem, Integer> currProduction, Card c,
             ArrayList<NobleTile> availNobles, ArrayList<Integer> nobleIdx) {

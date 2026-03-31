@@ -34,7 +34,7 @@ public class CPUPlayer extends Player {
      *
      * @param name Name of {@link CPUPlayer}
      * @param order {@link CPUPlayer} order number
-     * @param splendor Game that {@link CPUPlayer} is playing in.
+     * @param splendor Game that {@link CPUPlayer} is playing in
      */
     public CPUPlayer(Game splendor, String name, int order) {
         super(name, order);
@@ -44,7 +44,7 @@ public class CPUPlayer extends Player {
     /**
      * Sets game which {@link CPUPlayer} is playing in.
      *
-     * @param splendor Game that {@link CPUPlayer} is playing in.
+     * @param splendor Game that {@link CPUPlayer} is playing in
      */
     public void setGame(Game splendor) {
         this.splendor = splendor;
@@ -62,7 +62,7 @@ public class CPUPlayer extends Player {
     /**
      * Gets optimal move that {@link CPUPlayer} can perform.
      *
-     * @return {@link Move}
+     * @return optimal {@link Move}
      */
     public Move getMove() {
         return optimalMove;
@@ -172,7 +172,7 @@ public class CPUPlayer extends Player {
      *
      * @param card {@link Card} to be purchased
      * @param toPay Tokens that {@link CPUPlayer} has to pay to buy
-     * {@link Card}.
+     * {@link Card}
      *
      * @return True if able to buy {@link Card}. False if otherwise.
      */

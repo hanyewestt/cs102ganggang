@@ -21,10 +21,10 @@ public class ReserveCard extends Move {
     /**
      * Stores information for {@link CPUPlayer} to reserve {@link Card}.
      *
-     * @param cpu {@link CPUPlayer}.
-     * @param row Row of {@link Card} in market.
-     * @param column Column of {@link Card} in market.
-     * @param nobleTiles {@link NobleTile} available.
+     * @param cpu {@link CPUPlayer}
+     * @param row Row of {@link Card} in market
+     * @param column Column of {@link Card} in market
+     * @param nobleTiles {@link NobleTile} available
      *
      */
     public ReserveCard(CPUPlayer cpu, int row, int column, List<NobleTile> nobleTiles) {
@@ -66,7 +66,7 @@ public class ReserveCard extends Move {
     /**
      * Gets row of {@link Card} (1, 2, 3) in market.
      *
-     * @return Row of {@link Card} in market.
+     * @return Row of {@link Card} in market
      */
     public int getRow() {
         return row;
@@ -75,7 +75,7 @@ public class ReserveCard extends Move {
     /**
      * Gets column of {@link Card} (1, 2, 3, 4) in market.
      *
-     * @return Column of {@link Card} in market.
+     * @return Column of {@link Card} in market
      */
     public int getColumn() {
         return column;
@@ -93,7 +93,7 @@ public class ReserveCard extends Move {
     /**
      * Gets tokens that {@link CPUPlayer} needs to return.
      *
-     * @return HashMap of {@link Gem} and respective quantities.
+     * @return HashMap of {@link Gem} and respective quantities
      */
     public HashMap<Gem, Integer> getToReturn() {
         return toReturn;

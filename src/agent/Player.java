@@ -411,7 +411,7 @@ public class Player implements Comparable<Player> {
      * Displays the respective {@link Gem} production levels of the
      * {@link Player}.
      *
-     * @return String that displays {@link Player}’s production levels.
+     * @return String that displays {@link Player}’s production levels
      */
     public String displayBonuses() {
         StringBuilder sb = new StringBuilder("[");
@@ -441,7 +441,7 @@ public class Player implements Comparable<Player> {
      * Displays {@link NobleTile} that the {@link Player} owns.
      *
      * @return String that displays {@link NobleTile} that have visited the
-     * {@link Player}.
+     * {@link Player}
      */
     public String displayNobles() {
 
@@ -463,7 +463,7 @@ public class Player implements Comparable<Player> {
     /**
      * Gets the name of the {@link Player};
      *
-     * @return The name of the {@link Player}.
+     * @return The name of the {@link Player}
      */
     public String getName() {
         return name;
