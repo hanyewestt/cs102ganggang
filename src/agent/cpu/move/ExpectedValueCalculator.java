@@ -76,7 +76,7 @@ public class ExpectedValueCalculator {
 
             int difference = tokens.get(g) - cardCost.get(g);
 
-            sum += difference < 0 ? difference : 0;
+            sum += difference < 0 ? 0 : difference;
         }
 
         sum += c.getPoints();

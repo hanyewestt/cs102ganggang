@@ -10,8 +10,8 @@ import item.*;
 public class Utility {
 
     /**
-     * Returns an empty hashmap with {@link Gem} keys, and their respective values
-     * initialised to 0.
+     * Returns an empty hashmap with {@link Gem} keys, and their respective
+     * values initialised to 0.
      *
      * @return The empty hashmap.
      */
@@ -40,6 +40,11 @@ public class Utility {
         return copy;
     }
 
+    /**
+     * Generates a copy of market.
+     *
+     * @param market The market to copy.
+     */
     public static Card[][] generateMarketClone(Card[][] market) {
         Card[][] copy = new Card[3][4];
 
@@ -68,9 +73,9 @@ public class Utility {
     }
 
     /**
-     * Performs subtraction with gold on two HashMaps with {@link Gem}, Integer. Returns
-     * the amount of tokens that are subtracted, with gold as a wildcard.
-     * Returns null if insufficient amount of tokens.
+     * Performs subtraction with gold on two HashMaps with {@link Gem}, Integer.
+     * Returns the amount of tokens that are subtracted, with gold as a
+     * wildcard. Returns null if insufficient amount of tokens.
      *
      * @param tokens HashMap representing amount of tokens held.
      * @param cost HashMap representing cost, usually cards.
@@ -104,13 +109,13 @@ public class Utility {
     }
 
     /**
-     * Subtracts the number of {@link Gem}s in the first HashMap by the amount of said
-     * gem in right HashMap. Use findSubtractionAmount to find the second
-     * HashMap and ensure it is not null or more than the first.
+     * Subtracts the number of {@link Gem}s in the first HashMap by the amount
+     * of said gem in right HashMap. Use findSubtractionAmount to find the
+     * second HashMap and ensure it is not null or more than the first.
      *
      * @param orig The HashMap to be modified.
-     * @param subtractAmount The HashMap containing the amount of {@link Gem}s to
-     * subtract.
+     * @param subtractAmount The HashMap containing the amount of {@link Gem}s
+     * to subtract.
      */
     public static void subtract(HashMap<Gem, Integer> orig, HashMap<Gem, Integer> subtractAmount) {
         for (Gem g : Gem.values()) {
@@ -119,12 +124,13 @@ public class Utility {
     }
 
     /**
-     * Subtracts the number of {@link Gem}s in the first HashMap by the amount of said
-     * gem in right HashMap, ignoring Gold, with a minimum value of 0 left.
-     * Ensure both HashMaps are not null beforehand.
+     * Subtracts the number of {@link Gem}s in the first HashMap by the amount
+     * of said gem in right HashMap, ignoring Gold, with a minimum value of 0
+     * left. Ensure both HashMaps are not null beforehand.
      *
      * @param orig The HashMap to be modified.
-     * @param discountAmount The HashMap containing the amount of {@link Gem}s to discount.
+     * @param discountAmount The HashMap containing the amount of {@link Gem}s
+     * to discount.
      */
     public static void discount(HashMap<Gem, Integer> orig, HashMap<Gem, Integer> discountAmount) {
         for (Gem g : Gem.values()) {
@@ -137,6 +143,15 @@ public class Utility {
         }
     }
 
+    /**
+     * Returns true if the number of each {@link Gem}s in the first hashmap is
+     * greater than or equal to the number of each {@link Gem}s in the second
+     * hashmap.
+     *
+     * @param first The first HashMap
+     * @param second The second HashMap
+     * @return The boolean representing if first is greater than second.
+     */
     public static boolean isGreaterOrEqual(HashMap<Gem, Integer> first, HashMap<Gem, Integer> second) {
         for (Gem g : Gem.values()) {
             if (first.get(g) < second.get(g)) {
@@ -175,13 +190,12 @@ public class Utility {
     }
 
     /**
-     * Will prompt the user for a string representing a {@link Gem}. 
-     * Keeps prompting until a valid input is given.
-     * Gold cannot be taken.
-     * 
+     * Will prompt the user for a string representing a {@link Gem}. Keeps
+     * prompting until a valid input is given. Gold cannot be taken.
+     *
      * @param keyboard The Scanner that is looking at keyboard input
      * @param message The message to prompt for user input.
-     * 
+     *
      * @return {@link Gem} that the user inputs.
      */
     public static Gem askForGem(Scanner keyboard, String message) {
@@ -189,13 +203,14 @@ public class Utility {
     }
 
     /**
-     * Will prompt the user for a string representing a {@link Gem}. 
-     * Keeps prompting until a valid input is given.
-     * Gold can be taken.
+     * Will prompt the user for a string representing a {@link Gem}. Keeps
+     * prompting until a valid input is given. Gold can be taken.
      *
      * @param keyboard The Scanner that is looking at keyboard input.
      * @param message The message to prompt for user input.
-     * 
+     * @param takesGold set to false by default. Can be specified as true if
+     * allowing player to take gold.
+     *
      * @return {@link Gem} that the user inputs.
      */
     public static Gem askForGem(Scanner keyboard, String message, boolean takesGold) {
@@ -217,7 +232,7 @@ public class Utility {
                     return Gem.Emerald;
                 case "onyx", "o":
                     return Gem.Onyx;
-                case "cancel", "c","done":
+                case "cancel", "c", "done":
                     return null;
                 case "gold", "g":
                     if (takesGold) {
@@ -274,10 +289,13 @@ public class Utility {
     }
 
     /**
-     * Prompts the user for the row and column position of the {@link Card}s on the board.
-     * User can enter '0' to cancel at any time.
-     * 
-     * @return returns an array of size 2 {row, col}. Returns null if users cancels.
+     * Prompts the user for the row and column position of the {@link Card}s on
+     * the board. User can enter '0' to cancel at any time.
+     *
+     * @param sc The Scanner that is looking at keyboard input.
+     *
+     * @return returns an array of size 2 {row, col}. Returns null if users
+     * cancels.
      */
     public static int[] getPositionOnBoard(Scanner sc) {
         final int ROW_MAX = 3;
@@ -306,7 +324,7 @@ public class Utility {
     /**
      * Converts a {@link Gem} to a char Returns X if {@link Gem} is invalid.
      *
-     * @param Gem The {@link Gem} to be read.
+     * @param gem The {@link Gem} to be read.
      * @return The char representing that {@link Gem}.
      */
     public static char fromGemToChar(Gem gem) {

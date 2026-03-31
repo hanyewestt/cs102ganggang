@@ -30,6 +30,7 @@ public class Display {
 
     /**
      * Prints turn options the {@link Player} can take.
+     * @param player {@link Player} who is performing their turn
      */
     public static void turnOptionDisplay(Player player) {
         StringBuilder sb = new StringBuilder();
@@ -346,18 +347,13 @@ public class Display {
         return false;
     }
 
+    
     /**
-     * Returns true if the {@link Player} can draw 2 or draw 3 tokens. Calls
-     * {@link #canDrawTwo()} and {@link #canDrawThree()}.
-     *
-     * @return True if Player can draw tokens. False if otherwise.
+     * Returns true if the {@link Player} bank not empty
+     * @return True if bank is not empty.
      */
     public static boolean showDrawToken() {
-        // 0, 1, 2 in bank is impossible to draw from.
-        if (Utility.getTotalGems(new HashMap<>(bank)) < 3) {
-            return false;
-        }
-        return canDrawTwo() || canDrawThree();
+        return Utility.getTotalGems(new HashMap<>(bank)) > 0 ? true : false;
     }
 
     /**
@@ -384,7 +380,7 @@ public class Display {
      * there is at least 3 different token types, each with more than one token
      * each in bank. Returns false otherwise.
      *
-     * @return True if {@link Player} can draw 3 tokens. False if otherwise.
+     * @return True if {@link Player} can draw 3 tokens. False if otherwise
      */
     public static boolean canDrawThree() {
 
