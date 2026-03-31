@@ -1,8 +1,7 @@
 package util;
 
-import java.util.*;
-
 import item.*;
+import java.util.*;
 
 /**
  * This class contains all the utility functions.
@@ -368,5 +367,29 @@ public class Utility {
                 return null;
         }
     }
-
+    
+    /**
+     * Converts a {@link Gem} to a char Returns null if {@link Gem} is invalid.
+     *
+     * @param Gem The {@link Gem} to be read.
+     * @return The string of an emoji representing an {@link Gem}.
+     */
+    public static String fromGemToColour(Gem gem) {
+        switch (gem) {
+            case Diamond:
+                return "💎";
+            case Ruby:
+                return "🛑";
+            case Sapphire:
+                return "🔵";
+            case Emerald:
+                return "🟩";
+            case Onyx:
+                return "🔳";
+            case Gold:
+                return "🪙";
+            default:
+                return null;
+        }
+    }
 }

@@ -1,10 +1,9 @@
 package display;
 
-import java.util.*;
-
 import agent.*;
 import app.*;
 import item.*;
+import java.util.*;
 import util.*;
 
 /**
@@ -110,22 +109,22 @@ public class Display {
         System.out.println(roundDisplay);
         System.out.println("\n=== " + player.getName() + "'s turn ===\n");
 
-        System.out.println("------------------ Bank 🏦 ------------------\n");
+        System.out.println("------------------- Bank 🏦 -------------------\n");
 
         printBank(bank);
         System.out.println();
 
-        System.out.println("----------------- Market 🏬 -----------------\n");
+        System.out.println("------------------ Market 🏬 ------------------\n");
 
         printMarket(market);
         System.out.println();
 
-        System.out.println("----------------- Nobles 👑 -----------------\n");
+        System.out.println("------------------ Nobles 👑 ------------------\n");
 
         Display.printNobles(nobles);
         System.out.println();
 
-        System.out.println("---------------- Your Hand 👤 ---------------\n");
+        System.out.println("----------------- Your Hand 👤 ----------------\n");
 
         System.out.println(player);
     }
@@ -136,7 +135,7 @@ public class Display {
      * @param market the market
      */
     public static void printMarket(Card[][] market) {
-        System.out.println("    [ Bonuses  | Prestige | Card Costs 💰  ]\n");
+        System.out.println("    [ Bonuses | Prestige | Card Costs 💰      ]\n");
 
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
@@ -161,12 +160,12 @@ public class Display {
      * @param bank the bank
      */
     public static void printBank(HashMap<Gem, Integer> bank) {
-        System.out.printf(bank.get(Gem.Diamond) + "D , ");
-        System.out.printf(bank.get(Gem.Ruby) + "R , ");
-        System.out.printf(bank.get(Gem.Sapphire) + "S , ");
-        System.out.printf(bank.get(Gem.Emerald) + "E , ");
-        System.out.printf(bank.get(Gem.Onyx) + "O , ");
-        System.out.printf(bank.get(Gem.Gold) + "G\n");
+        System.out.printf(bank.get(Gem.Diamond) + Utility.fromGemToColour(Gem.Diamond) + " , ");
+        System.out.printf(bank.get(Gem.Ruby) + Utility.fromGemToColour(Gem.Ruby) + " , ");
+        System.out.printf(bank.get(Gem.Sapphire) + Utility.fromGemToColour(Gem.Sapphire) + " , ");
+        System.out.printf(bank.get(Gem.Emerald) + Utility.fromGemToColour(Gem.Emerald) + " , ");
+        System.out.printf(bank.get(Gem.Onyx) + Utility.fromGemToColour(Gem.Onyx) + " , ");
+        System.out.printf(bank.get(Gem.Gold) + Utility.fromGemToColour(Gem.Gold) + "\n");
     }
 
     /**
@@ -175,7 +174,7 @@ public class Display {
      * @param nobles a list of {@link NobleTile} to print
      */
     public static void printNobles(List<NobleTile> nobles) {
-        System.out.println("     [ Prestige | Bonus Req. ]\n");
+        System.out.println("     [ Prestige | Bonus Req.    ]\n");
         for (int i = 0; i < nobles.size(); i++) {
             System.out.printf("%d.   %s\n", i + 1, nobles.get(i));
         }
@@ -287,7 +286,7 @@ public class Display {
                     costDisplay += ", ";
                 }
 
-                costDisplay += "" + entry.getValue() + Utility.fromGemToChar((Gem) entry.getKey());
+                costDisplay += "" + entry.getValue() + Utility.fromGemToColour((Gem) entry.getKey());
 
             }
         }
