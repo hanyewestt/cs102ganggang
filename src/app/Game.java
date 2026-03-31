@@ -675,6 +675,8 @@ public class Game {
             chosen = move.getToDraw();
         } else {
             chosen = drawTokenFromPlayer();
+
+
             if (chosen == null) {
                 // player has chosen not to continue
                 return false;
@@ -699,7 +701,9 @@ public class Game {
      * cancels.
      */
     public static HashMap<Gem, Integer> drawTokenFromPlayer() {
-        while (true) {
+        boolean validAction = false;
+        HashMap<Gem, Integer> chosen = new HashMap<>();
+        while (!validAction) {
             Display.drawTokenDisplay();
 
             int choice = Utility.askForNum(sc, 0, 2, "Please enter your choice: ");
@@ -707,13 +711,29 @@ public class Game {
 
             switch (choice) {
                 case 1:
-                    return pickThreeDifferentGems();
+                    chosen = pickThreeDifferentGems();
+                    if (chosen == null) {
+                        validAction = false;
+                        break;
+                    }
+                    else {
+                        return chosen;
+                    }
                 case 2:
-                    return pickTwoSameGem();
+                    chosen = pickTwoSameGem();
+                    if (chosen == null) {
+                        validAction = false;
+                        break;
+                    }
+                    else {
+                        return chosen;
+                    }
+
                 default:
                     return null;
             }
         }
+        return null;
     }
 
     /**
@@ -761,14 +781,10 @@ public class Game {
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 3) {
-            Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o), 'done' to stop, or 'cancel': ");
+            Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o), 'done' to stop or cancel: ");
 
             if (g == null && Utility.getTotalGems(chosen) > 0) {
                 break;
-            }
-
-            if (g == null) {
-                return null;
             }
 
             if (bank.get(g) <= 0) {
@@ -784,7 +800,12 @@ public class Game {
             chosen.put(g, 1);
         }
 
-        return chosen;
+        boolean proceed = Utility.willProceed(sc, "Confirm that these are the tokens you want to return draw? {Y/N} ");
+        if (proceed) {
+            return chosen;
+        }
+
+        return null;
     }
 
     /**
