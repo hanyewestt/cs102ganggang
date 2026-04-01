@@ -10,9 +10,9 @@ import util.*;
  */
 public class ExpectedValueCalculator {
 
-    private static final int goldWeight = 6;
-    private static final int valueLossPerRemoval = -5;
-    private static final int nobleWeight = 3;
+    private static final int goldWeight = 3;
+    private static final int valueLossPerRemoval = -10;
+    private static final int nobleWeight = 2;
 
     /**
      * Calculates expected value of performing a move without considering
@@ -37,12 +37,20 @@ public class ExpectedValueCalculator {
                     continue;
                 }
 
-                sum += getCardValue(c, nobles, production, tokens);
+                sum += getCardValue(c, production, tokens);
             }
         }
 
         for (Card c : reserveHand) {
-            sum += getCardValue(c, nobles, production, tokens);
+            sum += getCardValue(c, production, tokens);
+        }
+
+        for (NobleTile noble : nobles) {
+            for (Gem g : Gem.values()) {
+                int progressToNoble = Math.min(production.get(g), noble.getTokens().get(g));
+
+                sum += progressToNoble * nobleWeight;
+            }
         }
 
         sum += tokens.get(Gem.Gold) * goldWeight;
@@ -54,41 +62,26 @@ public class ExpectedValueCalculator {
      * Gets value of {@link Card} in market.
      *
      * @param c {@link Card} in the market.
-     * @param nobles {@link NobleTile}s available.
      * @param production {@link Gem} production levels.
      * @param tokens {@link Gem}s owned by {@link agent.cpu.CPUPlayer}.
      *
      * @return {@link Card} value.
      */
-    public static int getCardValue(Card c, List<NobleTile> nobles, HashMap<Gem, Integer> production,
-            HashMap<Gem, Integer> tokens) {
+    public static int getCardValue(Card c, HashMap<Gem, Integer> production, HashMap<Gem, Integer> tokens) {
         int sum = 0;
 
         HashMap<Gem, Integer> cardCost = c.getTokens();
 
-        Utility.discount(tokens, production);
+        Utility.discount(cardCost, production);
 
         for (Gem g : Gem.values()) {
             if (g == Gem.Gold) {
                 continue;
             }
 
-            int difference = tokens.get(g) - cardCost.get(g);
+            int progressToCard = Math.min(tokens.get(g), cardCost.get(g));
 
-            sum += difference < 0 ? 0 : difference;
-        }
-
-        sum += c.getPoints();
-
-        Gem produce = c.getGemType();
-        for (NobleTile noble : nobles) {
-            if (noble == null) {
-                continue;
-            }
-
-            if (noble.getTokens().get(produce) > 0) {
-                sum += nobleWeight;
-            }
+            sum += progressToCard;
         }
 
         return sum;
@@ -133,9 +126,11 @@ public class ExpectedValueCalculator {
         }
 
         if (tokensNeeded < 0) {
-            sum -= 5;
-        } else if (tokensNeeded < 5) {
-            sum += 5 - tokensNeeded;
+            sum -= 3;
+        } else if (tokensNeeded < 3) {
+            sum += 3 - tokensNeeded;
+        } else {
+            sum -= 10;
         }
 
         sum *= c.getPoints();

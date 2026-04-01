@@ -29,6 +29,7 @@ public class Display {
 
     /**
      * Prints turn options the {@link Player} can take.
+     *
      * @param player {@link Player} who is performing their turn
      */
     public static void turnOptionDisplay(Player player) {
@@ -60,37 +61,62 @@ public class Display {
 
     /**
      * Prints options the player has to buy {@link Card}s.
+     *
+     * @param player {@link Player} who is performing their turn
      */
-    public static void buyCardDisplay() {
-        System.out.println();
-        System.out.println("1. Buy from market");
-        System.out.println("2. Buy from reserve");
-        System.out.println("0. Cancel");
-        System.out.println();
+    public static void buyCardDisplay(Player player) {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Choose option:\n");
+        sb.append("1. Buy from market\n");
+        sb.append("2. Buy from reserve\n");
+        sb.append("0. Cancel\n");
+
+        if (!canBuyFromMarket(player)) {
+            sb.insert(sb.indexOf("1."), "\u001b[9m");
+            sb.insert(sb.indexOf("2."), "\u001b[0m");
+        }
+
+        if (!canBuyFromReserve(player)) {
+            sb.insert(sb.indexOf("2."), "\u001b[9m");
+            sb.insert(sb.indexOf("0."), "\u001b[0m");
+        }
+
+        System.out.println(sb);
     }
 
     /**
      * Prints options the {@link Player} has to draw tokens.
      */
     public static void drawTokenDisplay() {
-        System.out.println();
-        System.out.println("Token options: ");
-        System.out.println("1. Take up to 3 different tokens");
-        System.out.println("2. Take 2 same tokens");
-        System.out.println("0. Cancel");
-        System.out.println();
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Token options:\n");
+        sb.append("1. Take up to 3 different tokens\n");
+        sb.append("2. Take 2 same tokens\n");
+        sb.append("0. Cancel\n");
+
+        if (!canDrawTwo()) {
+            sb.insert(sb.indexOf("2."), "\u001b[9m");
+            sb.insert(sb.indexOf("0."), "\u001b[0m");
+        }
+        System.out.println(sb);
     }
 
     /**
      * Prints options the {@link Player} has to reserve {@link Card}s.
      */
     public static void reserveCardDisplay() {
-        System.out.println();
-        System.out.println("Choose option: ");
-        System.out.println("1. Reserve from market");
-        System.out.println("2. Reserve from deck");
-        System.out.println("0. Cancel");
-        System.out.println();
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Choose option:\n");
+        sb.append("1. Reserve from market\n");
+        sb.append("2. Reserve from deck\n");
+        sb.append("0. Cancel\n");
+
+        System.out.println(sb);
     }
 
     /**
@@ -116,7 +142,7 @@ public class Display {
 
         System.out.println("----------------- Market 🏬 -----------------\n");
 
-        printMarket(market);
+        printMarket(market, player);
         System.out.println();
 
         System.out.println("----------------- Nobles 👑 -----------------\n");
@@ -132,19 +158,31 @@ public class Display {
     /**
      * Prints the {@link Card}s currently out in the market.
      *
-     * @param market the market
+     * @param player the current {@link Player}
+     * @param market the market }
      */
-    public static void printMarket(Card[][] market) {
+    public static void printMarket(Card[][] market, Player player) {
         System.out.println("    [ Bonuses | Prestige | Card Costs 💰   ]\n");
 
         for (int i = 1; i <= 3; i++) {
             System.out.printf("Deck <%d>\n", i);
             for (int j = 1; j <= 4; j++) {
-                if (market[i - 1][j - 1] == null) {
+
+                Card c = market[i - 1][j - 1];
+                if (c == null) {
                     System.out.printf("%d.%d [ Empty ]\n", i, j);
 
                 } else {
-                    System.out.printf("%d.%d %s\n", i, j, market[i - 1][j - 1].toString());
+                    HashMap<Gem, Integer> playerBonuses = player.getBonuses();
+                    HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
+                    Utility.discount(cardCost, playerBonuses);
+
+                    HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(player.getTokens(), cardCost);
+                    if (tokensToPay == null) {
+                        System.out.printf("\u001b[9m%d.%d\u001b[0m %s%n", i, j, c);
+                    } else {
+                        System.out.printf("%d.%d %s\n", i, j, c.toString());
+                    }
                 }
             }
 
@@ -316,7 +354,17 @@ public class Display {
      * @return True if {@link Player} can buy {@link Card}. False if otherwise.
      */
     public static boolean showBuyCard(Player player) {
+        return canBuyFromMarket(player) || canBuyFromReserve(player);
+    }
 
+    /**
+     * Returns true if the {@link Player} can buy from the market.
+     *
+     * @param player the current {@link Player}
+     *
+     * @return True if action can still be performed. False if otherwise.
+     */
+    public static boolean canBuyFromMarket(Player player) {
         HashMap<Gem, Integer> playerBonuses = player.getBonuses();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
@@ -334,6 +382,18 @@ public class Display {
                 }
             }
         }
+        return false;
+    }
+
+    /**
+     * Returns true if the {@link Player} can buy from their own reserve hand.
+     *
+     * @param player the current {@link Player}
+     *
+     * @return True if action can still be performed. False if otherwise.
+     */
+    public static boolean canBuyFromReserve(Player player) {
+        HashMap<Gem, Integer> playerBonuses = player.getBonuses();
         for (Card c : player.getReserveHand()) {
 
             HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
@@ -346,13 +406,24 @@ public class Display {
         return false;
     }
 
-    
     /**
      * Returns true if the {@link Player} bank not empty
+     *
      * @return True if bank is not empty.
      */
     public static boolean showDrawToken() {
-        return Utility.getTotalGems(new HashMap<>(bank)) > 0 ? true : false;
+        int nTokensNotEmpty = 0;
+        for (Gem g : Gem.values()) {
+            if (g == Gem.Gold) {
+                continue;
+            }
+            if (bank.get(g) > 0) {
+                // at least one not-gold token that isn't empty.
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -372,29 +443,6 @@ public class Display {
             }
         }
         return false;
-    }
-
-    /**
-     * Returns true if the {@link Player} can draw 3 tokens. Returns true if
-     * there is at least 3 different token types, each with more than one token
-     * each in bank. Returns false otherwise.
-     *
-     * @return True if {@link Player} can draw 3 tokens. False if otherwise
-     */
-    public static boolean canDrawThree() {
-
-        int nTokensNotEmpty = 0;
-        for (Gem g : Gem.values()) {
-            if (g == Gem.Gold) {
-                continue;
-            }
-            if (bank.get(g) > 0) {
-                nTokensNotEmpty++;
-            }
-        }
-
-        // at least 3 different tokens, at least one each.
-        return nTokensNotEmpty >= 3;
     }
 
     /**
