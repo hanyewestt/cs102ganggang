@@ -33,7 +33,7 @@ public class Display {
      */
     public static void turnOptionDisplay(Player player) {
         StringBuilder sb = new StringBuilder();
-        sb.append("----------------- Moves 🎮 -----------------\n\n");
+        sb.append("------------------ Moves 🎮 -----------------\n\n");
         sb.append("1. Draw tokens\n");
         sb.append("2. Reserve a card\n");
         sb.append("3. Buy a card\n");
@@ -109,22 +109,22 @@ public class Display {
         System.out.println(roundDisplay);
         System.out.println("\n=== " + player.getName() + "'s turn ===\n");
 
-        System.out.println("------------------- Bank 🏦 -------------------\n");
+        System.out.println("------------------ Bank 🏦 ------------------\n");
 
         printBank(bank);
         System.out.println();
 
-        System.out.println("------------------ Market 🏬 ------------------\n");
+        System.out.println("----------------- Market 🏬 -----------------\n");
 
         printMarket(market);
         System.out.println();
 
-        System.out.println("------------------ Nobles 👑 ------------------\n");
+        System.out.println("----------------- Nobles 👑 -----------------\n");
 
         Display.printNobles(nobles);
         System.out.println();
 
-        System.out.println("----------------- Your Hand 👤 ----------------\n");
+        System.out.println("---------------- Your Hand 👤 ---------------\n");
 
         System.out.println(player);
     }
@@ -243,7 +243,7 @@ public class Display {
     public static void printOtherPlayers(Map<Integer, Player> playersToPrint) {
 
         if (!playersToPrint.isEmpty()) {
-            System.out.println("------------- Other players 👥 -------------\n");
+            System.out.println("-------------- Other players 👥 -------------\n");
 
             for (Player p : playersToPrint.values()) {
                 System.out.println(p);

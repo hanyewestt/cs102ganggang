@@ -783,10 +783,6 @@ public class Game {
         while (Utility.getTotalGems(chosen) < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o), 'done' to stop or cancel: ");
 
-            if (g == null && Utility.getTotalGems(chosen) == 0 ) {
-                return null;
-            }
-
             if (g == null) {
                 break;
             }
@@ -804,7 +800,10 @@ public class Game {
             chosen.put(g, 1);
         }
 
-        boolean proceed = Utility.willProceed(sc, "Confirm that these are the tokens you want to return draw? {Y/N} ");
+        System.out.print("\nChosen gems: ");
+        chosen.forEach((x, y) -> System.out.print("" + y + Utility.fromGemToColour(x) + " "));
+        System.out.println();
+        boolean proceed = Utility.willProceed(sc, "Are these the tokens you want to draw? (Y/N): ");
         if (proceed) {
             return chosen;
         }
@@ -822,7 +821,7 @@ public class Game {
     private static HashMap<Gem, Integer> pickTwoSameGem() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 1) {
-            Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o) or cancel: ");
+            Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o) or 'cancel': ");
             if (g == null) {
                 return null;
             }
