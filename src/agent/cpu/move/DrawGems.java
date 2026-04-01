@@ -1,11 +1,8 @@
 package agent.cpu.move;
 
-import java.util.*;
-
-import item.*;
-import agent.*;
 import agent.cpu.*;
-import agent.cpu.move.*;
+import item.*;
+import java.util.*;
 import util.*;
 
 /**
@@ -97,7 +94,22 @@ public class DrawGems extends Move {
      * {@link CPUPlayer} makes
      */
     public void doMove() {
-        System.out.println("CPU is drawing tokens:" + toDraw);
+        System.out.print("CPU is drawing tokens:");
+        StringBuilder strb = new StringBuilder("[ ");
+        Boolean first = true;
+        for (Map.Entry<Gem, Integer> e: toDraw.entrySet()) {
+            if (e.getValue() > 0) {
+                if (first) {
+                    first = false;
+                } else {
+                    strb.append(", ");
+                }
+                strb.append(e.getValue()).append(Utility.fromGemToColour(e.getKey()));
+            }
+        }
+        strb.append(" ]");
+        System.out.println(strb.toString());
+
         cpu.getGameState().drawToken(cpu);
     }
 }

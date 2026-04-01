@@ -419,11 +419,11 @@ public class Player implements Comparable<Player> {
         for (Gem g : Gem.values()) {
             if (bonuses.get(g) != 0) {
                 if (first) {
-                    sb.append(bonuses.get(g)).append(Utility.fromGemToChar(g));
+                    sb.append(bonuses.get(g)).append(Utility.fromGemToColour(g));
                     first = false;
 
                 } else {
-                    sb.append(", ").append(bonuses.get(g)).append(Utility.fromGemToChar(g));
+                    sb.append(", ").append(bonuses.get(g)).append(Utility.fromGemToColour(g));
                 }
             }
         }
