@@ -830,7 +830,10 @@ public class Game {
             chosen.put(g, 1);
         }
 
-        boolean proceed = Utility.willProceed(sc, "Confirm that these are the tokens you want to draw? {Y/N} ");
+        System.out.print("\nChosen gems: ");
+        chosen.forEach((x, y) -> System.out.print("" + y + Utility.fromGemToColour(x) + " "));
+        System.out.println();
+        boolean proceed = Utility.willProceed(sc, "Are these the tokens you want to draw? (Y/N): ");
         if (proceed) {
             return chosen;
         }

@@ -485,7 +485,7 @@ public class Player implements Comparable<Player> {
                 sb.append(", ").append(tokens.get(g)).append(Utility.fromGemToColour(g));
             }
         }
-        sb.append("  ]\n");
+        sb.append("]\n");
 
         return sb.toString();
     }
