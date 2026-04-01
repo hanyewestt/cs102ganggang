@@ -104,8 +104,8 @@ public class ReserveCard extends Move {
      * {@link CPUPlayer} makes.
      */
     public void doMove() {
-        System.out.println("CPU is reserving card... ");
-        // System.out.println("CPU is reserving card: "+cpu.getGameState().getMarket()[row][column]);
+        // System.out.println("CPU is reserving card... ");
+        System.out.println("CPU is reserving card: "+cpu.getGameState().getMarket()[row][column]);
         cpu.getGameState().reserveCard(cpu);
     }
 }

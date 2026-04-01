@@ -217,7 +217,21 @@ public class Game {
             System.out.println("Computer is making its move...");
             cpu.calculateOptimalMove();
             Move move = cpu.getMove();
-            System.out.println("CPU Hand: " + cpu.getTokens());
+            System.out.print("CPU Hand: ");
+            StringBuilder strb = new StringBuilder("[ ");
+            Boolean first = true;
+            for (Map.Entry<Gem, Integer> e: cpu.getTokens().entrySet()) {
+                if (first) {
+                    first = false;
+                } else {
+                    strb.append(", ");
+                }
+                strb.append(e.getValue()).append(Utility.fromGemToColour(e.getKey()));
+            }
+            
+            strb.append(" ]");
+            System.out.println(strb.toString());
+
             if (move != null) {
                 move.doMove();
             }
@@ -289,7 +303,7 @@ public class Game {
 
         try {
             System.out.println("\nThe turn has ended, continuing to next player...\n");
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException e) {
             return;
         }
@@ -755,7 +769,19 @@ public class Game {
             } else if (cpu.getMove() instanceof ReserveCard rc) {
                 returnAmt = rc.getToReturn();
             }
-            System.out.println("returnExcessToken cpu hand: " + cpu.getTokens());
+            System.out.print("returnExcessToken cpu hand: ");
+            StringBuilder strb = new StringBuilder("[ ");
+            Boolean first = true;
+            for (Map.Entry<Gem, Integer> e: cpu.getTokens().entrySet()) {
+                if (first) {
+                    first = false;
+                } else {
+                    strb.append(", ");
+                }
+                strb.append(e.getValue()).append(Utility.fromGemToColour(e.getKey()));
+            }
+            strb.append(" ]");
+            System.out.println(strb.toString());
         } else {
             boolean confirmReturn = false;
             while (!confirmReturn) {
@@ -781,7 +807,7 @@ public class Game {
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 3) {
-            Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o), 'done' to stop or cancel: ");
+            Gem g = Utility.askForGem(sc, "Enter gem (\u001B[34md\u001B[0m/\u001B[31mr\u001B[0m/\u001B[35ms\u001B[0m/\u001B[32me\u001B[0m/\u001B[90mo\u001B[0m), 'done' to stop or cancel: ");
 
             if (g == null && Utility.getTotalGems(chosen) == 0 ) {
                 return null;
@@ -804,7 +830,10 @@ public class Game {
             chosen.put(g, 1);
         }
 
-        boolean proceed = Utility.willProceed(sc, "Confirm that these are the tokens you want to return draw? {Y/N} ");
+        System.out.print("\nChosen gems: ");
+        chosen.forEach((x, y) -> System.out.print("" + y + Utility.fromGemToColour(x) + " "));
+        System.out.println();
+        boolean proceed = Utility.willProceed(sc, "Are these the tokens you want to draw? (Y/N): ");
         if (proceed) {
             return chosen;
         }
@@ -822,7 +851,7 @@ public class Game {
     private static HashMap<Gem, Integer> pickTwoSameGem() {
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 1) {
-            Gem g = Utility.askForGem(sc, "Enter gem (d/r/s/e/o) or cancel: ");
+            Gem g = Utility.askForGem(sc, "Enter gem (\u001B[34md\u001B[0m/\u001B[31mr\u001B[0m/\u001B[35ms\u001B[0m/\u001B[32me\u001B[0m/\u001B[90mo\u001B[0m) or cancel: ");
             if (g == null) {
                 return null;
             }

@@ -73,9 +73,10 @@ public class Card {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
 
-        // print gems
-        int gemWidth = 7;
-        sb.append(String.format("%-" + gemWidth + "s", Utility.fromGemToColour(GEMTYPE)));
+        // print bonus
+        int bonusWidth = 7;
+        sb.append(String.format("%-" + bonusWidth + "s", Utility.fromGemToColour(GEMTYPE)));
+        sb.append("      ");
         sb.append(" | ");
 
         // print points
@@ -84,7 +85,7 @@ public class Card {
         sb.append(" | ");
 
         // print costs
-        int costWidth = 30 + 9 * (Display.costDisplayString(tokens).length() / 16);
+        int costWidth = 24 + 9 * (Display.costDisplayString(tokens).length() / 16);
 
         sb.append(String.format("%-" + costWidth + "s", Display.costDisplayString(tokens)));
         sb.append(" ]");
