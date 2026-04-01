@@ -220,7 +220,7 @@ public class Game {
             System.out.print("CPU Hand: ");
             StringBuilder strb = new StringBuilder("[ ");
             Boolean first = true;
-            for (Map.Entry<Gem, Integer> e: cpu.getTokens().entrySet()) {
+            for (Map.Entry<Gem, Integer> e : cpu.getTokens().entrySet()) {
                 if (first) {
                     first = false;
                 } else {
@@ -228,7 +228,7 @@ public class Game {
                 }
                 strb.append(e.getValue()).append(Utility.fromGemToColour(e.getKey()));
             }
-            
+
             strb.append(" ]");
             System.out.println(strb.toString());
 
@@ -552,7 +552,7 @@ public class Game {
                 BuyCard move = (BuyCard) cpu.getMove();
                 choice = move.getBuyLocation();
             } else {
-                Display.buyCardDisplay();
+                Display.buyCardDisplay(player);
                 choice = Utility.askForNum(sc, 0, 2, "Enter your choice: ");
                 System.out.println();
             }
@@ -562,7 +562,7 @@ public class Game {
             }
 
             HashMap<Gem, Integer> toPay = Utility.generateEmptyHashmap();
-            if (choice == 1) {
+            if (choice == 1 && Display.canBuyFromMarket(player)) {
                 // get card position
                 int[] pos = new int[2];
                 Card card = null;
@@ -607,9 +607,9 @@ public class Game {
 
                 // remove from market
                 market[pos[0]][pos[1]] = decks.get(pos[0]).draw();
-            }
+            } 
 
-            if (choice == 2) {
+            else if (choice == 2 && Display.canBuyFromReserve(player)) {
                 // buy from reserve
                 List<Card> hand = player.getReserveHand();
                 if (hand.isEmpty()) {
@@ -664,7 +664,22 @@ public class Game {
                 }
 
                 player.removeReserveCard(idx);
+            } else {
+
+                // handles both of these cases:
+                // player chose to buy from market, but cannot
+                // player chose to buy from reserve, but cannot
+                try {
+                    System.out.println("\n‼️ This is not a valid option! ‼️\n");
+                    TimeUnit.SECONDS.sleep(2);
+                    continue;
+                } catch (InterruptedException e) {
+                    return false;
+                }
             }
+            
+
+            
             for (Gem g : Gem.values()) {
                 bank.put(g, bank.get(g) + toPay.get(g));
             }
@@ -689,7 +704,6 @@ public class Game {
             chosen = move.getToDraw();
         } else {
             chosen = drawTokenFromPlayer();
-
 
             if (chosen == null) {
                 // player has chosen not to continue
@@ -729,17 +743,24 @@ public class Game {
                     if (chosen == null) {
                         validAction = false;
                         break;
-                    }
-                    else {
+                    } else {
                         return chosen;
                     }
                 case 2:
+                    if (!Display.canDrawTwo()) {
+                        try {
+                            System.out.println("\n‼️ This is not a valid option! ‼️\n");
+                            TimeUnit.SECONDS.sleep(2);
+                            break;
+                        } catch (InterruptedException e) {
+                            return null;
+                        }
+                    }
                     chosen = pickTwoSameGem();
                     if (chosen == null) {
                         validAction = false;
                         break;
-                    }
-                    else {
+                    } else {
                         return chosen;
                     }
 
@@ -772,7 +793,7 @@ public class Game {
             System.out.print("returnExcessToken cpu hand: ");
             StringBuilder strb = new StringBuilder("[ ");
             Boolean first = true;
-            for (Map.Entry<Gem, Integer> e: cpu.getTokens().entrySet()) {
+            for (Map.Entry<Gem, Integer> e : cpu.getTokens().entrySet()) {
                 if (first) {
                     first = false;
                 } else {
@@ -809,7 +830,7 @@ public class Game {
         while (Utility.getTotalGems(chosen) < 3) {
             Gem g = Utility.askForGem(sc, "Enter gem (\u001B[34md\u001B[0m/\u001B[31mr\u001B[0m/\u001B[35ms\u001B[0m/\u001B[32me\u001B[0m/\u001B[90mo\u001B[0m), 'done' to stop or cancel: ");
 
-            if (g == null && Utility.getTotalGems(chosen) == 0 ) {
+            if (g == null && Utility.getTotalGems(chosen) == 0) {
                 return null;
             }
 
