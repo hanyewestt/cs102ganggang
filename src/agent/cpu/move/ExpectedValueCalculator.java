@@ -18,8 +18,8 @@ public class ExpectedValueCalculator {
      * Calculates expected value of performing a move without considering
      * points.
      *
-     * @param tokens {@link CPUPlayer} current tokens.
-     * @param production {@link CPUPlayer} current production levels.
+     * @param tokens {@link agent.cpu.CPUPlayer} current tokens.
+     * @param production {@link agent.cpu.CPUPlayer} current production levels.
      * @param market {@link Card}s in the market.
      * @param nobles {@link NobleTile}s available in game.
      * @param reserveHand {@link Card}s in reserve hand.
@@ -56,7 +56,7 @@ public class ExpectedValueCalculator {
      * @param c {@link Card} in the market.
      * @param nobles {@link NobleTile}s available.
      * @param production {@link Gem} production levels.
-     * @param tokens {@link Gem}s owned by {@link CPUPlayer}.
+     * @param tokens {@link Gem}s owned by {@link agent.cpu.CPUPlayer}.
      *
      * @return {@link Card} value.
      */
