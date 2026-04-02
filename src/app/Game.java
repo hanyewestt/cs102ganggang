@@ -734,7 +734,7 @@ public class Game {
         boolean validAction = false;
         HashMap<Gem, Integer> chosen = new HashMap<>();
         while (!validAction) {
-            // Display.drawTokenDisplay();
+            Display.drawTokenDisplay();
 
             int choice = Utility.askForNum(sc, 0, 2, "Please enter your choice: ");
             System.out.println();
