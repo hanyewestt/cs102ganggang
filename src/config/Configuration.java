@@ -177,8 +177,8 @@ public class Configuration {
             fillCardDeck(deck1, deck1Loader);
             fillCardDeck(deck2, deck2Loader);
             fillCardDeck(deck3, deck3Loader);
-
             fillNobleTileDeck(nobleTiles, nobleTilesLoader);
+            
         } catch (NumberFormatException e) {
             System.out.println("File has invalid format");
             return;
