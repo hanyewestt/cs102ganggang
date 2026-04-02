@@ -703,6 +703,8 @@ public class Game {
             DrawGems move = (DrawGems) cpu.getMove();
             chosen = move.getToDraw();
         } else {
+            if (player.getTokenAmount() >= 8) System.out.println("\n⚠️ Caution! You may have to return tokens!\n");
+
             chosen = drawTokenFromPlayer();
 
             if (chosen == null) {
@@ -807,7 +809,11 @@ public class Game {
             boolean confirmReturn = false;
             while (!confirmReturn) {
                 returnAmt = player.getReturnAmt();
-                System.out.println("Returning : " + returnAmt);
+
+                System.out.print("\nReturning: ");
+                returnAmt.forEach((x, y) -> System.out.print("" + y + Utility.fromGemToColour(x) + " "));
+                System.out.println();
+
                 confirmReturn = Utility.willProceed(sc, "Confirm that these are the tokens you want to return? (Y/N): ");
             }
         }
@@ -826,8 +832,10 @@ public class Game {
      * cancels.
      */
     private static HashMap<Gem, Integer> pickThreeDifferentGems() {
+        
         HashMap<Gem, Integer> chosen = Utility.generateEmptyHashmap();
         while (Utility.getTotalGems(chosen) < 3) {
+
             Gem g = Utility.askForGem(sc, "Enter gem (\u001B[34md\u001B[0m/\u001B[31mr\u001B[0m/\u001B[35ms\u001B[0m/\u001B[32me\u001B[0m/\u001B[90mo\u001B[0m), 'done' to stop or cancel: ");
 
             if (g == null && Utility.getTotalGems(chosen) == 0) {
