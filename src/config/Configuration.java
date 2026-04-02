@@ -110,37 +110,75 @@ public class Configuration {
         scanners.add(deck3Loader);
         scanners.add(nobleTilesLoader);
 
+        Properties properties = new Properties();
+
+        String filePath = System.getProperty("user.dir") + "/src/config/config.properties";
+
         try {
-            numLoader = setupScanner("src/data/numbers.txt");
-            deck1Loader = setupScanner("src/data/deck1.csv");
-            deck2Loader = setupScanner("src/data/deck2.csv");
-            deck3Loader = setupScanner("src/data/deck3.csv");
-            nobleTilesLoader = setupScanner("src/data/nobletiles.csv");
+            FileInputStream file = new FileInputStream(filePath);
+            properties.load(file);
+
+            deck1Loader = setupScanner(properties.getProperty("deck1"));
+            deck2Loader = setupScanner(properties.getProperty("deck2"));
+            deck3Loader = setupScanner(properties.getProperty("deck3"));
+            nobleTilesLoader = setupScanner(properties.getProperty("nobletiles"));
+
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
             closeScanners(scanners);
             return;
-        }
+
+        } catch (IOException e) {
+            System.out.println("Could not load config.properties");
+            closeScanners(scanners);
+            return;
+        }  
+
+        // try {
+        //     numLoader = setupScanner("src/data/numbers.txt");
+        //     deck1Loader = setupScanner("src/data/deck1.csv");
+        //     deck2Loader = setupScanner("src/data/deck2.csv");
+        //     deck3Loader = setupScanner("src/data/deck3.csv");
+        //     nobleTilesLoader = setupScanner("src/data/nobletiles.csv");
+        // } catch (FileNotFoundException e) {
+        //     System.out.println(e.getMessage());
+        //     closeScanners(scanners);
+        //     return;
+        // }
 
         try {
-            nobleTilePoints = getNextNo(numLoader);
-            pointsToWin = getNextNo(numLoader);
+            nobleTilePoints = Integer.parseInt(properties.getProperty("nobleTilePoints"));
+            pointsToWin = Integer.parseInt(properties.getProperty("pointsToWin"));
 
-            for (int i = 0; i < 3; i++) {
-                startingGems[i] = getNextNo(numLoader);
-            }
+            startingGems[0] = Integer.parseInt(properties.getProperty("startingGems2Players"));
+            startingGems[1] = Integer.parseInt(properties.getProperty("startingGems3Players"));
+            startingGems[2] = Integer.parseInt(properties.getProperty("startingGems4Players"));
+
         } catch (NumberFormatException e) {
             System.out.println("File has invalid format");
             closeScanners(scanners);
             return;
         }
 
+        // try {
+        //     nobleTilePoints = getNextNo(numLoader);
+        //     pointsToWin = getNextNo(numLoader);
+
+        //     for (int i = 0; i < 3; i++) {
+        //         startingGems[i] = getNextNo(numLoader);
+        //     }
+        // } catch (NumberFormatException e) {
+        //     System.out.println("File has invalid format");
+        //     closeScanners(scanners);
+        //     return;
+        // }
+
         try {
             fillCardDeck(deck1, deck1Loader);
             fillCardDeck(deck2, deck2Loader);
             fillCardDeck(deck3, deck3Loader);
-
             fillNobleTileDeck(nobleTiles, nobleTilesLoader);
+            
         } catch (NumberFormatException e) {
             System.out.println("File has invalid format");
             return;

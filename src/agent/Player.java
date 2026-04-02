@@ -547,7 +547,7 @@ public class Player implements Comparable<Player> {
             System.out.println("‼️ You have more than 10 tokens. ‼️");
             System.out.println("You have to return " + (total - 10) + " tokens. ");
             Gem g = Utility.askForGem(new Scanner(System.in),
-                    "Return 1 token (diamond/ruby/sapphire/emerald/onyx/gold), or 'cancel' to reset: ", true);
+                    "Return 1 token (\u001B[34md\u001B[0m/\u001B[31mr\u001B[0m/\u001B[35ms\u001B[0m/\u001B[32me\u001B[0m/\u001B[90mo\u001B[0m), or 'cancel' to reset: ", true);
             if (g == null) {
                 System.out.println("Reseting return amounts.\n");
                 total = getTokenAmount();

@@ -142,7 +142,7 @@ public class Display {
 
         System.out.println("----------------- Market 🏬 -----------------\n");
 
-        printMarket(market, player);
+        printMarket(market);
         System.out.println();
 
         System.out.println("----------------- Nobles 👑 -----------------\n");
@@ -158,10 +158,9 @@ public class Display {
     /**
      * Prints the {@link Card}s currently out in the market.
      *
-     * @param player the current {@link Player}
      * @param market the market }
      */
-    public static void printMarket(Card[][] market, Player player) {
+    public static void printMarket(Card[][] market) {
         System.out.println("    [ Bonuses | Prestige | Card Costs 💰   ]\n");
 
         for (int i = 1; i <= 3; i++) {
@@ -173,16 +172,7 @@ public class Display {
                     System.out.printf("%d.%d [ Empty ]\n", i, j);
 
                 } else {
-                    HashMap<Gem, Integer> playerBonuses = player.getBonuses();
-                    HashMap<Gem, Integer> cardCost = Utility.generateHashMapClone(c.getTokens());
-                    Utility.discount(cardCost, playerBonuses);
-
-                    HashMap<Gem, Integer> tokensToPay = Utility.findSubtractionAmount(player.getTokens(), cardCost);
-                    if (tokensToPay == null) {
-                        System.out.printf("\u001b[9m%d.%d\u001b[0m %s%n", i, j, c);
-                    } else {
-                        System.out.printf("%d.%d %s\n", i, j, c.toString());
-                    }
+                    System.out.printf("%d.%d %s\n", i, j, c.toString());
                 }
             }
 

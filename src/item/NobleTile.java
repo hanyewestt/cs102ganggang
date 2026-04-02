@@ -1,5 +1,6 @@
 package item;
 
+import config.*;
 import display.Display;
 import java.util.*;
 import util.Utility;
@@ -11,7 +12,7 @@ import util.Utility;
 public class NobleTile {
 
     private HashMap<Gem, Integer> tokens = Utility.generateEmptyHashmap();
-    private static final int POINTS = 3;
+    private static final int POINTS = Configuration.getNobleTilePoints();
 
     /**
      * Constructor for {@link NobleTile} that initialises the Gem Hashmap
